@@ -211,6 +211,20 @@ h1 {
 #audioBtn:hover { transform:scale(1.02); box-shadow:0 0 12px #2d8a2d55; color:#f0c040; }
 #audioBtn.muted { color:#6a7a67; border-color:#315036; }
 
+#animationBtn {
+  width:100%; margin-top:8px; padding:9px; font-size:13px;
+  background:linear-gradient(135deg,#40280a,#7a4a12);
+  color:#ffd88a; border:1px solid #9b6a28; border-radius:12px;
+  cursor:pointer; font-weight:bold; letter-spacing:.5px;
+}
+#animationBtn.off { color:#bca988; border-color:#6f5a3a; background:linear-gradient(135deg,#2e2416,#4a3a25); }
+.no-level1-animations *,
+.no-level1-animations *::before,
+.no-level1-animations *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
 
 #legend {
   display:flex; justify-content:center; gap:6px;
@@ -400,6 +414,7 @@ h1 {
   <div id="hint">👆 Swipe like Candy Crush: Tigers hunt adjacent Deer/Goat, 5 Tigers trigger a full deer sweep</div>
   <button id="restartBtn">🔄 Restart Jungle</button>
   <button id="audioBtn" class="muted" type="button">🔊 Enable Jungle Audio</button>
+  <button id="animationBtn" type="button">✨ Level 1 Animation: ON</button>
 </div>
 
 <!-- Level Complete overlay -->
@@ -713,12 +728,32 @@ let mouseStartX=0, mouseStartY=0;
 let huntProgress=0;
 let lastSpawnedCells = new Set();
 let lastDroppedCells = new Set();
+let animationsEnabled = true;
 
 function getConfig(lvl) {
   const i = Math.min(lvl - 1, LEVELS.length - 1);
   const c = LEVELS[i];
   if (lvl > LEVELS.length) return { ...c, level:lvl, target:c.target + (lvl - LEVELS.length) * 5000, moves:16 };
   return c;
+}
+
+
+function updateAnimationToggleUi() {
+  const btn = document.getElementById('animationBtn');
+  if (!btn) return;
+  const levelOne = level === 1;
+  btn.disabled = !levelOne;
+  btn.textContent = levelOne
+    ? (animationsEnabled ? '✨ Level 1 Animation: ON' : '✨ Level 1 Animation: OFF')
+    : '✨ Animation Toggle (Level 1 only)';
+  btn.classList.toggle('off', !animationsEnabled || !levelOne);
+  document.body.classList.toggle('no-level1-animations', levelOne && !animationsEnabled);
+}
+
+function toggleAnimations() {
+  if (level !== 1) { updateAnimationToggleUi(); return; }
+  animationsEnabled = !animationsEnabled;
+  updateAnimationToggleUi();
 }
 
 function initLevel() {
@@ -758,6 +793,7 @@ function initLevel() {
   createBoard(cfg.animalTypes, cfg.openingBoard);
   while (findMatches().length > 0) createBoard(cfg.animalTypes);
   renderBoard(cfg.iconSize, true);
+  updateAnimationToggleUi();
 }
 
 function createBoard(animalTypes, presetBoard=null) {
@@ -1024,46 +1060,14 @@ function processMatches(playerTriggered=false) {
         specialLabel = '⚔️ Cross-clear strike!';
       }
     }
-    if (special === 'basic' && hasBoxMatch(type)) special = 'blast';
-  }
-  return { special, center, type, all };
-}
-function hasBoxMatch(type) {
-  for (let r = 0; r < ROWS - 1; r++) for (let c = 0; c < COLS - 1; c++) {
-    if (board[r][c] === type && board[r+1][c] === type && board[r][c+1] === type && board[r+1][c+1] === type) return true;
-  }
-  return false;
-}
-function uniqueCells(cells) {
-  const seen = new Set();
-  return cells.filter(({r,c}) => { const key = `${r},${c}`; if (seen.has(key)) return false; seen.add(key); return true; });
-}
+  });
 
   if (cfg.objective === 'hunt') {
     huntedCells.forEach(key => {
       const [r, c] = key.split(',').map(Number);
       if (board[r][c] === cfg.huntAnimal) huntProgress++;
     });
-
-    const points = (cellsToRemove.size * 12) + (huntedCells.size * 38) + (special !== 'basic' ? 100 : 0);
-    score += points;
-    updateScore();
-    announceTurn(matches.length, special, type, huntedCells.size, points);
-
-    cellsToRemove.forEach(key => { const [r,c] = key.split(',').map(Number); board[r][c] = -1; });
-    await delay(120);
-    drop();
-    renderBoard();
-    await delay(260);
-    fill(cfg.animalTypes);
-    renderBoard();
-    await delay(360);
   }
-  isProcessing = false;
-  checkStatus();
-  if (!findMatches().length) ensurePlayableBoard();
-  markPossibleMoveHint();
-}
 
   predatorCells.forEach(([r, c]) => getEl(r, c)?.classList.add('predator-strike'));
   attackLinks.slice(0, 18).forEach(([from, to]) => drawAttackLine(from, to));
@@ -1104,7 +1108,7 @@ function uniqueCells(cells) {
       renderBoard(undefined, true);
       setTimeout(() => processMatches(false), 330);
     }, 300);
-  }, 460);
+  }, animationsEnabled ? 460 : 120);
 }
 
 function matchIsSpecial(matches, r, c) {
@@ -1317,6 +1321,7 @@ function unlockAudioOnce(event) {
 
 document.getElementById('restartBtn').addEventListener('click', restartGame);
 document.getElementById('audioBtn').addEventListener('click', () => jungleAudio.toggle());
+document.getElementById('animationBtn').addEventListener('click', toggleAnimations);
 document.addEventListener('pointerdown', unlockAudioOnce, { once:true });
 document.addEventListener('keydown', unlockAudioOnce, { once:true });
 initLevel();
