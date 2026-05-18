@@ -28,6 +28,16 @@ body::before, body::after {
 body::before { top:-10px; left:-10px; transform:rotate(-20deg); }
 body::after  { bottom:-10px; right:-10px; transform:rotate(160deg); }
 
+.jungle-mist {
+  position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.18;
+  background:
+    radial-gradient(circle at 15% 25%, #b7ff9a33 0 3px, transparent 4px),
+    radial-gradient(circle at 80% 18%, #f0c04022 0 2px, transparent 3px),
+    radial-gradient(circle at 60% 85%, #ffffff20 0 2px, transparent 3px);
+  animation:mistDrift 11s linear infinite alternate;
+}
+@keyframes mistDrift { from { transform:translate3d(-8px, 0, 0); } to { transform:translate3d(10px, -10px, 0); } }
+
 #gameContainer {
   position:relative; z-index:1;
   background: linear-gradient(180deg, #0a2e0f 0%, #0d3b1e 50%, #081a0b 100%);
@@ -123,11 +133,19 @@ h1 {
   display:flex; align-items:center; justify-content:center;
   line-height:1;
   overflow:hidden;
-  transition:transform 0.15s, box-shadow 0.15s;
+  transition:transform 0.15s, box-shadow 0.15s, filter 0.2s;
   cursor:pointer;
   -webkit-user-select:none; user-select:none;
   min-width:0; min-height:0;
   width:100%; height:100%;
+  position:relative;
+  will-change:transform, opacity;
+  animation:tileDrop 0.38s cubic-bezier(.2,.8,.2,1) both;
+}
+.candy::after {
+  content:''; position:absolute; inset:8%; border-radius:inherit;
+  background:linear-gradient(135deg, #ffffff55, transparent 42%);
+  pointer-events:none; mix-blend-mode:screen;
 }
 .candy.selected {
   transform:scale(1.12);
@@ -135,8 +153,16 @@ h1 {
   border:2px solid #f0c040;
   z-index:10; position:relative;
 }
-@keyframes fadeOut { to { opacity:0; transform:scale(0) rotate(20deg); } }
+@keyframes fadeOut { to { opacity:0; transform:scale(0) rotate(20deg); filter:brightness(1.8); } }
+@keyframes huntedOut { 0%{transform:scale(1)} 45%{transform:scale(1.24) rotate(-8deg); filter:brightness(1.8)} 100%{opacity:0; transform:scale(0) rotate(25deg);} }
+@keyframes tileDrop { from { opacity:0; transform:translateY(-28px) scale(.86); } to { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes validPulse { 50% { transform:scale(1.12); filter:brightness(1.4); } }
+@keyframes invalidShake { 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
 .removing { animation:fadeOut 0.35s forwards; }
+.hunted { animation:huntedOut 0.48s forwards; }
+.swap-valid { animation:validPulse 0.32s ease; }
+.swap-invalid { animation:invalidShake 0.32s ease; }
+.predator-source { box-shadow:0 0 22px #f0c040, inset 0 0 18px #fff6 !important; transform:scale(1.13); z-index:15; }
 
 /* Animal tile colors */
 .candy-0 { background: linear-gradient(135deg, #6a2000, #aa4010); box-shadow:0 3px 8px rgba(0,0,0,0.5); } /* Tiger - deep orange */
@@ -145,6 +171,7 @@ h1 {
 .candy-3 { background: linear-gradient(135deg, #1a1a4a, #2a408a); box-shadow:0 3px 8px rgba(0,0,0,0.4); } /* Eagle - navy blue  */
 .candy-4 { background: linear-gradient(135deg, #0a3a0a, #186a18); box-shadow:0 3px 8px rgba(0,0,0,0.4); } /* Snake - dark green */
 .candy-5 { background: linear-gradient(135deg, #3a2010, #6a4020); box-shadow:0 3px 8px rgba(0,0,0,0.4); } /* Monkey- dark brown */
+.candy-6 { background: linear-gradient(135deg, #2a2f32, #7a858a); box-shadow:0 3px 10px rgba(0,0,0,0.55), inset 0 0 0 2px #ffffff1f; } /* Rhino - heavyweight */
 
 #message {
   text-align:center; font-size:15px; color:#6dbf67;
@@ -155,6 +182,15 @@ h1 {
 .combo { animation:pulse 0.5s; color:#f0c040 !important; text-shadow:0 0 12px #f0c040 !important; }
 
 #hint { text-align:center; font-size:11px; color:#3a6a3a; margin-bottom:6px; }
+
+.attackFx, .floatText {
+  position:fixed; pointer-events:none; z-index:250;
+  filter:drop-shadow(0 0 8px #f0c040);
+}
+.attackFx { font-size:24px; animation:clawStrike .52s cubic-bezier(.2,.8,.2,1) forwards; }
+.floatText { color:#f0c040; font-weight:900; font-size:13px; text-shadow:0 2px 6px #000; animation:floatText 1s ease-out forwards; }
+@keyframes clawStrike { 0%{opacity:0; transform:translate(var(--sx),var(--sy)) scale(.45) rotate(-25deg)} 20%{opacity:1} 100%{opacity:0; transform:translate(var(--ex),var(--ey)) scale(1.35) rotate(10deg)} }
+@keyframes floatText { to { opacity:0; transform:translateY(-45px) scale(1.12); } }
 
 #restartBtn {
   width:100%; padding:10px; font-size:15px;
@@ -217,6 +253,7 @@ h1 {
 </style>
 </head>
 <body>
+<div class="jungle-mist"></div>
 <div id="gameContainer">
 
   <div id="titleArea">
@@ -288,11 +325,14 @@ h1 {
 // Level 1 fully compliant with KING_OF_JUNGLE_DESIGN_RULES.md
 // =================================================================
 
-// All animals indexed 0-5
-// Zone I   (Levels 1-100):  0=Tiger🐯  1=Deer🦌  2=Goat🐐
+// All animals indexed 0-6
+// Zone I   (Levels 1-100):  0=Tiger🐯  1=Deer🦌  2=Goat🐐  6=Rhino🦏 (rare blocker)
 // Zone II+ (Levels 101+):   3=Eagle🦅  4=Snake🐍  5=Monkey🐒
-const ALL_ANIMALS  = ['🐯','🦌','🐐','🦅','🐍','🐒'];
-const ANIMAL_NAMES = ['Tiger','Deer','Goat','Eagle','Snake','Monkey'];
+const ALL_ANIMALS  = ['🐯','🦌','🐐','🦅','🐍','🐒','🦏'];
+const ANIMAL_NAMES = ['Tiger','Deer','Goat','Eagle','Snake','Monkey','Rhino'];
+const RHINO = 6;
+const HEAVYWEIGHT_BLOCKERS = [RHINO];
+const ANIMATION_TIMING = { swap: 260, attack: 520, remove: 480, cascade: 330 };
 
 // ===========================================================
 // FOOD CHAIN — per KING_OF_JUNGLE_DESIGN_RULES.md Section 3
@@ -318,11 +358,12 @@ const LEVELS = [
     cols:6, rows:6,            // ✅ Rule: Grid always 6×6
     iconSize:46,
     moves:30,                  // ✅ Rule: Zone I start moves = 30
-    animalTypes:[0,1,2],       // ✅ Rule: Zone I = Tiger, Deer, Goat only
+    animalTypes:[0,1,2,6],     // ✅ Zone I animals + one rare Rhino blocker
     objective:'hunt',          // ✅ Rule: Hunt objective for Levels 1-50
     huntAnimal:1,              // ✅ Hunt Deer (index 1)
-    huntCount:15,              // ✅ Rule example: Hunt 15 Deer
-    goalText:'Hunt 15 Deer before moves run out',
+    huntCount:18,              // Harder: only Tiger food-chain hunts count
+    goalText:'Hunt 18 Deer with Tiger strikes before moves run out',
+    blockers:[6],
     target:0,
   },
   // Levels 2-10 (score mode — to be upgraded per zone rules)
@@ -412,13 +453,24 @@ function initLevel() {
 }
 
 function createBoard(animalTypes) {
+  const cfg = getConfig(level);
   board = [];
   for (let r = 0; r < ROWS; r++) {
     board[r] = [];
     for (let c = 0; c < COLS; c++) {
-      board[r][c] = animalTypes[Math.floor(Math.random() * animalTypes.length)];
+      board[r][c] = pickAnimalForCell(animalTypes, r, c, cfg);
     }
   }
+}
+
+function pickAnimalForCell(animalTypes, r, c, cfg) {
+  if (cfg.level === 1) {
+    // Rare rhino blockers add jungle realism without letting the level auto-clear.
+    const rhinoSpots = new Set(['1,4', '4,1']);
+    if (rhinoSpots.has(`${r},${c}`)) return RHINO;
+  }
+  const playableTypes = animalTypes.filter(type => !HEAVYWEIGHT_BLOCKERS.includes(type));
+  return playableTypes[Math.floor(Math.random() * playableTypes.length)];
 }
 
 function renderBoard(iconSizeOverride) {
@@ -432,7 +484,7 @@ function renderBoard(iconSizeOverride) {
     for (let c = 0; c < COLS; c++) {
       const animalIdx = board[r][c];
       const d = document.createElement('div');
-      d.className = `candy candy-${Math.min(animalIdx, 5)}`;
+      d.className = `candy candy-${animalIdx}`;
       d.textContent = ALL_ANIMALS[animalIdx] || '🐯';
       d.style.fontSize = iSize + 'px';
       d.dataset.r = r; d.dataset.c = c;
@@ -509,15 +561,51 @@ function getEl(r, c) {
 }
 
 function doSwap(r1, c1, r2, c2) {
+  if (isProcessing) return;
+  if (isBlocker(board[r1][c1]) || isBlocker(board[r2][c2])) {
+    animateInvalidSwap(r1, c1, r2, c2);
+    showMsg('🦏 Rhino is a heavyweight blocker — predators bounce off!');
+    return;
+  }
+
   isProcessing = true; clearSelected();
-  swapCells(r1, c1, r2, c2); renderBoard();
-  if (findMatches().length > 0) {
+  swapCells(r1, c1, r2, c2);
+  const valid = findMatches().length > 0;
+  swapCells(r1, c1, r2, c2);
+
+  if (!valid) {
+    animateInvalidSwap(r1, c1, r2, c2);
+    showMsg('🌿 No jungle pattern — try a smarter swipe.');
+    setTimeout(() => { isProcessing = false; }, ANIMATION_TIMING.swap);
+    return;
+  }
+
+  animateValidSwap(r1, c1, r2, c2);
+  setTimeout(() => {
+    swapCells(r1, c1, r2, c2);
+    renderBoard();
     movesLeft--;
     document.getElementById('moves').textContent = movesLeft;
-    setTimeout(() => processMatches(), 300);
-  } else {
-    setTimeout(() => { swapCells(r1, c1, r2, c2); renderBoard(); isProcessing = false; }, 300);
-  }
+    setTimeout(() => processMatches(), ANIMATION_TIMING.cascade);
+  }, ANIMATION_TIMING.swap);
+}
+
+function isBlocker(type) {
+  return HEAVYWEIGHT_BLOCKERS.includes(type);
+}
+
+function animateValidSwap(r1, c1, r2, c2) {
+  [getEl(r1,c1), getEl(r2,c2)].forEach(el => el?.classList.add('swap-valid'));
+}
+
+function animateInvalidSwap(r1, c1, r2, c2) {
+  [getEl(r1,c1), getEl(r2,c2)].forEach(el => {
+    if (!el) return;
+    el.classList.remove('swap-invalid');
+    void el.offsetWidth;
+    el.classList.add('swap-invalid');
+    setTimeout(() => el.classList.remove('swap-invalid'), ANIMATION_TIMING.swap);
+  });
 }
 
 function swapCells(r1, c1, r2, c2) {
@@ -557,24 +645,34 @@ function processMatches() {
   let totalCnt = 0;
   const firstType = board[matches[0][0].r][matches[0][0].c];
   const cellsToRemove = new Set();
+  const huntedCells = new Set();
+  const predatorSources = [];
 
   matches.forEach(match => {
+    const matchType = board[match[0].r][match[0].c];
+    if (isBlocker(matchType)) return;
+
     totalCnt += match.length;
     match.forEach(({r,c}) => cellsToRemove.add(`${r},${c}`));
 
     // ============================================================
     // FOOD CHAIN LOGIC — per KING_OF_JUNGLE_DESIGN_RULES.md §3
-    // When a predator tile is matched, it ALSO destroys adjacent
-    // prey tiles (e.g. Tiger match → nearby Deer & Goat destroyed)
+    // Predator matches attack only natural prey. Heavyweights stay.
+    // HUNT objective counts only prey removed by these strikes.
     // ============================================================
-    const matchType = board[match[0].r][match[0].c];
     if (FOOD_CHAIN[matchType]) {
       const preyTypes = FOOD_CHAIN[matchType];
       match.forEach(({r, c}) => {
+        predatorSources.push({r, c});
         [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(([nr, nc]) => {
           if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
-            if (preyTypes.includes(board[nr][nc])) {
+            const targetType = board[nr][nc];
+            if (preyTypes.includes(targetType)) {
               cellsToRemove.add(`${nr},${nc}`);
+              huntedCells.add(`${nr},${nc}`);
+              animatePredatorStrike(r, c, nr, nc, matchType);
+            } else if (isBlocker(targetType)) {
+              animatePredatorBounce(r, c, nr, nc);
             }
           }
         });
@@ -582,37 +680,40 @@ function processMatches() {
     }
   });
 
-  // ============================================================
-  // HUNT OBJECTIVE TRACKING (Level 1 — Hunt 15 Deer)
-  // Count every huntAnimal tile destroyed this turn
-  // ============================================================
+  if (!cellsToRemove.size) { isProcessing = false; checkStatus(); return; }
+
   if (cfg.objective === 'hunt') {
-    cellsToRemove.forEach(key => {
+    huntedCells.forEach(key => {
       const [r, c] = key.split(',').map(Number);
       if (board[r][c] === cfg.huntAnimal) huntProgress++;
     });
   }
 
-  // Animate removal
+  predatorSources.forEach(({r,c}) => getEl(r,c)?.classList.add('predator-source'));
+
   cellsToRemove.forEach(key => {
     const [r, c] = key.split(',').map(Number);
     const el = getEl(r, c);
-    if (el) { el.classList.add('removing'); spawnParticles(el); }
+    if (el) {
+      el.classList.add(huntedCells.has(key) ? 'hunted' : 'removing');
+      spawnParticles(el, huntedCells.has(key));
+      if (huntedCells.has(key)) spawnFloatText(el, '+HUNT');
+    }
   });
 
-  const pts = totalCnt * 10 * matches.length;
+  const pts = (totalCnt * 12 * matches.length) + huntedCells.size * 60;
   score += pts;
   updateScore();
 
   const msgs = {
-    0: '🐯 Tiger Hunts! Prey destroyed!',
-    1: '🦌 Deer herd scattered!',
-    2: '🐐 Goats flee in panic!',
+    0: huntedCells.size ? `🐯 Tiger strike! ${huntedCells.size} prey hunted! +${pts}` : `🐯 Tiger roar! Make it beside Deer to hunt. +${pts}`,
+    1: '🦌 Deer herd matched — not hunted. Use Tigers for objective!',
+    2: '🐐 Goats flee through the grass!',
     3: '🦅 Eagle strikes from sky!',
     4: '🐍 Snake slithers away!',
     5: '🐒 Monkey swings to safety!',
   };
-  if (matches.length > 1) showMsg(`🔥 COMBO x${matches.length}! +${pts}`, true);
+  if (matches.length > 1) showMsg(`🔥 JUNGLE COMBO x${matches.length}! +${pts}`, true);
   else showMsg(msgs[firstType] || `✨ Match! +${pts}`);
 
   setTimeout(() => {
@@ -624,15 +725,19 @@ function processMatches() {
     setTimeout(() => {
       fill(cfg.animalTypes);
       renderBoard();
-      setTimeout(() => processMatches(), 300);
-    }, 300);
-  }, 300);
+      setTimeout(() => processMatches(), ANIMATION_TIMING.cascade);
+    }, ANIMATION_TIMING.cascade);
+  }, ANIMATION_TIMING.attack);
 }
 
 function drop() {
   for (let c = 0; c < COLS; c++) {
     let e = ROWS - 1;
     for (let r = ROWS - 1; r >= 0; r--) {
+      if (isBlocker(board[r][c])) {
+        e = r - 1; // Rhino stays fixed and splits gravity into board segments.
+        continue;
+      }
       if (board[r][c] !== -1) {
         if (r !== e) { board[e][c] = board[r][c]; board[r][c] = -1; }
         e--;
@@ -642,7 +747,7 @@ function drop() {
 }
 
 function fill(animalTypes) {
-  const types = animalTypes || getConfig(level).animalTypes;
+  const types = (animalTypes || getConfig(level).animalTypes).filter(type => !HEAVYWEIGHT_BLOCKERS.includes(type));
   for (let r = 0; r < ROWS; r++)
     for (let c = 0; c < COLS; c++)
       if (board[r][c] === -1)
@@ -725,10 +830,10 @@ function showMsg(txt, combo=false) {
   if (combo) { el.classList.add('combo'); setTimeout(() => el.classList.remove('combo'), 500); }
 }
 
-function spawnParticles(el) {
+function spawnParticles(el, hunted=false) {
   const rect = el.getBoundingClientRect();
-  const icons = ['🌿','🍃','✨','🌱'];
-  for (let i = 0; i < 3; i++) {
+  const icons = hunted ? ['🐾','💥','🌿','✨'] : ['🌿','🍃','✨','🌱'];
+  for (let i = 0; i < (hunted ? 6 : 3); i++) {
     const p = document.createElement('div');
     p.className = 'particles';
     p.textContent = icons[Math.floor(Math.random() * icons.length)];
@@ -738,6 +843,45 @@ function spawnParticles(el) {
     document.body.appendChild(p);
     setTimeout(() => p.remove(), 1000);
   }
+}
+
+function animatePredatorStrike(sr, sc, tr, tc, predatorType) {
+  const source = getEl(sr, sc), target = getEl(tr, tc);
+  if (!source || !target) return;
+  const a = source.getBoundingClientRect();
+  const b = target.getBoundingClientRect();
+  const fx = document.createElement('div');
+  fx.className = 'attackFx';
+  fx.textContent = predatorType === 0 ? '🐾' : '⚡';
+  fx.style.left = a.left + a.width / 2 + 'px';
+  fx.style.top = a.top + a.height / 2 + 'px';
+  fx.style.setProperty('--sx', '0px');
+  fx.style.setProperty('--sy', '0px');
+  fx.style.setProperty('--ex', `${b.left - a.left}px`);
+  fx.style.setProperty('--ey', `${b.top - a.top}px`);
+  document.body.appendChild(fx);
+  setTimeout(() => fx.remove(), ANIMATION_TIMING.attack);
+}
+
+function animatePredatorBounce(sr, sc, tr, tc) {
+  const predator = getEl(sr, sc), blocker = getEl(tr, tc);
+  predator?.classList.add('swap-invalid');
+  blocker?.classList.add('swap-invalid');
+  setTimeout(() => {
+    predator?.classList.remove('swap-invalid');
+    blocker?.classList.remove('swap-invalid');
+  }, ANIMATION_TIMING.swap);
+}
+
+function spawnFloatText(el, text) {
+  const rect = el.getBoundingClientRect();
+  const t = document.createElement('div');
+  t.className = 'floatText';
+  t.textContent = text;
+  t.style.left = rect.left + rect.width * 0.18 + 'px';
+  t.style.top = rect.top + rect.height * 0.2 + 'px';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 1000);
 }
 
 document.getElementById('restartBtn').addEventListener('click', restartGame);
