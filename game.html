@@ -41,7 +41,7 @@ body::after  { bottom:-10px; right:-10px; transform:rotate(160deg); }
 }
 
 #titleArea {
-  text-align:center; margin-bottom:10px; position:relative;
+  text-align:center; margin-bottom:4px; position:relative;
 }
 #titleArea .crown { font-size:28px; display:block; }
 h1 {
@@ -57,6 +57,18 @@ h1 {
   text-transform:uppercase; margin-top:2px;
 }
 
+/* Zone bar */
+#zoneBar {
+  text-align:center;
+  font-size:10px; color:#6dbf67;
+  letter-spacing:2px; text-transform:uppercase;
+  margin: 4px 0 8px;
+  padding: 4px 14px;
+  background: rgba(45,138,45,0.12);
+  border-radius: 20px;
+  border: 1px solid rgba(45,138,45,0.25);
+}
+
 #gameInfo {
   display:flex; justify-content:space-around; margin:8px 0;
   padding:10px 6px;
@@ -68,7 +80,19 @@ h1 {
 .info-label { font-size:9px; color:#6dbf67; font-weight:bold; letter-spacing:1px; }
 .info-value { font-size:20px; color:#f0c040; font-weight:bold; text-shadow:0 0 8px #f0c04066; }
 
-#progressLabel { text-align:center; font-size:11px; color:#6dbf67; margin:4px 0; }
+/* Objective box */
+#objectiveBox {
+  background: linear-gradient(135deg, rgba(0,60,0,0.4), rgba(0,30,0,0.4));
+  border: 1px solid #2a6a2a;
+  border-radius: 12px;
+  padding: 7px 12px;
+  margin-bottom: 7px;
+  text-align: center;
+}
+#objectiveLabel { font-size:9px; color:#6dbf67; letter-spacing:1px; text-transform:uppercase; font-weight:bold; }
+#objectiveText  { font-size:13px; color:#f0c040; font-weight:bold; margin-top:2px; }
+#huntCounter    { font-size:12px; color:#8adf80; margin-top:3px; }
+
 #progressBar {
   width:100%; height:10px;
   background:#0a1f0a; border-radius:10px; margin-bottom:8px;
@@ -81,10 +105,8 @@ h1 {
   box-shadow: 0 0 8px #6dbf6788;
 }
 
-/* Board */
 #board {
   display:grid;
-  /* grid-template-columns set dynamically by JS */
   gap:3px;
   background: linear-gradient(135deg, #051208, #0a2010);
   padding:6px;
@@ -99,7 +121,6 @@ h1 {
   aspect-ratio:1;
   border-radius:8px;
   display:flex; align-items:center; justify-content:center;
-  /* font-size set dynamically by JS per level */
   line-height:1;
   overflow:hidden;
   transition:transform 0.15s, box-shadow 0.15s;
@@ -117,12 +138,13 @@ h1 {
 @keyframes fadeOut { to { opacity:0; transform:scale(0) rotate(20deg); } }
 .removing { animation:fadeOut 0.35s forwards; }
 
-.candy-0 { background: linear-gradient(135deg, #5a2d0c, #8b4513); box-shadow:0 3px 8px rgba(0,0,0,0.4); }
-.candy-1 { background: linear-gradient(135deg, #1a4a1a, #2d7a2d); box-shadow:0 3px 8px rgba(0,0,0,0.4); }
-.candy-2 { background: linear-gradient(135deg, #4a3000, #7a5200); box-shadow:0 3px 8px rgba(0,0,0,0.4); }
-.candy-3 { background: linear-gradient(135deg, #1a3a4a, #2a6a7a); box-shadow:0 3px 8px rgba(0,0,0,0.4); }
-.candy-4 { background: linear-gradient(135deg, #3a1a4a, #6a3a8a); box-shadow:0 3px 8px rgba(0,0,0,0.4); }
-.candy-5 { background: linear-gradient(135deg, #4a3a00, #8a6a00); box-shadow:0 3px 8px rgba(0,0,0,0.4); }
+/* Animal tile colors */
+.candy-0 { background: linear-gradient(135deg, #6a2000, #aa4010); box-shadow:0 3px 8px rgba(0,0,0,0.5); } /* Tiger - deep orange */
+.candy-1 { background: linear-gradient(135deg, #5a3a10, #9a6a25); box-shadow:0 3px 8px rgba(0,0,0,0.4); } /* Deer  - warm tan   */
+.candy-2 { background: linear-gradient(135deg, #3a3a3a, #686060); box-shadow:0 3px 8px rgba(0,0,0,0.4); } /* Goat  - slate gray */
+.candy-3 { background: linear-gradient(135deg, #1a1a4a, #2a408a); box-shadow:0 3px 8px rgba(0,0,0,0.4); } /* Eagle - navy blue  */
+.candy-4 { background: linear-gradient(135deg, #0a3a0a, #186a18); box-shadow:0 3px 8px rgba(0,0,0,0.4); } /* Snake - dark green */
+.candy-5 { background: linear-gradient(135deg, #3a2010, #6a4020); box-shadow:0 3px 8px rgba(0,0,0,0.4); } /* Monkey- dark brown */
 
 #message {
   text-align:center; font-size:15px; color:#6dbf67;
@@ -153,6 +175,9 @@ h1 {
 .legend-item {
   display:flex; align-items:center; gap:3px;
   font-size:10px; color:#4a8a4a;
+  background: rgba(0,40,0,0.4);
+  padding: 3px 8px; border-radius: 10px;
+  border: 1px solid rgba(45,138,45,0.2);
 }
 
 .overlay {
@@ -200,6 +225,10 @@ h1 {
     <div class="subtitle">🌿 Nepal Wild Kingdom 🌿</div>
   </div>
 
+  <!-- Zone identifier (updates per level) -->
+  <div id="zoneBar">Zone I — Starter Plains 🌾</div>
+
+  <!-- Stats bar: Level | Score | Moves | Best -->
   <div id="gameInfo">
     <div class="info-item"><div class="info-label">🌿 LEVEL</div><div class="info-value" id="levelDisplay">1</div></div>
     <div class="info-item"><div class="info-label">🏆 SCORE</div><div class="info-value" id="score">0</div></div>
@@ -207,25 +236,30 @@ h1 {
     <div class="info-item"><div class="info-label">⭐ BEST</div><div class="info-value" id="bestScore">0</div></div>
   </div>
 
-  <div id="progressLabel">🎯 Target: <span id="targetDisplay">500</span></div>
+  <!-- Objective display -->
+  <div id="objectiveBox">
+    <div id="objectiveLabel">🎯 HUNT OBJECTIVE</div>
+    <div id="objectiveText">Hunt 15 Deer before moves run out</div>
+    <div id="huntCounter">🦌 Hunted: 0 / 15</div>
+  </div>
+
+  <!-- Progress bar -->
   <div id="progressBar"><div id="progressFill"></div></div>
 
+  <!-- Active animal legend -->
   <div id="legend">
     <div class="legend-item">🐯 Tiger</div>
-    <div class="legend-item">🦏 Rhino</div>
-    <div class="legend-item">🐘 Elephant</div>
-    <div class="legend-item">🦚 Peacock</div>
-    <div class="legend-item">🐒 Monkey</div>
-    <div class="legend-item">🦅 Eagle</div>
+    <div class="legend-item">🦌 Deer</div>
+    <div class="legend-item">🐐 Goat</div>
   </div>
 
   <div id="board"></div>
-  <div id="message">🌿 Swipe animals to match 3!</div>
-  <div id="hint">👆 Swipe UP / DOWN / LEFT / RIGHT</div>
+  <div id="message">🌿 Match Tigers to hunt the Deer!</div>
+  <div id="hint">👆 Tiger matches hunt nearby Deer &amp; Goat — Swipe to move</div>
   <button id="restartBtn">🔄 Restart Jungle</button>
 </div>
 
-<!-- Level Complete -->
+<!-- Level Complete overlay -->
 <div class="overlay" id="lvlOverlay">
   <div class="overlay-box">
     <h2>👑 Level Clear!</h2>
@@ -236,50 +270,86 @@ h1 {
   </div>
 </div>
 
-<!-- Game Over -->
+<!-- Game Over overlay -->
 <div class="overlay" id="overOverlay">
   <div class="overlay-box">
     <h2>💀 Defeated!</h2>
     <p>🌿 Level <span id="failedLevel">1</span> failed</p>
     <div class="big">🏆 <span id="finalScore">0</span></div>
-    <p>🎯 Target was: <span id="failTarget">0</span></p>
+    <p id="failInfo">🦌 Deer hunted: <span id="failProgress">0</span> / <span id="failTarget">15</span></p>
     <button class="overlay-btn" onclick="retryLevel()">🔄 Retry Level</button>
     <button class="overlay-btn red" onclick="restartGame()">🏠 Main Menu</button>
   </div>
 </div>
 
 <script>
-const TYPES = 6;
-const ANIMALS = ['🐯','🦏','🐘','🦚','🐒','🦅'];
+// =================================================================
+// KING OF JUNGLE — Game Engine
+// Level 1 fully compliant with KING_OF_JUNGLE_DESIGN_RULES.md
+// =================================================================
 
-// Each level: cols×rows = total boxes (30→50), iconSize px (bigger for less boxes)
-// Level 1: 6×5=30 boxes, 50px icons
-// Level 10: 10×5=50 boxes, 26px icons
+// All animals indexed 0-5
+// Zone I   (Levels 1-100):  0=Tiger🐯  1=Deer🦌  2=Goat🐐
+// Zone II+ (Levels 101+):   3=Eagle🦅  4=Snake🐍  5=Monkey🐒
+const ALL_ANIMALS  = ['🐯','🦌','🐐','🦅','🐍','🐒'];
+const ANIMAL_NAMES = ['Tiger','Deer','Goat','Eagle','Snake','Monkey'];
+
+// ===========================================================
+// FOOD CHAIN — per KING_OF_JUNGLE_DESIGN_RULES.md Section 3
+// When a predator is matched, it ALSO destroys adjacent prey
+// ===========================================================
+const FOOD_CHAIN = {
+  0: [1, 2],   // Tiger  hunts Deer and Goat
+  3: [4, 5],   // Eagle  hunts Snake and Monkey
+};
+
+// Zone icons for the zone bar
+const ZONE_ICONS = { 'I':'🌾', 'II':'🌴', 'III':'💧', 'IV':'⛰️', 'V':'🌺' };
+
+// =================================================================
+// LEVEL CONFIGS — following KING_OF_JUNGLE_DESIGN_RULES.md
+// Level 1: FULLY RULES-COMPLIANT (Zone I — Starter Plains)
+// Levels 2-10: will be updated zone-by-zone as game expands
+// =================================================================
 const LEVELS = [
-  {target:500,  moves:30, cols:6, rows:5,  iconSize:50}, // Lv1:  30 boxes
-  {target:1000, moves:28, cols:6, rows:6,  iconSize:46}, // Lv2:  36 boxes
-  {target:1800, moves:26, cols:7, rows:6,  iconSize:42}, // Lv3:  42 boxes
-  {target:2800, moves:24, cols:7, rows:6,  iconSize:40}, // Lv4:  42 boxes
-  {target:4000, moves:22, cols:7, rows:7,  iconSize:36}, // Lv5:  49 boxes
-  {target:5500, moves:20, cols:7, rows:7,  iconSize:34}, // Lv6:  49 boxes
-  {target:7500, moves:20, cols:8, rows:6,  iconSize:32}, // Lv7:  48 boxes
-  {target:10000,moves:18, cols:8, rows:6,  iconSize:30}, // Lv8:  48 boxes
-  {target:13000,moves:18, cols:10,rows:5,  iconSize:27}, // Lv9:  50 boxes
-  {target:17000,moves:16, cols:10,rows:5,  iconSize:25}, // Lv10: 50 boxes
+  // ✅ LEVEL 1 — Zone I Starter Plains — ALL RULES APPLIED
+  {
+    level:1, zone:'I', zoneName:'Starter Plains', biome:'Open Grasslands',
+    cols:6, rows:6,            // ✅ Rule: Grid always 6×6
+    iconSize:46,
+    moves:30,                  // ✅ Rule: Zone I start moves = 30
+    animalTypes:[0,1,2],       // ✅ Rule: Zone I = Tiger, Deer, Goat only
+    objective:'hunt',          // ✅ Rule: Hunt objective for Levels 1-50
+    huntAnimal:1,              // ✅ Hunt Deer (index 1)
+    huntCount:15,              // ✅ Rule example: Hunt 15 Deer
+    goalText:'Hunt 15 Deer before moves run out',
+    target:0,
+  },
+  // Levels 2-10 (score mode — to be upgraded per zone rules)
+  { level:2,  zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:46, moves:28, animalTypes:[0,1,2,3],     objective:'score', target:1000,  goalText:'Reach score 1,000'  },
+  { level:3,  zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:44, moves:26, animalTypes:[0,1,2,3],     objective:'score', target:1800,  goalText:'Reach score 1,800'  },
+  { level:4,  zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:42, moves:24, animalTypes:[0,1,2,3,4],   objective:'score', target:2800,  goalText:'Reach score 2,800'  },
+  { level:5,  zone:'I',  zoneName:'Starter Plains',  cols:7, rows:6, iconSize:38, moves:22, animalTypes:[0,1,2,3,4],   objective:'score', target:4000,  goalText:'Reach score 4,000'  },
+  { level:6,  zone:'I',  zoneName:'Starter Plains',  cols:7, rows:6, iconSize:36, moves:20, animalTypes:[0,1,2,3,4,5], objective:'score', target:5500,  goalText:'Reach score 5,500'  },
+  { level:7,  zone:'II', zoneName:'Thick Forest',     cols:7, rows:7, iconSize:34, moves:20, animalTypes:[0,1,2,3,4,5], objective:'score', target:7500,  goalText:'Reach score 7,500'  },
+  { level:8,  zone:'II', zoneName:'Thick Forest',     cols:8, rows:6, iconSize:30, moves:18, animalTypes:[0,1,2,3,4,5], objective:'score', target:10000, goalText:'Reach score 10,000' },
+  { level:9,  zone:'II', zoneName:'Thick Forest',     cols:8, rows:7, iconSize:28, moves:18, animalTypes:[0,1,2,3,4,5], objective:'score', target:13000, goalText:'Reach score 13,000' },
+  { level:10, zone:'II', zoneName:'Thick Forest',     cols:9, rows:6, iconSize:26, moves:16, animalTypes:[0,1,2,3,4,5], objective:'score', target:17000, goalText:'Reach score 17,000' },
 ];
 
 let board=[], score=0, movesLeft=0, level=1, bestScore=0;
-let ROWS=5, COLS=6;
+let ROWS=6, COLS=6;
 let isProcessing=false;
 let touchStartX=0, touchStartY=0, touchStartRow=-1, touchStartCol=-1;
 let selectedRow=-1, selectedCol=-1;
 let mouseStartX=0, mouseStartY=0;
+let huntProgress=0; // how many prey have been hunted this level
 
 function getConfig(lvl) {
-  const i = Math.min(lvl-1, LEVELS.length-1);
+  const i = Math.min(lvl - 1, LEVELS.length - 1);
   const c = LEVELS[i];
   if (lvl > LEVELS.length) {
-    return {target: c.target+(lvl-LEVELS.length)*5000, moves:16, cols:10, rows:5, iconSize:24};
+    return { ...c, level: lvl, target: c.target + (lvl - LEVELS.length) * 5000, moves: 16 };
   }
   return c;
 }
@@ -288,30 +358,66 @@ function initLevel() {
   const cfg = getConfig(level);
   ROWS = cfg.rows;
   COLS = cfg.cols;
-  score = 0; movesLeft = cfg.moves; isProcessing = false;
+  score = 0;
+  movesLeft = cfg.moves;
+  huntProgress = 0;
+  isProcessing = false;
   selectedRow = -1; selectedCol = -1;
+
+  // -- Stats bar --
   document.getElementById('levelDisplay').textContent = level;
   document.getElementById('score').textContent = 0;
   document.getElementById('moves').textContent = movesLeft;
   document.getElementById('bestScore').textContent = bestScore;
-  document.getElementById('targetDisplay').textContent = cfg.target;
   document.getElementById('progressFill').style.width = '0%';
-  document.getElementById('message').textContent = `🌿 Level ${level} — Rule the jungle!`;
 
-  // Update board grid columns & icon size
+  // -- Zone bar --
+  const zoneBar = document.getElementById('zoneBar');
+  if (zoneBar) zoneBar.textContent =
+    `Zone ${cfg.zone} — ${cfg.zoneName || ''} ${ZONE_ICONS[cfg.zone] || ''}`;
+
+  // -- Objective box --
+  const objLabel = document.getElementById('objectiveLabel');
+  const objText  = document.getElementById('objectiveText');
+  const huntCtr  = document.getElementById('huntCounter');
+  if (cfg.objective === 'hunt') {
+    if (objLabel) objLabel.textContent = '🎯 HUNT OBJECTIVE';
+    if (objText)  objText.textContent  = cfg.goalText;
+    if (huntCtr)  huntCtr.textContent  = `🦌 Hunted: 0 / ${cfg.huntCount}`;
+  } else {
+    if (objLabel) objLabel.textContent = '🎯 SCORE OBJECTIVE';
+    if (objText)  objText.textContent  = cfg.goalText;
+    if (huntCtr)  huntCtr.textContent  = `🏆 Score: 0 / ${cfg.target.toLocaleString()}`;
+  }
+
+  // -- Message --
+  document.getElementById('message').textContent =
+    `🌿 Level ${level} — ${cfg.goalText}`;
+
+  // -- Legend (only active animals) --
+  const legendEl = document.getElementById('legend');
+  if (legendEl) {
+    legendEl.innerHTML = cfg.animalTypes
+      .map(i => `<div class="legend-item">${ALL_ANIMALS[i]} ${ANIMAL_NAMES[i]}</div>`)
+      .join('');
+  }
+
+  // -- Board --
   const boardEl = document.getElementById('board');
   boardEl.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
 
-  createBoard();
-  while (findMatches().length > 0) createBoard();
+  createBoard(cfg.animalTypes);
+  while (findMatches().length > 0) createBoard(cfg.animalTypes);
   renderBoard(cfg.iconSize);
 }
 
-function createBoard() {
+function createBoard(animalTypes) {
   board = [];
-  for (let r=0; r<ROWS; r++) {
+  for (let r = 0; r < ROWS; r++) {
     board[r] = [];
-    for (let c=0; c<COLS; c++) board[r][c] = Math.floor(Math.random()*TYPES);
+    for (let c = 0; c < COLS; c++) {
+      board[r][c] = animalTypes[Math.floor(Math.random() * animalTypes.length)];
+    }
   }
 }
 
@@ -322,11 +428,12 @@ function renderBoard(iconSizeOverride) {
   el.innerHTML = '';
   el.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
 
-  for (let r=0; r<ROWS; r++) {
-    for (let c=0; c<COLS; c++) {
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const animalIdx = board[r][c];
       const d = document.createElement('div');
-      d.className = `candy candy-${board[r][c]}`;
-      d.textContent = ANIMALS[board[r][c]];
+      d.className = `candy candy-${Math.min(animalIdx, 5)}`;
+      d.textContent = ALL_ANIMALS[animalIdx] || '🐯';
       d.style.fontSize = iSize + 'px';
       d.dataset.r = r; d.dataset.c = c;
       d.addEventListener('touchstart', onTouchStart, {passive:false});
@@ -340,7 +447,7 @@ function renderBoard(iconSizeOverride) {
 
 function onTouchStart(e) {
   e.preventDefault();
-  if (isProcessing||movesLeft<=0) return;
+  if (isProcessing || movesLeft <= 0) return;
   const t = e.touches[0];
   touchStartX = t.clientX; touchStartY = t.clientY;
   touchStartRow = +this.dataset.r; touchStartCol = +this.dataset.c;
@@ -349,91 +456,93 @@ function onTouchStart(e) {
 
 function onTouchEnd(e) {
   e.preventDefault();
-  if (isProcessing||movesLeft<=0) return;
+  if (isProcessing || movesLeft <= 0) return;
   const t = e.changedTouches[0];
-  const dx = t.clientX-touchStartX, dy = t.clientY-touchStartY;
-  if (Math.abs(dx)<12 && Math.abs(dy)<12) return;
-  let dr=0, dc=0;
-  if (Math.abs(dx)>Math.abs(dy)) dc = dx>0?1:-1;
-  else dr = dy>0?1:-1;
-  const nr=touchStartRow+dr, nc=touchStartCol+dc;
-  if (nr>=0&&nr<ROWS&&nc>=0&&nc<COLS) doSwap(touchStartRow,touchStartCol,nr,nc);
+  const dx = t.clientX - touchStartX, dy = t.clientY - touchStartY;
+  if (Math.abs(dx) < 12 && Math.abs(dy) < 12) return;
+  let dr = 0, dc = 0;
+  if (Math.abs(dx) > Math.abs(dy)) dc = dx > 0 ? 1 : -1;
+  else dr = dy > 0 ? 1 : -1;
+  const nr = touchStartRow + dr, nc = touchStartCol + dc;
+  if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS)
+    doSwap(touchStartRow, touchStartCol, nr, nc);
   clearSelected();
 }
 
 function onMouseDown(e) {
-  if (isProcessing||movesLeft<=0) return;
+  if (isProcessing || movesLeft <= 0) return;
   mouseStartX = e.clientX; mouseStartY = e.clientY;
   touchStartRow = +this.dataset.r; touchStartCol = +this.dataset.c;
   setSelected(touchStartRow, touchStartCol);
 }
 
 function onMouseUp(e) {
-  if (isProcessing||movesLeft<=0) return;
-  const dx = e.clientX-mouseStartX, dy = e.clientY-mouseStartY;
-  if (Math.abs(dx)<5 && Math.abs(dy)<5) {
-    const r=+this.dataset.r, c=+this.dataset.c;
-    if (selectedRow===r && selectedCol===c) { clearSelected(); return; }
-    if (selectedRow>=0 && Math.abs(selectedRow-r)+Math.abs(selectedCol-c)===1) {
-      doSwap(selectedRow,selectedCol,r,c); clearSelected(); return;
+  if (isProcessing || movesLeft <= 0) return;
+  const dx = e.clientX - mouseStartX, dy = e.clientY - mouseStartY;
+  if (Math.abs(dx) < 5 && Math.abs(dy) < 5) {
+    const r = +this.dataset.r, c = +this.dataset.c;
+    if (selectedRow === r && selectedCol === c) { clearSelected(); return; }
+    if (selectedRow >= 0 && Math.abs(selectedRow - r) + Math.abs(selectedCol - c) === 1) {
+      doSwap(selectedRow, selectedCol, r, c); clearSelected(); return;
     }
-    setSelected(r,c); return;
+    setSelected(r, c); return;
   }
-  let dr=0, dc=0;
-  if (Math.abs(dx)>Math.abs(dy)) dc = dx>0?1:-1;
-  else dr = dy>0?1:-1;
-  const nr=touchStartRow+dr, nc=touchStartCol+dc;
-  if (nr>=0&&nr<ROWS&&nc>=0&&nc<COLS) doSwap(touchStartRow,touchStartCol,nr,nc);
+  let dr = 0, dc = 0;
+  if (Math.abs(dx) > Math.abs(dy)) dc = dx > 0 ? 1 : -1;
+  else dr = dy > 0 ? 1 : -1;
+  const nr = touchStartRow + dr, nc = touchStartCol + dc;
+  if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS)
+    doSwap(touchStartRow, touchStartCol, nr, nc);
   clearSelected();
 }
 
-function setSelected(r,c) {
-  clearSelected(); selectedRow=r; selectedCol=c;
-  getEl(r,c)?.classList.add('selected');
+function setSelected(r, c) {
+  clearSelected(); selectedRow = r; selectedCol = c;
+  getEl(r, c)?.classList.add('selected');
 }
 function clearSelected() {
-  if (selectedRow>=0) getEl(selectedRow,selectedCol)?.classList.remove('selected');
-  selectedRow=-1; selectedCol=-1;
+  if (selectedRow >= 0) getEl(selectedRow, selectedCol)?.classList.remove('selected');
+  selectedRow = -1; selectedCol = -1;
 }
-function getEl(r,c) { return document.querySelector(`[data-r="${r}"][data-c="${c}"]`); }
+function getEl(r, c) {
+  return document.querySelector(`[data-r="${r}"][data-c="${c}"]`);
+}
 
-function doSwap(r1,c1,r2,c2) {
-  isProcessing=true; clearSelected();
-  swapCells(r1,c1,r2,c2); renderBoard();
-  if (findMatches().length>0) {
+function doSwap(r1, c1, r2, c2) {
+  isProcessing = true; clearSelected();
+  swapCells(r1, c1, r2, c2); renderBoard();
+  if (findMatches().length > 0) {
     movesLeft--;
-    document.getElementById('moves').textContent=movesLeft;
-    setTimeout(()=>processMatches(), 300);
+    document.getElementById('moves').textContent = movesLeft;
+    setTimeout(() => processMatches(), 300);
   } else {
-    setTimeout(()=>{ swapCells(r1,c1,r2,c2); renderBoard(); isProcessing=false; }, 300);
+    setTimeout(() => { swapCells(r1, c1, r2, c2); renderBoard(); isProcessing = false; }, 300);
   }
 }
 
-function swapCells(r1,c1,r2,c2) {
-  let t=board[r1][c1]; board[r1][c1]=board[r2][c2]; board[r2][c2]=t;
+function swapCells(r1, c1, r2, c2) {
+  const t = board[r1][c1]; board[r1][c1] = board[r2][c2]; board[r2][c2] = t;
 }
 
 function findMatches() {
   const m = [];
-  // Horizontal
-  for (let r=0; r<ROWS; r++) {
-    for (let c=0; c<COLS-2; c++) {
-      const v=board[r][c];
-      if (v===board[r][c+1] && v===board[r][c+2]) {
-        const a=[{r,c}]; let x=c+1;
-        while (x<COLS && board[r][x]===v) { a.push({r,c:x}); x++; }
-        m.push(a); c=x-1;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS - 2; c++) {
+      const v = board[r][c];
+      if (v === board[r][c+1] && v === board[r][c+2]) {
+        const a = [{r,c}]; let x = c+1;
+        while (x < COLS && board[r][x] === v) { a.push({r, c:x}); x++; }
+        m.push(a); c = x - 1;
       }
     }
   }
-  // Vertical
-  for (let c=0; c<COLS; c++) {
-    for (let r=0; r<ROWS-2; r++) {
-      const v=board[r][c];
-      if (v===board[r+1][c] && v===board[r+2][c]) {
-        const a=[{r,c}]; let y=r+1;
-        while (y<ROWS && board[y][c]===v) { a.push({r:y,c}); y++; }
-        m.push(a); r=y-1;
+  for (let c = 0; c < COLS; c++) {
+    for (let r = 0; r < ROWS - 2; r++) {
+      const v = board[r][c];
+      if (v === board[r+1][c] && v === board[r+2][c]) {
+        const a = [{r,c}]; let y = r+1;
+        while (y < ROWS && board[y][c] === v) { a.push({r:y, c}); y++; }
+        m.push(a); r = y - 1;
       }
     }
   }
@@ -441,72 +550,158 @@ function findMatches() {
 }
 
 function processMatches() {
+  const cfg = getConfig(level);
   const matches = findMatches();
-  if (!matches.length) { isProcessing=false; checkStatus(); return; }
-  let cnt=0;
-  const msgs=['🐯 Tiger Roar!','🦏 Rhino Charge!','🐘 Elephant Stomp!','🦚 Peacock Dance!','🐒 Monkey Swing!','🦅 Eagle Strike!'];
+  if (!matches.length) { isProcessing = false; checkStatus(); return; }
+
+  let totalCnt = 0;
   const firstType = board[matches[0][0].r][matches[0][0].c];
-  matches.forEach(m => {
-    cnt += m.length;
-    m.forEach(({r,c}) => {
-      const el=getEl(r,c);
-      if (el) { el.classList.add('removing'); spawnParticles(el); }
-    });
+  const cellsToRemove = new Set();
+
+  matches.forEach(match => {
+    totalCnt += match.length;
+    match.forEach(({r,c}) => cellsToRemove.add(`${r},${c}`));
+
+    // ============================================================
+    // FOOD CHAIN LOGIC — per KING_OF_JUNGLE_DESIGN_RULES.md §3
+    // When a predator tile is matched, it ALSO destroys adjacent
+    // prey tiles (e.g. Tiger match → nearby Deer & Goat destroyed)
+    // ============================================================
+    const matchType = board[match[0].r][match[0].c];
+    if (FOOD_CHAIN[matchType]) {
+      const preyTypes = FOOD_CHAIN[matchType];
+      match.forEach(({r, c}) => {
+        [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(([nr, nc]) => {
+          if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+            if (preyTypes.includes(board[nr][nc])) {
+              cellsToRemove.add(`${nr},${nc}`);
+            }
+          }
+        });
+      });
+    }
   });
-  const pts = cnt*10*matches.length;
-  score += pts; updateScore();
-  if (matches.length>1) showMsg(`🔥 COMBO x${matches.length}! +${pts}`, true);
-  else showMsg(`${msgs[firstType]} +${pts}`);
-  setTimeout(()=>{
-    matches.forEach(m => m.forEach(({r,c}) => { board[r][c]=-1; }));
+
+  // ============================================================
+  // HUNT OBJECTIVE TRACKING (Level 1 — Hunt 15 Deer)
+  // Count every huntAnimal tile destroyed this turn
+  // ============================================================
+  if (cfg.objective === 'hunt') {
+    cellsToRemove.forEach(key => {
+      const [r, c] = key.split(',').map(Number);
+      if (board[r][c] === cfg.huntAnimal) huntProgress++;
+    });
+  }
+
+  // Animate removal
+  cellsToRemove.forEach(key => {
+    const [r, c] = key.split(',').map(Number);
+    const el = getEl(r, c);
+    if (el) { el.classList.add('removing'); spawnParticles(el); }
+  });
+
+  const pts = totalCnt * 10 * matches.length;
+  score += pts;
+  updateScore();
+
+  const msgs = {
+    0: '🐯 Tiger Hunts! Prey destroyed!',
+    1: '🦌 Deer herd scattered!',
+    2: '🐐 Goats flee in panic!',
+    3: '🦅 Eagle strikes from sky!',
+    4: '🐍 Snake slithers away!',
+    5: '🐒 Monkey swings to safety!',
+  };
+  if (matches.length > 1) showMsg(`🔥 COMBO x${matches.length}! +${pts}`, true);
+  else showMsg(msgs[firstType] || `✨ Match! +${pts}`);
+
+  setTimeout(() => {
+    cellsToRemove.forEach(key => {
+      const [r, c] = key.split(',').map(Number);
+      board[r][c] = -1;
+    });
     drop();
-    setTimeout(()=>{ fill(); renderBoard(); setTimeout(()=>processMatches(), 300); }, 300);
+    setTimeout(() => {
+      fill(cfg.animalTypes);
+      renderBoard();
+      setTimeout(() => processMatches(), 300);
+    }, 300);
   }, 300);
 }
 
 function drop() {
-  for (let c=0; c<COLS; c++) {
-    let e=ROWS-1;
-    for (let r=ROWS-1; r>=0; r--) {
-      if (board[r][c]!==-1) { if (r!==e){board[e][c]=board[r][c];board[r][c]=-1;} e--; }
+  for (let c = 0; c < COLS; c++) {
+    let e = ROWS - 1;
+    for (let r = ROWS - 1; r >= 0; r--) {
+      if (board[r][c] !== -1) {
+        if (r !== e) { board[e][c] = board[r][c]; board[r][c] = -1; }
+        e--;
+      }
     }
   }
 }
 
-function fill() {
-  for (let r=0; r<ROWS; r++)
-    for (let c=0; c<COLS; c++)
-      if (board[r][c]===-1) board[r][c]=Math.floor(Math.random()*TYPES);
+function fill(animalTypes) {
+  const types = animalTypes || getConfig(level).animalTypes;
+  for (let r = 0; r < ROWS; r++)
+    for (let c = 0; c < COLS; c++)
+      if (board[r][c] === -1)
+        board[r][c] = types[Math.floor(Math.random() * types.length)];
 }
 
 function updateScore() {
   const cfg = getConfig(level);
   document.getElementById('score').textContent = score;
-  const pct = Math.min((score/cfg.target)*100, 100);
-  document.getElementById('progressFill').style.width = pct+'%';
-  if (score>bestScore) { bestScore=score; document.getElementById('bestScore').textContent=bestScore; }
+
+  const huntCtr = document.getElementById('huntCounter');
+  if (cfg.objective === 'hunt') {
+    const pct = Math.min((huntProgress / cfg.huntCount) * 100, 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    if (huntCtr) huntCtr.textContent = `🦌 Hunted: ${huntProgress} / ${cfg.huntCount}`;
+  } else {
+    const pct = Math.min((score / cfg.target) * 100, 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    if (huntCtr) huntCtr.textContent = `🏆 Score: ${score.toLocaleString()} / ${cfg.target.toLocaleString()}`;
+  }
+
+  if (score > bestScore) {
+    bestScore = score;
+    document.getElementById('bestScore').textContent = bestScore;
+  }
 }
 
 function checkStatus() {
   const cfg = getConfig(level);
-  if (score>=cfg.target) setTimeout(showLevelComplete, 400);
-  else if (movesLeft<=0) setTimeout(showGameOver, 400);
+  const won = cfg.objective === 'hunt'
+    ? huntProgress >= cfg.huntCount
+    : score >= cfg.target;
+
+  if (won) setTimeout(showLevelComplete, 400);
+  else if (movesLeft <= 0) setTimeout(showGameOver, 400);
 }
 
 function showLevelComplete() {
-  const bonus=movesLeft*50; score+=bonus; updateScore();
-  document.getElementById('completedLevel').textContent=level;
-  document.getElementById('levelScore').textContent=score;
-  document.getElementById('bonusMoves').textContent=movesLeft;
-  document.getElementById('bonusPts').textContent=bonus;
+  const bonus = movesLeft * 50;
+  score += bonus; updateScore();
+  document.getElementById('completedLevel').textContent = level;
+  document.getElementById('levelScore').textContent = score;
+  document.getElementById('bonusMoves').textContent = movesLeft;
+  document.getElementById('bonusPts').textContent = bonus;
   document.getElementById('lvlOverlay').classList.add('active');
 }
 
 function showGameOver() {
   const cfg = getConfig(level);
-  document.getElementById('failedLevel').textContent=level;
-  document.getElementById('finalScore').textContent=score;
-  document.getElementById('failTarget').textContent=cfg.target;
+  document.getElementById('failedLevel').textContent = level;
+  document.getElementById('finalScore').textContent = score;
+  const failInfo = document.getElementById('failInfo');
+  const failProg = document.getElementById('failProgress');
+  const failTgt  = document.getElementById('failTarget');
+  if (cfg.objective === 'hunt') {
+    if (failInfo) failInfo.innerHTML = '🦌 Deer hunted: <span id="failProgress">' + huntProgress + '</span> / <span id="failTarget">' + cfg.huntCount + '</span>';
+  } else {
+    if (failInfo) failInfo.innerHTML = '🏆 Score: <span id="failProgress">' + score + '</span> / <span id="failTarget">' + cfg.target + '</span>';
+  }
   document.getElementById('overOverlay').classList.add('active');
 }
 
@@ -521,27 +716,27 @@ function retryLevel() {
 function restartGame() {
   document.getElementById('lvlOverlay').classList.remove('active');
   document.getElementById('overOverlay').classList.remove('active');
-  level=1; initLevel();
+  level = 1; initLevel();
 }
 
 function showMsg(txt, combo=false) {
   const el = document.getElementById('message');
   el.textContent = txt;
-  if (combo) { el.classList.add('combo'); setTimeout(()=>el.classList.remove('combo'),500); }
+  if (combo) { el.classList.add('combo'); setTimeout(() => el.classList.remove('combo'), 500); }
 }
 
 function spawnParticles(el) {
   const rect = el.getBoundingClientRect();
   const icons = ['🌿','🍃','✨','🌱'];
-  for (let i=0; i<3; i++) {
+  for (let i = 0; i < 3; i++) {
     const p = document.createElement('div');
     p.className = 'particles';
-    p.textContent = icons[Math.floor(Math.random()*icons.length)];
-    p.style.left = rect.left+rect.width/2+'px';
-    p.style.top  = rect.top+rect.height/2+'px';
-    p.style.transform = `translateX(${(Math.random()-0.5)*70}px)`;
+    p.textContent = icons[Math.floor(Math.random() * icons.length)];
+    p.style.left = rect.left + rect.width / 2 + 'px';
+    p.style.top  = rect.top + rect.height / 2 + 'px';
+    p.style.transform = `translateX(${(Math.random() - 0.5) * 70}px)`;
     document.body.appendChild(p);
-    setTimeout(()=>p.remove(), 1000);
+    setTimeout(() => p.remove(), 1000);
   }
 }
 
