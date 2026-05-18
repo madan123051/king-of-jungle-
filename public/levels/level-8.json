@@ -1,0 +1,8 @@
+{
+  "level": 8,
+  "cols": 8,
+  "rows": 7,
+  "target": 10000,
+  "moves": 18,
+  "iconSize": 30
+}
