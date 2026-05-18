@@ -1,30 +1,40 @@
 # Candyboom / King of Jungle
 
-Modernized working scaffold with:
-- Landing page auth modal toggle (Google/Facebook/Guest)
-- Firebase callable backend for profile/progress/invite
-- Game page wired with profile sync, cloud progress save, and share invite link
+This repository now includes a working Firebase backend scaffold for user auth/profile, level progress saving, and referral code generation.
 
-## Configure Firebase (required)
-Update Firebase config in:
-- `index.html` (module script firebaseConfig)
-- `game.html` (module script firebaseConfig)
+## What is included
 
-## Backend callables
-- `createOrInitUserProfile`
-- `saveLevelResult`
-- `fetchDashboardData`
-- `generateReferralCode`
-- `redeemReferralCode`
+- Static game frontend (`index.html`, `game.html`)
+- Firebase Cloud Functions backend in `functions/src/index.js`
+- Firestore security rules (`firestore.rules`)
+- Firestore indexes (`firestore.indexes.json`)
+- Firebase project config (`firebase.json`)
 
-## Deploy
-```bash
-cd functions && npm install
-cd ..
-firebase deploy --only functions,firestore:rules,firestore:indexes
-```
+## Backend functions
 
-## Notes
-- Login button on landing now opens auth modal.
-- Invite link is generated for logged-in user.
-- Game saves level result to Firestore on level clear.
+- `createOrInitUserProfile` (callable)
+- `saveLevelResult` (callable)
+- `fetchDashboardData` (callable)
+- `generateReferralCode` (callable)
+
+## Quick start
+
+1. Install Firebase CLI and login.
+2. Install dependencies:
+   ```bash
+   cd functions
+   npm install
+   ```
+3. From repo root, deploy:
+   ```bash
+   firebase deploy --only functions,firestore:rules,firestore:indexes
+   ```
+
+## Data model
+
+- `/users/{uid}`
+  - `uid`, `currentLevel`, `totalScore`, `boosters`, timestamps
+- `/users/{uid}/levels/{level}`
+  - `level`, `highScore`, `stars`, `updatedAt`
+- `/referrals/{code}`
+  - `ownerUid`, `redeemedBy[]`, `createdAt`

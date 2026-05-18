@@ -90,31 +90,3 @@ exports.generateReferralCode = onCall(async (req) => {
   });
   return { ok: true, code };
 });
-
-
-exports.redeemReferralCode = onCall(async (req) => {
-  const uid = requireAuth(req);
-  const { code } = req.data || {};
-  if (!code || typeof code !== 'string') throw new HttpsError('invalid-argument', 'Code required');
-
-  const ref = db.collection(REFERRALS).doc(code.trim());
-  const userRef = db.collection(USERS).doc(uid);
-
-  await db.runTransaction(async (tx) => {
-    const [refSnap, userSnap] = await Promise.all([tx.get(ref), tx.get(userRef)]);
-    if (!refSnap.exists) throw new HttpsError('not-found', 'Referral not found');
-    const data = refSnap.data();
-    if (data.ownerUid === uid) throw new HttpsError('failed-precondition', 'Cannot redeem own code');
-    const redeemedBy = data.redeemedBy || [];
-    if (redeemedBy.includes(uid)) throw new HttpsError('already-exists', 'Already redeemed');
-
-    tx.set(ref, { redeemedBy: [...redeemedBy, uid], updatedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
-    tx.set(userRef, { boosters: { extraMoves: ((userSnap.data()?.boosters?.extraMoves) || 0) + 5 }, updatedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
-
-    const ownerRef = db.collection(USERS).doc(data.ownerUid);
-    const ownerSnap = await tx.get(ownerRef);
-    tx.set(ownerRef, { boosters: { extraMoves: ((ownerSnap.data()?.boosters?.extraMoves) || 0) + 5 }, updatedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
-  });
-
-  return { ok: true, reward: '5 Extra Moves' };
-});
