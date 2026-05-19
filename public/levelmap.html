@@ -311,6 +311,50 @@ body{
   box-shadow:0 0 20px rgba(240,192,64,.4);
 }
 .modal-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.modal-avatar{position:relative;cursor:pointer;}
+.avatar-cam{
+  position:absolute;bottom:0;right:0;
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(240,192,64,.95);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;border:2px solid #0a1a0a;
+  box-shadow:0 2px 8px rgba(0,0,0,.5);
+  transition:transform .2s;
+}
+.avatar-cam:active{transform:scale(.85);}
+.name-edit-row{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-bottom:4px;
+}
+.modal-name{text-align:center;font-size:20px;font-weight:800;color:var(--gold);cursor:pointer;}
+.name-edit-btn{
+  background:rgba(240,192,64,.15);border:1px solid rgba(240,192,64,.4);
+  color:var(--gold);border-radius:8px;padding:4px 10px;font-size:13px;
+  cursor:pointer;transition:background .2s;
+}
+.name-edit-btn:active{background:rgba(240,192,64,.3);}
+.name-input-row{
+  display:none;align-items:center;gap:8px;justify-content:center;
+  margin-bottom:4px;
+}
+.name-input-row.show{display:flex;}
+.name-input{
+  background:rgba(255,255,255,.08);border:1.5px solid rgba(240,192,64,.5);
+  color:#fff;border-radius:10px;padding:8px 14px;font-size:16px;
+  text-align:center;width:180px;outline:none;font-weight:700;
+}
+.name-save-btn{
+  background:var(--gold);border:none;color:#0a1a0a;border-radius:10px;
+  padding:8px 14px;font-size:14px;font-weight:800;cursor:pointer;
+}
+.btn-share{
+  background:linear-gradient(135deg,#1a6bd6,#1244a0);
+  border:none;color:#fff;border-radius:14px;padding:14px;
+  font-size:15px;font-weight:700;cursor:pointer;
+  box-shadow:0 4px 16px rgba(18,68,160,.5);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-share:active{transform:scale(.97);}
 .modal-name{text-align:center;font-size:20px;font-weight:800;color:var(--gold);margin-bottom:4px;}
 .modal-email{text-align:center;font-size:12px;color:#777;margin-bottom:20px;}
 .modal-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
@@ -360,8 +404,23 @@ body{
 <div class="modal-bg" id="profileModal" onclick="if(event.target===this)closeProfile()">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-avatar" id="mAvatar">🦁</div>
-    <div class="modal-name" id="mName">Guest</div>
+    <!-- hidden file input for avatar -->
+    <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarFile(this)">
+
+    <div class="modal-avatar" id="mAvatar" onclick="triggerAvatarUpload()">🦁
+      <div class="avatar-cam">📷</div>
+    </div>
+
+    <!-- name display + edit -->
+    <div class="name-edit-row">
+      <div class="modal-name" id="mName">Guest</div>
+      <button class="name-edit-btn" onclick="toggleNameEdit()">✏️ Edit</button>
+    </div>
+    <div class="name-input-row" id="nameInputRow">
+      <input class="name-input" id="nameInput" type="text" maxlength="20" placeholder="Your name">
+      <button class="name-save-btn" onclick="saveName()">Save</button>
+    </div>
+
     <div class="modal-email" id="mEmail"></div>
     <div class="modal-stats">
       <div class="stat-box"><div class="stat-val" id="mLevel">1</div><div class="stat-lbl">Current Level</div></div>
@@ -370,6 +429,7 @@ body{
       <div class="stat-box"><div class="stat-val" id="mStars">0</div><div class="stat-lbl">Total Stars</div></div>
     </div>
     <div class="modal-btns">
+      <button class="btn-share" onclick="shareProfile()">🔗 Share Profile</button>
       <button class="btn-close-modal" onclick="closeProfile()">▶ Continue Playing</button>
       <button class="btn-logout" onclick="doLogout()">↩ Logout</button>
     </div>
@@ -739,10 +799,107 @@ function openProfile(){
   document.getElementById('mBest').textContent = best.toLocaleString();
   document.getElementById('mDone').textContent = done;
   document.getElementById('mStars').textContent = totalStars;
-  if(photo) document.getElementById('mAvatar').innerHTML = `<img src="${photo}" alt="">`;
+  // reset name input row
+  document.getElementById('nameInputRow').classList.remove('show');
+  document.getElementById('nameInput').value = name;
+  // avatar
+  const avatarEl = document.getElementById('mAvatar');
+  if(photo){
+    avatarEl.innerHTML = `<img src="${photo}" alt=""><div class="avatar-cam">📷</div>`;
+  } else {
+    avatarEl.innerHTML = `🦁<div class="avatar-cam">📷</div>`;
+  }
   document.getElementById('profileModal').classList.add('show');
 }
-function closeProfile(){ document.getElementById('profileModal').classList.remove('show'); }
+
+function closeProfile(){
+  document.getElementById('profileModal').classList.remove('show');
+}
+
+/* ── AVATAR UPLOAD + WebP convert ── */
+function triggerAvatarUpload(){
+  document.getElementById('avatarFileInput').click();
+}
+
+function handleAvatarFile(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      // Convert to WebP via canvas (max 200×200px for fast load)
+      const canvas = document.createElement('canvas');
+      const MAX = 200;
+      let w = img.width, h = img.height;
+      if(w > h){ h = Math.round(h*(MAX/w)); w=MAX; }
+      else { w = Math.round(w*(MAX/h)); h=MAX; }
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const webpData = canvas.toDataURL('image/webp', 0.82);
+      localStorage.setItem('koj_photo_url', webpData);
+      // update header + modal
+      document.getElementById('hdrAvatar').innerHTML = `<img src="${webpData}" alt="">`;
+      const avatarEl = document.getElementById('mAvatar');
+      avatarEl.innerHTML = `<img src="${webpData}" alt=""><div class="avatar-cam">📷</div>`;
+      showToast('✅ Profile photo updated!');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value = ''; // reset so same file can be re-selected
+}
+
+/* ── NAME EDIT ── */
+function toggleNameEdit(){
+  const row = document.getElementById('nameInputRow');
+  const isShown = row.classList.contains('show');
+  if(!isShown){
+    const name = localStorage.getItem('koj_player_name') || 'Guest';
+    document.getElementById('nameInput').value = name;
+    row.classList.add('show');
+    setTimeout(()=>document.getElementById('nameInput').focus(), 50);
+  } else {
+    row.classList.remove('show');
+  }
+}
+
+function saveName(){
+  const inp = document.getElementById('nameInput');
+  const newName = inp.value.trim();
+  if(!newName){ showToast('❌ Name cannot be empty'); return; }
+  localStorage.setItem('koj_player_name', newName);
+  document.getElementById('mName').textContent = newName;
+  document.getElementById('nameInputRow').classList.remove('show');
+  updateHeader();
+  showToast('✅ Name saved: ' + newName);
+}
+
+/* ── SHARE PROFILE ── */
+function shareProfile(){
+  const name = localStorage.getItem('koj_player_name') || 'Guest';
+  const best = parseInt(localStorage.getItem('koj_best')||'0');
+  let done=0, totalStars=0;
+  for(let i=1;i<=100;i++){
+    const s = getStars(i);
+    if(s>0){done++;totalStars+=s;}
+    else if(i < currentLevel) done++;
+  }
+  const text = `🦁 ${name} is playing King of Jungle!
+🏆 Level ${currentLevel} | ⭐ ${totalStars} Stars | 🎯 ${done} Levels Done | 🥇 Best Score: ${best.toLocaleString()}
+
+Play now: https://candyboom.wildsaura.com`;
+  if(navigator.share){
+    navigator.share({ title:'King of Jungle – My Progress', text, url:'https://candyboom.wildsaura.com' })
+      .catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(text).then(()=>{
+      showToast('📋 Profile copied to clipboard!');
+    }).catch(()=> showToast('Share not supported on this browser'));
+  }
+}
+
 function doLogout(){
   ['koj_player_name','koj_guest_mode','koj_photo_url','koj_email'].forEach(k=>localStorage.removeItem(k));
   location.href = 'game.html';
