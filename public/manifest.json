@@ -2,7 +2,7 @@
   "name": "King of Jungle – Candy Boom",
   "short_name": "CandyBoom",
   "description": "Match jungle animals in this wild candy crush adventure!",
-  "start_url": "/levelmap.html",
+  "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
