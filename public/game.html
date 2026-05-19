@@ -786,6 +786,18 @@ class JungleAudioEngine {
 const jungleAudio = new JungleAudioEngine();
 jungleAudio.setButton();
 
+// ═══ GLOBAL STATE ═══
+let board=[], score=0, movesLeft=0, level=1, bestScore=0;
+let ROWS=5, COLS=5;
+let isProcessing=false;
+let touchStartX=0, touchStartY=0, touchStartRow=-1, touchStartCol=-1;
+let selectedRow=-1, selectedCol=-1;
+let mouseStartX=0, mouseStartY=0;
+let huntProgress=0;
+let lastSpawnedCells = new Set();
+let lastDroppedCells = new Set();
+let animationsEnabled = true;
+
 // ═══ USER'S EXACT LEVEL FORMULA ═══
 // Grid: 5×5 (L1-20), 6×6 (L21-40), 7×7 (L41-60), 8×8 (L61+)
 // Types: 4 (L1-16), 5 (L17-32), 6 (L33-48), 7 (L49-64), 8 (L65+)
@@ -822,8 +834,6 @@ function getConfig(lvl) {
     goalText: 'Score ' + (lvl * 80) + ' points',
     zone, zoneName: zoneNames[zone] || 'Wilderness',
   };
-};
-  return c;
 }
 
 
