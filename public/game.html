@@ -553,12 +553,9 @@ window.setServerCurrentLevel = (lvl)=>{};
 // Level 1 follows KING_OF_JUNGLE_DESIGN_RULES.md strictly:
 // 6×6 board, Zone I animals only, 30 moves, realistic Tiger hunts.
 // =================================================================
-const ALL_ANIMALS  = ['🐯','🦌','🐐','🦅','🐍','🐒'];
-const ANIMAL_NAMES = ['Tiger','Deer','Goat','Eagle','Snake','Monkey'];
-const FOOD_CHAIN = {
-  0: [1, 2],   // Tiger hunts Deer and Goat
-  3: [4, 5],   // Eagle hunts Snake and Monkey
-};
+const ALL_ANIMALS  = ['🐯','🦌','🐐','🦅','🐍','🐒','🐘','🦚'];
+const ANIMAL_NAMES = ['Tiger','Deer','Goat','Eagle','Snake','Monkey','Elephant','Peacock'];
+// FOOD_CHAIN removed — simple match-3 logic
 const ZONE_ICONS = { 'I':'🌾', 'II':'🌴', 'III':'💧', 'IV':'⛰️', 'V':'🌺' };
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 const AUDIO_PREF_KEY = 'koj_audio_enabled';
@@ -789,65 +786,43 @@ class JungleAudioEngine {
 const jungleAudio = new JungleAudioEngine();
 jungleAudio.setButton();
 
-// A hand-tuned Level 1 opener: no automatic matches on load, but several
-// meaningful Tiger setups exist so the player must swipe and plan hunts.
-const LEVEL_ONE_START_BOARD = [
-  [0,1,2,0,1,2],
-  [2,0,1,2,0,1],
-  [1,2,0,1,2,0],
-  [0,2,1,0,1,2],
-  [1,0,2,1,0,2],
-  [2,1,0,2,1,0],
-];
-
-// =================================================================
-// LEVEL CONFIGS — following KING_OF_JUNGLE_DESIGN_RULES.md
-// Level 1: FULLY RULES-COMPLIANT (Zone I — Starter Plains)
-// Levels 2-10: will be updated zone-by-zone as game expands
-// =================================================================
-const LEVELS = [
-  {
-    level:1, zone:'I', zoneName:'Starter Plains', biome:'Open Grasslands',
-    cols:6, rows:6,            // ✅ Rule: Grid always 6×6
-    iconSize:46,
-    moves:30,                  // ✅ Rule: Zone I start moves = 30
-    animalTypes:[0,1,2],       // ✅ Rule: Zone I = Tiger, Deer, Goat only
-    objective:'hunt',          // ✅ Rule: Hunt objective for Levels 1-50
-    huntAnimal:1,              // ✅ Hunt Deer (index 1)
-    huntCount:15,              // ✅ Rule example: Hunt 15 Deer
-    goalText:'Hunt 15 Deer with Tiger attacks before moves run out',
-    target:0,
-    openingBoard: LEVEL_ONE_START_BOARD,
-  },
-  { level:2,  zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:46, moves:28, animalTypes:[0,1,2],       objective:'score', target:1000,  goalText:'Reach score 1,000'  },
-  { level:3,  zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:44, moves:26, animalTypes:[0,1,2],       objective:'score', target:1800,  goalText:'Reach score 1,800'  },
-  { level:4,  zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:42, moves:24, animalTypes:[0,1,2],       objective:'score', target:2800,  goalText:'Reach score 2,800'  },
-  { level:5,  zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:40, moves:22, animalTypes:[0,1,2],       objective:'score', target:4000,  goalText:'Reach score 4,000'  },
-  { level:6,  zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:38, moves:20, animalTypes:[0,1,2],       objective:'score', target:5500,  goalText:'Reach score 5,500'  },
-  { level:7,  zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:38, moves:20, animalTypes:[0,1,2],       objective:'score', target:7500,  goalText:'Reach score 7,500'  },
-  { level:8,  zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:38, moves:18, animalTypes:[0,1,2],       objective:'score', target:10000, goalText:'Reach score 10,000' },
-  { level:9,  zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:38, moves:18, animalTypes:[0,1,2],       objective:'score', target:13000, goalText:'Reach score 13,000' },
-  { level:10, zone:'I',  zoneName:'Starter Plains',  cols:6, rows:6, iconSize:38, moves:16, animalTypes:[0,1,2],       objective:'score', target:17000, goalText:'Reach score 17,000' },
-];
-
-let board=[], score=0, movesLeft=0, level=1, bestScore=0;
-window.setServerCurrentLevel = (lvl) => { if (Number.isInteger(lvl) && lvl > level) { level = lvl; initLevel(); } };
-let ROWS=6, COLS=6;
-let isProcessing=false;
-let touchStartX=0, touchStartY=0, touchStartRow=-1, touchStartCol=-1;
-let selectedRow=-1, selectedCol=-1;
-let mouseStartX=0, mouseStartY=0;
-let huntProgress=0;
-let lastSpawnedCells = new Set();
-let lastDroppedCells = new Set();
-let animationsEnabled = true;
-const MAX_AUTO_CASCADES = 2;
-const CASCADE_PAUSE_MS = 500;
+// ═══ USER'S EXACT LEVEL FORMULA ═══
+// Grid: 5×5 (L1-20), 6×6 (L21-40), 7×7 (L41-60), 8×8 (L61+)
+// Types: 4 (L1-16), 5 (L17-32), 6 (L33-48), 7 (L49-64), 8 (L65+)
+// Score target: level × 80
+// Moves: max(10, 22 - floor(level/5))
 
 function getConfig(lvl) {
-  const i = Math.min(lvl - 1, LEVELS.length - 1);
-  const c = LEVELS[i];
-  if (lvl > LEVELS.length) return { ...c, level:lvl, target:c.target + (lvl - LEVELS.length) * 5000, moves:16 };
+  let r, c;
+  if (lvl <= 20) { r = 5; c = 5; }
+  else if (lvl <= 40) { r = 6; c = 6; }
+  else if (lvl <= 60) { r = 7; c = 7; }
+  else { r = 8; c = 8; }
+
+  let numTypes;
+  if (lvl <= 16) numTypes = 4;
+  else if (lvl <= 32) numTypes = 5;
+  else if (lvl <= 48) numTypes = 6;
+  else if (lvl <= 64) numTypes = 7;
+  else numTypes = 8;
+
+  const types = [];
+  for (let i = 0; i < numTypes; i++) types.push(i);
+
+  const iconSize = r <= 5 ? 46 : r <= 6 ? 42 : r <= 7 ? 38 : 34;
+  const zone = lvl <= 20 ? 'I' : lvl <= 40 ? 'II' : lvl <= 60 ? 'III' : lvl <= 80 ? 'IV' : 'V';
+  const zoneNames = { 'I':'Starter Plains', 'II':'Dense Forest', 'III':'River Delta', 'IV':'Mountain Peak', 'V':'Royal Garden' };
+
+  return {
+    level: lvl, rows: r, cols: c, iconSize,
+    animalTypes: types,
+    moves: Math.max(10, 22 - Math.floor(lvl / 5)),
+    target: lvl * 80,
+    objective: 'score',
+    goalText: 'Score ' + (lvl * 80) + ' points',
+    zone, zoneName: zoneNames[zone] || 'Wilderness',
+  };
+};
   return c;
 }
 
@@ -884,27 +859,21 @@ function initLevel() {
   document.getElementById('progressFill').style.width = '0%';
   document.getElementById('zoneBar').textContent = `Zone ${cfg.zone} — ${cfg.zoneName || ''} ${ZONE_ICONS[cfg.zone] || ''}`;
   document.getElementById('message').textContent = `🌿 Level ${level} — ${cfg.goalText}`;
-  document.getElementById('hint').textContent = cfg.tutorialHint || '👆 Swipe adjacent animals to create jungle strikes';
+  document.getElementById('hint').textContent = '👆 Swipe adjacent animals to match 3 or more!';
 
   const objLabel = document.getElementById('objectiveLabel');
   const objText  = document.getElementById('objectiveText');
   const huntCtr  = document.getElementById('huntCounter');
-  if (cfg.objective === 'hunt') {
-    objLabel.textContent = '🎯 REAL HUNT OBJECTIVE';
-    objText.textContent = cfg.goalText;
-    huntCtr.textContent = `🦌 Hunted: 0 / ${cfg.huntCount}`;
-  } else {
-    objLabel.textContent = '🎯 SCORE OBJECTIVE';
-    objText.textContent = cfg.goalText;
-    huntCtr.textContent = `🏆 Score: 0 / ${cfg.target.toLocaleString()}`;
-  }
+  objLabel.textContent = '🎯 SCORE OBJECTIVE';
+  objText.textContent = cfg.goalText;
+  huntCtr.textContent = '🏆 Score: 0 / ' + cfg.target;
 
   const legendEl = document.getElementById('legend');
   legendEl.innerHTML = cfg.animalTypes.map(i => `<div class="legend-item">${ALL_ANIMALS[i]} ${ANIMAL_NAMES[i]}</div>`).join('');
   const boardEl = document.getElementById('board');
   boardEl.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
 
-  createBoard(cfg.animalTypes, cfg.openingBoard);
+  createBoard(cfg.animalTypes);
   while (findMatches().length > 0) createBoard(cfg.animalTypes);
   renderBoard(cfg.iconSize, true);
   updateAnimationToggleUi();
@@ -1035,7 +1004,7 @@ function doSwap(r1, c1, r2, c2) {
     setTimeout(() => processMatches(true), 280);
   } else {
     jungleAudio.play('invalid', pan);
-    showMsg('🌿 No hunt path there — try another swipe.');
+    showMsg('❌ No match!');
     setTimeout(() => {
       markCells([[r1,c1],[r2,c2]], 'invalid');
       swapCells(r1, c1, r2, c2); renderBoard();
@@ -1080,15 +1049,7 @@ function findMatches() {
       }
     }
   }
-  for (let r = 0; r < ROWS - 1; r++) {
-    for (let c = 0; c < COLS - 1; c++) {
-      const v = board[r][c];
-      if (v < 0) continue;
-      if (board[r][c+1] === v && board[r+1][c] === v && board[r+1][c+1] === v) {
-        matches.push({ type:v, shape:'box', cells:[{r,c},{r,c:c+1},{r:r+1,c},{r:r+1,c:c+1}] });
-      }
-    }
-  }
+  // Box matching removed — user's code only has horizontal + vertical
   return mergeIntersections(matches);
 }
 
@@ -1123,107 +1084,34 @@ function mergeIntersections(matches) {
 
 function cellKey({r, c}) { return `${r},${c}`; }
 
-function processMatches(playerTriggered=false, cascadeDepth=0) {
+function processMatches(playerTriggered=false) {
   const cfg = getConfig(level);
   const matches = findMatches();
   if (!matches.length) { isProcessing = false; ensurePlayableBoard(); checkStatus(); return; }
 
-  let totalCnt = 0;
-  const firstType = matches[0].type;
+  // ═══ USER'S EXACT LOGIC: Simple same-type match, +10 per cell ═══
   const cellsToRemove = new Set();
-  const huntedCells = new Set();
-  const predatorCells = [];
-  const attackLinks = [];
-  let specialLabel = '';
-
   matches.forEach(match => {
-    totalCnt += match.cells.length;
-    match.cells.forEach(({r,c}) => cellsToRemove.add(`${r},${c}`));
-
-    const matchType = match.type;
-    if (FOOD_CHAIN[matchType]) {
-      predatorCells.push(...match.cells.map(({r,c}) => [r,c]));
-      const preyTypes = FOOD_CHAIN[matchType];
-      match.cells.forEach(({r, c}) => {
-        [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(([nr, nc]) => {
-          if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && preyTypes.includes(board[nr][nc])) {
-            cellsToRemove.add(`${nr},${nc}`);
-            huntedCells.add(`${nr},${nc}`);
-            attackLinks.push([[r,c], [nr,nc]]);
-          }
-        });
-      });
-
-      if (match.shape === 'five') {
-        specialLabel = '🐯 Fierce Tiger sweep!';
-        for (let r = 0; r < ROWS; r++) {
-          for (let c = 0; c < COLS; c++) {
-            if (board[r][c] === cfg.huntAnimal) {
-              cellsToRemove.add(`${r},${c}`);
-              huntedCells.add(`${r},${c}`);
-              attackLinks.push([[match.cells[0].r, match.cells[0].c], [r,c]]);
-            }
-          }
-        }
-      } else if (match.shape === 'box') {
-        specialLabel = '💣 Expanding jungle blast!';
-        const center = match.cells[0];
-        for (let r = Math.max(0, center.r - 2); r <= Math.min(ROWS - 1, center.r + 2); r++) {
-          for (let c = Math.max(0, center.c - 2); c <= Math.min(COLS - 1, center.c + 2); c++) {
-            if (preyTypes.includes(board[r][c])) {
-              cellsToRemove.add(`${r},${c}`);
-              huntedCells.add(`${r},${c}`);
-              attackLinks.push([[center.r, center.c], [r,c]]);
-            }
-          }
-        }
-      } else if (match.shape === 'cross') {
-        specialLabel = '⚔️ Cross-clear strike!';
-      }
-    }
+    match.cells.forEach(({r,c}) => cellsToRemove.add(r + ',' + c));
   });
 
-  if (cfg.objective === 'hunt') {
-    huntedCells.forEach(key => {
-      const [r, c] = key.split(',').map(Number);
-      if (board[r][c] === cfg.huntAnimal) huntProgress++;
-    });
-  }
-
-  predatorCells.forEach(([r, c]) => getEl(r, c)?.classList.add('predator-strike'));
-  attackLinks.slice(0, 18).forEach(([from, to]) => drawAttackLine(from, to));
-  cellsToRemove.forEach(key => {
-    const [r, c] = key.split(',').map(Number);
-    const el = getEl(r, c);
-    if (el) {
-      if (huntedCells.has(key)) el.classList.add('prey-hit');
-      else el.classList.add(matchIsSpecial(matches, r, c) ? 'special-sweep' : 'removing');
-      spawnParticles(el, huntedCells.has(key));
-    }
-  });
-
-  const pts = totalCnt * 10 * matches.length + huntedCells.size * 25;
-  const centerCol = matches[0]?.cells?.[0]?.c ?? Math.floor(COLS / 2);
-  const pan = jungleAudio.panFromCell(centerCol);
-  if (huntedCells.size > 0) jungleAudio.play('hunt', pan);
-  else jungleAudio.play('pop', pan);
-  if (specialLabel.includes('sweep')) jungleAudio.play('color', pan);
-  else if (specialLabel.includes('Cross')) jungleAudio.play('cross', pan);
-  else if (specialLabel.includes('blast')) jungleAudio.play('blast', pan);
+  // Score: +10 per matched cell (exact user logic)
+  const pts = cellsToRemove.size * 10;
   score += pts;
   updateScore();
 
-  const msgs = {
-    0: '🐯 Tiger Hunts! Only real prey counts toward the objective!',
-    1: '🦌 Deer scattered — match Tigers to actually hunt them!',
-    2: '🐐 Goats flee in panic!',
-    3: '🦅 Eagle strikes from sky!',
-    4: '🐍 Snake slithers away!',
-    5: '🐒 Monkey swings to safety!',
-  };
-  if (specialLabel) showMsg(`${specialLabel} +${pts}`, true);
-  else if (matches.length > 1) showMsg(`🔥 COMBO x${matches.length}! +${pts}`, true);
-  else showMsg(msgs[firstType] || `✨ Match! +${pts}`);
+  // Animations
+  const centerCol = matches[0]?.cells?.[0]?.c ?? Math.floor(COLS / 2);
+  jungleAudio.play('pop', jungleAudio.panFromCell(centerCol));
+
+  cellsToRemove.forEach(key => {
+    const [r, c] = key.split(',').map(Number);
+    const el = getEl(r, c);
+    if (el) { el.classList.add('removing'); spawnParticles(el, false); }
+  });
+
+  if (matches.length > 1) showMsg('🔥 COMBO! +' + pts + ' points!', true);
+  else showMsg('✨ +' + pts + ' points!');
 
   setTimeout(() => {
     cellsToRemove.forEach(key => {
@@ -1234,7 +1122,7 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
     setTimeout(() => {
       fill(cfg.animalTypes);
       renderBoard(undefined, true);
-      // NO cascade — single resolve per swap (manual match logic)
+      // ═══ NO CASCADE — single resolve per swap (user's exact logic) ═══
       isProcessing = false;
       ensurePlayableBoard();
       checkStatus();
@@ -1337,26 +1225,17 @@ function weightedPick(types, weights, blacklist) {
 function updateScore() {
   const cfg = getConfig(level);
   document.getElementById('score').textContent = score;
-  const huntCtr = document.getElementById('huntCounter');
-  if (cfg.objective === 'hunt') {
-    const pct = Math.min((huntProgress / cfg.huntCount) * 100, 100);
-    document.getElementById('progressFill').style.width = pct + '%';
-    huntCtr.textContent = `🦌 Hunted: ${huntProgress} / ${cfg.huntCount}`;
-  } else {
-    const pct = Math.min((score / cfg.target) * 100, 100);
-    document.getElementById('progressFill').style.width = pct + '%';
-    huntCtr.textContent = `🏆 Score: ${score.toLocaleString()} / ${cfg.target.toLocaleString()}`;
-  }
+  const pct = Math.min((score / cfg.target) * 100, 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('huntCounter').textContent = '🏆 Score: ' + score + ' / ' + cfg.target;
   if (score > bestScore) { bestScore = score; document.getElementById('bestScore').textContent = bestScore; }
 }
 function announceTurn(matchCount, special, type, hunted, points) {
-  if (special !== 'basic') showMsg(`${ALL_ANIMALS[type]} ${special.toUpperCase()}! ${hunted} prey hunted • +${points}`, true);
-  else if (hunted > 0) showMsg(`🐯 Tiger pounced! ${hunted} prey hunted • +${points}`, true);
-  else showMsg(`🍃 ${ANIMAL_NAMES[type]} match scattered — no Deer hunted • +${points}`);
+  showMsg('✨ Match! +' + points + ' points!');
 }
 function checkStatus() {
   const cfg = getConfig(level);
-  const won = cfg.objective === 'hunt' ? huntProgress >= cfg.huntCount : score >= cfg.target;
+  const won = score >= cfg.target;
   if (won) setTimeout(showLevelComplete, 420);
   else if (movesLeft <= 0) setTimeout(showGameOver, 420);
 }
@@ -1377,8 +1256,7 @@ function showGameOver() {
   document.getElementById('failedLevel').textContent = level;
   document.getElementById('finalScore').textContent = score;
   const failInfo = document.getElementById('failInfo');
-  if (cfg.objective === 'hunt') failInfo.innerHTML = `🦌 Deer hunted: <span id="failProgress">${huntProgress}</span> / <span id="failTarget">${cfg.huntCount}</span>`;
-  else failInfo.innerHTML = `🏆 Score: <span id="failProgress">${score}</span> / <span id="failTarget">${cfg.target}</span>`;
+  failInfo.innerHTML = '🏆 Score: <span id="failProgress">' + score + '</span> / <span id="failTarget">' + cfg.target + '</span>';
   jungleAudio.play('fail');
   showComboBanner('The Jungle is Ruthless! Try Again.');
   document.getElementById('overOverlay').classList.add('active');
