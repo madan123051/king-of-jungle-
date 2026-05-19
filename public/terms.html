@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Terms & Conditions — King of Jungle</title>
+  <meta name="description" content="Terms and Conditions for King of Jungle — a mobile puzzle game by WildSaura."/>
+  <link rel="icon" href="assets/icon-192.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #f0c040;
+      --green-dark: #07210d;
+      --green-mid: #0d3b1e;
+      --green-light: #8adf80;
+      --text: #c8e8c0;
+      --text-dim: #6aa06a;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, #07210d 0%, #0d3b1e 40%, #081a0b 100%);
+      min-height: 100vh;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* NAV */
+    nav {
+      background: rgba(7,33,13,0.95);
+      border-bottom: 1px solid rgba(240,192,64,0.15);
+      padding: 0 24px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .nav-logo {
+      font-family: 'Cinzel Decorative', serif;
+      color: var(--gold);
+      font-size: 15px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-back {
+      background: rgba(240,192,64,0.12);
+      border: 1px solid rgba(240,192,64,0.3);
+      color: var(--gold);
+      padding: 7px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-back:hover { background: rgba(240,192,64,0.22); }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 52px 24px 36px;
+      border-bottom: 1px solid rgba(240,192,64,0.08);
+    }
+    .hero-icon { font-size: 52px; margin-bottom: 14px; display: block; }
+    .hero h1 {
+      font-family: 'Cinzel Decorative', serif;
+      color: var(--gold);
+      font-size: clamp(22px, 5vw, 34px);
+      text-shadow: 0 0 20px rgba(240,192,64,0.4);
+      margin-bottom: 10px;
+    }
+    .hero p {
+      color: var(--text-dim);
+      font-size: 14px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .effective-date {
+      display: inline-block;
+      margin-top: 14px;
+      background: rgba(240,192,64,0.1);
+      border: 1px solid rgba(240,192,64,0.25);
+      border-radius: 8px;
+      padding: 5px 14px;
+      font-size: 12px;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* CONTENT */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .section {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(45,138,45,0.2);
+      border-radius: 16px;
+      padding: 28px 28px;
+      margin-bottom: 24px;
+      transition: border-color 0.3s;
+    }
+    .section:hover { border-color: rgba(240,192,64,0.2); }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .section-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a5c1a, #2d8a2d);
+      border: 1px solid rgba(240,192,64,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    .section h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.3px;
+    }
+
+    .section p {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+
+    .section ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+    .section ul li {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.8;
+      margin-bottom: 4px;
+    }
+    .section ul li::marker { color: var(--green-light); }
+
+    .highlight {
+      background: rgba(240,192,64,0.08);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      margin: 12px 0;
+      font-size: 13px;
+      color: var(--gold);
+    }
+
+    /* CONTACT BOX */
+    .contact-box {
+      background: linear-gradient(135deg, rgba(7,33,13,0.9), rgba(13,59,30,0.9));
+      border: 1px solid rgba(240,192,64,0.3);
+      border-radius: 16px;
+      padding: 28px;
+      text-align: center;
+      margin-top: 32px;
+    }
+    .contact-box h3 {
+      font-family: 'Cinzel Decorative', serif;
+      color: var(--gold);
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .contact-box p { color: var(--text-dim); font-size: 14px; margin-bottom: 16px; }
+    .contact-email {
+      display: inline-block;
+      background: rgba(240,192,64,0.12);
+      border: 1px solid rgba(240,192,64,0.4);
+      border-radius: 12px;
+      padding: 12px 24px;
+      color: var(--gold);
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .contact-email:hover { background: rgba(240,192,64,0.22); transform: scale(1.03); }
+
+    /* COPYRIGHT */
+    .copyright-bar {
+      text-align: center;
+      padding: 24px;
+      border-top: 1px solid rgba(45,138,45,0.2);
+      color: var(--text-dim);
+      font-size: 12px;
+      line-height: 1.9;
+    }
+    .copyright-bar a { color: var(--gold); text-decoration: none; }
+    .copyright-bar a:hover { text-decoration: underline; }
+
+    /* RESPONSIVE */
+    @media (max-width: 500px) {
+      .section { padding: 20px 18px; }
+      .hero { padding: 36px 18px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">👑 King of Jungle</a>
+    <a href="index.html" class="nav-back">← Back to Home</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-icon">📜</span>
+    <h1>Terms &amp; Conditions</h1>
+    <p>Please read these terms carefully before playing King of Jungle. By accessing or using our game, you agree to be bound by these terms.</p>
+    <span class="effective-date">📅 Effective Date: 20 May 2026</span>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="container">
+
+    <!-- 1. Acceptance -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <h2>Acceptance of Terms</h2>
+      </div>
+      <p>By accessing, downloading, installing, or playing <strong>King of Jungle</strong> ("the Game"), you agree to comply with and be bound by these Terms and Conditions. If you do not agree to these terms, please do not use the Game.</p>
+      <p>These Terms apply to all users of the Game, including visitors, registered players, and those who access the Game via the web app at <strong>candyboom.wildsaura.com</strong>.</p>
+    </div>
+
+    <!-- 2. About the Game -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <h2>About the Game</h2>
+      </div>
+      <p><strong>King of Jungle</strong> is a free-to-play, browser-based match-3 puzzle game developed by WildSaura. The game features:</p>
+      <ul>
+        <li>100 progressively challenging levels across jungle-themed zones</li>
+        <li>Nepal wildlife-inspired animal tiles including Tigers, Elephants, Rhinos, Peacocks, Eagles, and Monkeys</li>
+        <li>Special Power Animal Tiles: 🦁 Lion, 🦒 Giraffe, 🦏 Rhino, and 🐆 Leopard</li>
+        <li>Global leaderboard powered by Supabase</li>
+        <li>Progressive Web App (PWA) for offline play on Android and iOS</li>
+      </ul>
+    </div>
+
+    <!-- 3. Eligibility -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <h2>Eligibility &amp; User Accounts</h2>
+      </div>
+      <p>King of Jungle is intended for users of all ages. However, users under the age of 13 should have parental consent before playing or creating an account.</p>
+      <p>When you create a player profile or sign in via Google OAuth, you agree to:</p>
+      <ul>
+        <li>Provide accurate and truthful information (display name, avatar)</li>
+        <li>Not impersonate any other person or entity</li>
+        <li>Keep your login credentials secure</li>
+        <li>Not create multiple accounts to manipulate leaderboard scores</li>
+      </ul>
+      <div class="highlight">⚠️ We reserve the right to remove or ban accounts that violate these rules without prior notice.</div>
+    </div>
+
+    <!-- 4. Gameplay & Fair Play -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <h2>Gameplay &amp; Fair Play</h2>
+      </div>
+      <p>You agree to play King of Jungle in a fair and honest manner. The following are strictly prohibited:</p>
+      <ul>
+        <li>Using bots, scripts, automation tools, or any software to play the game on your behalf</li>
+        <li>Exploiting bugs or glitches to gain unfair scores or progress</li>
+        <li>Manipulating game data stored in your browser's localStorage or cloud saves</li>
+        <li>Reverse engineering, decompiling, or modifying the game code</li>
+        <li>Attempting to interfere with the game's server, database, or leaderboard</li>
+      </ul>
+      <p>Scores submitted to the global leaderboard must be achieved through legitimate gameplay only.</p>
+    </div>
+
+    <!-- 5. Intellectual Property -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <h2>Intellectual Property &amp; Copyright</h2>
+      </div>
+      <p>All content in King of Jungle — including but not limited to game design, artwork, graphics, animations, sound effects, music, code, level designs, Power Animal Tile concepts, and the King of Jungle name and logo — is the exclusive intellectual property of <strong>WildSaura</strong>.</p>
+      <div class="highlight">© 2026 WildSaura. All rights reserved.</div>
+      <p>You may not reproduce, distribute, modify, create derivative works from, publicly display, or commercially exploit any part of the Game without prior written permission from WildSaura.</p>
+      <p>Screenshots and gameplay clips shared for personal, non-commercial purposes (social media, reviews) are permitted, provided you credit <strong>King of Jungle by WildSaura</strong>.</p>
+    </div>
+
+    <!-- 6. Privacy & Data -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <h2>Privacy &amp; Data Collection</h2>
+      </div>
+      <p>We value your privacy. King of Jungle collects limited data to provide its services:</p>
+      <ul>
+        <li><strong>Player Name &amp; Avatar:</strong> Stored locally in your browser (localStorage) and optionally synced to our cloud database (Supabase) for leaderboard purposes</li>
+        <li><strong>Game Progress:</strong> Level completions, scores, and star ratings stored locally and in cloud saves</li>
+        <li><strong>Google Account Info:</strong> If you sign in with Google, we receive your email and display name via Google OAuth — used only for account identification</li>
+        <li><strong>No tracking cookies:</strong> We do not use third-party advertising trackers or sell your data to any third party</li>
+      </ul>
+      <p>Data stored on our Supabase database is secured with Row Level Security (RLS) and industry-standard encryption.</p>
+    </div>
+
+    <!-- 7. PWA & Offline Play -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <h2>PWA Installation &amp; Offline Play</h2>
+      </div>
+      <p>King of Jungle is available as a Progressive Web App (PWA). When installed on your device via "Add to Home Screen" in Chrome or Safari:</p>
+      <ul>
+        <li>Game assets are cached locally on your device for offline play</li>
+        <li>Leaderboard and cloud save features require an active internet connection</li>
+        <li>Uninstalling the PWA will remove locally cached game data</li>
+        <li>You can revoke offline permissions by clearing your browser's site data</li>
+      </ul>
+    </div>
+
+    <!-- 8. Disclaimers -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">8</div>
+        <h2>Disclaimers &amp; Limitation of Liability</h2>
+      </div>
+      <p>King of Jungle is provided <strong>"as is"</strong> without warranties of any kind. We do not guarantee:</p>
+      <ul>
+        <li>Uninterrupted or error-free gameplay at all times</li>
+        <li>Permanent availability of the leaderboard or cloud save service</li>
+        <li>That game progress will never be lost due to technical issues</li>
+      </ul>
+      <p>WildSaura shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Game, including loss of game progress or data.</p>
+    </div>
+
+    <!-- 9. Modifications -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">9</div>
+        <h2>Modifications to Terms</h2>
+      </div>
+      <p>WildSaura reserves the right to update or modify these Terms and Conditions at any time. Changes will be posted on this page with an updated effective date.</p>
+      <p>Continued use of the Game after any changes constitutes your acceptance of the new terms. We encourage you to review this page periodically.</p>
+    </div>
+
+    <!-- 10. Governing Law -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <h2>Governing Law</h2>
+      </div>
+      <p>These Terms and Conditions are governed by and construed in accordance with the laws of <strong>Nepal</strong>. Any disputes arising from these terms shall be subject to the exclusive jurisdiction of the courts of Nepal.</p>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="contact-box">
+      <h3>📬 Contact Us</h3>
+      <p>Have questions about these terms, want to report an issue, or need support? We're here to help!</p>
+      <a href="mailto:help@wildsaura.com" class="contact-email">✉️ help@wildsaura.com</a>
+      <p style="margin-top:14px; font-size:12px; color:#3a6a3a;">We aim to respond within 48 hours on business days.</p>
+    </div>
+
+  </div>
+
+  <!-- COPYRIGHT BAR -->
+  <div class="copyright-bar">
+    <p>© 2026 WildSaura. All rights reserved. | <strong>King of Jungle</strong></p>
+    <p>candyboom.wildsaura.com · Made with ❤️ for Nepal's wildlife 🌿</p>
+    <p style="margin-top:6px;"><a href="index.html">Home</a> · <a href="mailto:help@wildsaura.com">help@wildsaura.com</a></p>
+  </div>
+
+</body>
+</html>
