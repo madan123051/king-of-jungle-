@@ -2,13 +2,13 @@
 
 > *Swap, match, and conquer the wild! A fun match-3 puzzle game set in the heart of the jungle.*
 
-![King of Jungle](https://img.shields.io/badge/Game-King%20of%20Jungle-brightgreen?style=for-the-badge&logo=firebase)
-![Firebase](https://img.shields.io/badge/Backend-Firebase-orange?style=for-the-badge&logo=firebase)
+![King of Jungle](https://img.shields.io/badge/Game-King%20of%20Jungle-brightgreen?style=for-the-badge)
+![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel)
 ![HTML5](https://img.shields.io/badge/Platform-HTML5-blue?style=for-the-badge&logo=html5)
 
 ## 🎮 Play Now
 
-🌐 **Live:** [https://king-of-jungle-77f06.web.app](https://king-of-jungle-77f06.web.app)
+🌐 **Live:** *Deploy on Vercel to get your URL*
 
 ## 🦁 About
 
@@ -67,53 +67,44 @@
 ### ❤️ Lives System
 - **5 lives max** — lose one when you fail a level
 - **Auto-regenerate** over time
-- Lives persist via Firebase
-
-## 🔐 Authentication
-
-- **Google Sign-In** — One-tap login with Google account
-- **Guest Mode** — Play anonymously, progress saved locally
+- Progress saved via localStorage
 
 ## 🏗️ Tech Stack
 
 | Component | Technology |
 |-----------|-----------|
 | **Game Engine** | Vanilla HTML5 + CSS3 + JavaScript |
-| **Backend** | Firebase (Auth, Firestore, Hosting) |
-| **Auth** | Firebase Authentication (Google + Anonymous) |
-| **Database** | Cloud Firestore |
-| **Hosting** | Firebase Hosting |
-| **Cloud Functions** | Firebase Cloud Functions (Node.js) |
+| **State** | localStorage (offline-first) |
+| **Hosting** | Vercel |
 
 ## 📁 Project Structure
 
 ```
 candyboom/
-├── firebase.json              # Firebase Hosting config
-├── firestore.rules            # Firestore security rules
-├── firestore.indexes.json     # Firestore indexes
-├── functions/                 # Cloud Functions
-│   ├── package.json
-│   └── src/
-│       └── index.js           # 6 cloud functions
-└── public/                    # Firebase Hosting root
-    ├── index.html             # 🏠 Landing page (King of Jungle theme)
-    └── game.html              # 🎮 Main game (match-3 engine)
+├── vercel.json        # Vercel deployment config
+├── README.md          # This file
+├── .gitignore
+└── public/            # Vercel output directory
+    ├── index.html     # 🏠 Landing page (King of Jungle theme)
+    └── game.html      # 🎮 Main game (match-3 engine)
 ```
 
-## 🚀 Deployment
+## 🚀 Deploy on Vercel
 
-### Firebase Hosting
+### Option 1: One-Click
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/madan123051/candyboom)
+
+### Option 2: CLI
 ```bash
-firebase deploy --only hosting
+npm i -g vercel
+vercel --prod
 ```
-Live at: `https://king-of-jungle-77f06.web.app`
 
-### Cloud Functions
-```bash
-cd functions && npm install
-firebase deploy --only functions
-```
+### Option 3: GitHub Integration
+1. Go to [vercel.com](https://vercel.com)
+2. Import this repo
+3. Output Directory: `public`
+4. Deploy! 🚀
 
 ## 📱 Mobile (Coming Soon)
 

@@ -755,24 +755,8 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   </div>
 </div>
 
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signInAnonymously, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDOCAbauIOAnUOSLWlwe9Z5PvQq8xyzQGQ",
-  authDomain: "king-of-jungle-77f06.firebaseapp.com",
-  projectId: "king-of-jungle-77f06",
-  storageBucket: "king-of-jungle-77f06.appspot.com",
-  messagingSenderId: "993583513273",
-  appId: "1:993583513273:web:d4f7e8c9a1b2c3d4e5f6"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
+<script>
+// No Firebase — direct play
 const authModal = document.getElementById('authModal');
 const authStatus = document.getElementById('authStatus');
 const inviteBox = document.getElementById('inviteBox');
@@ -831,32 +815,33 @@ class HomeJungleAudio {
 }
 const homeAudio = new HomeJungleAudio();
 
-function openAuthModal(){ authModal.classList.add('active'); }
-function closeAuthModal(){ authModal.classList.remove('active'); }
+function openAuthModal() { authModal.classList.add('active'); }
+function closeAuthModal() { authModal.classList.remove('active'); }
 
 window.openAuthModal = openAuthModal;
 window.closeAuthModal = closeAuthModal;
 
+// Simple name-based login (no Firebase)
 window.loginGoogle = async () => {
-  try {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
-    closeAuthModal();
-  } catch (e) {
-    alert(`Login failed: ${e.message}`);
-  }
+  const name = prompt('Enter your name:') || 'Player';
+  localStorage.setItem('koj_player_name', name);
+  localStorage.setItem('koj_logged_in', '1');
+  closeAuthModal();
+  showLoggedIn(name);
 };
 
 window.loginGuest = async () => {
-  try {
-    await signInAnonymously(auth);
-    closeAuthModal();
-  } catch (e) {
-    alert(`Guest login failed: ${e.message}`);
-  }
+  localStorage.setItem('koj_player_name', 'Guest');
+  localStorage.setItem('koj_logged_in', '1');
+  closeAuthModal();
+  showLoggedIn('Guest');
 };
 
-window.logoutUser = async () => signOut(auth);
+window.logoutUser = () => {
+  localStorage.removeItem('koj_logged_in');
+  localStorage.removeItem('koj_player_name');
+  location.reload();
+};
 
 window.copyInvite = async () => {
   const text = document.getElementById('inviteLink').value;
@@ -865,53 +850,31 @@ window.copyInvite = async () => {
 };
 
 window.playNow = () => {
-  const user = auth.currentUser;
-  if (!user) return openAuthModal();
-  location.href = `game.html?uid=${encodeURIComponent(user.uid)}`;
+  if (localStorage.getItem('koj_logged_in') !== '1') return openAuthModal();
+  location.href = 'game.html';
 };
+
+function showLoggedIn(name) {
+  authStatus.innerHTML = '<div style="display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;">' +
+    '<span style="color:#6dbf67;">🌿 ' + name + '</span>' +
+    '<button class="btn-how" onclick="logoutUser()">Logout</button>' +
+    '<button class="btn-play" onclick="playNow()">▶ Continue</button>' +
+    '</div>';
+  const link = location.origin + location.pathname.replace('index.html','');
+  document.getElementById('inviteLink').value = link;
+  inviteBox.style.display = 'block';
+}
 
 document.addEventListener('pointerdown', () => homeAudio.unlock(), { once:true });
 document.addEventListener('keydown', () => homeAudio.unlock(), { once:true });
 
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    authStatus.innerHTML = '<button class="btn-play" onclick="openAuthModal()">🔐 Login to Play</button>';
-    inviteBox.style.display = 'none';
-    return;
-  }
-
-  // Save user profile to Firestore
-  try {
-    const userRef = doc(db, 'users', user.uid);
-    const snap = await getDoc(userRef);
-    if (!snap.exists()) {
-      await setDoc(userRef, {
-        uid: user.uid,
-        displayName: user.isAnonymous ? 'Guest' : (user.displayName || 'Player'),
-        email: user.email || null,
-        isAnonymous: user.isAnonymous,
-        createdAt: serverTimestamp(),
-        level: 1,
-        totalScore: 0
-      });
-    }
-  } catch(e) {}
-
-  const name = user.isAnonymous ? 'Guest' : (user.displayName || user.email || 'Player');
-  authStatus.innerHTML = `
-    <div style="display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;">
-      <span style="color:#6dbf67;">🌿 ${name}</span>
-      <button class="btn-how" onclick="logoutUser()">Logout</button>
-      <button class="btn-play" onclick="playNow()">▶ Continue</button>
-    </div>`;
-
-  // Generate invite link
-  const ref = localStorage.getItem('koj_ref') || user.uid.slice(0,8);
-  localStorage.setItem('koj_ref', ref);
-  const link = `${location.origin}${location.pathname}?ref=${ref}`;
-  document.getElementById('inviteLink').value = link;
-  inviteBox.style.display = 'block';
-});
+// Check if already logged in
+if (localStorage.getItem('koj_logged_in') === '1') {
+  showLoggedIn(localStorage.getItem('koj_player_name') || 'Player');
+} else {
+  authStatus.innerHTML = '<button class="btn-play" onclick="openAuthModal()">🔐 Login to Play</button>';
+  inviteBox.style.display = 'none';
+}
 
 document.body.insertAdjacentHTML('beforeend', '<button id="homeAudioBtn" class="muted" type="button">🔇 Audio Off</button>');
 document.getElementById('homeAudioBtn').addEventListener('click', () => homeAudio.toggle());

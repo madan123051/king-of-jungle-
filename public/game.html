@@ -489,48 +489,43 @@ h1 {
 </div>
 
 
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
-import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyDfsG48zCGPBREzmIe_wy7aaZxrZ0BNq7Q',
-  authDomain: 'king-of-jungle-77f06.firebaseapp.com',
-  projectId: 'king-of-jungle-77f06',
-  storageBucket: 'king-of-jungle-77f06.firebasestorage.app',
-  messagingSenderId: '993583513273',
-  appId: '1:993583513273:web:72b7f0ed9991a8f63ba568',
-  measurementId: 'G-QCTYFH80KH'
-};
-let ready = false;
-let saveLevelResultFn, fetchDashboardFn, genReferralFn;
-
-try {
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const functions = getFunctions(app);
-  saveLevelResultFn = httpsCallable(functions, 'saveLevelResult');
-  fetchDashboardFn = httpsCallable(functions, 'fetchDashboardData');
-  genReferralFn = httpsCallable(functions, 'generateReferralCode');
-
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) return;
-    ready = true;
-    document.getElementById('profileBar').textContent = `Player: ${user.isAnonymous ? 'Guest' : (user.displayName || user.email || user.uid.slice(0,8))}`;
-    const dash = await fetchDashboardFn();
-    if (dash?.data?.user?.currentLevel) window.setServerCurrentLevel(dash.data.user.currentLevel);
-    const ref = await genReferralFn();
-    document.getElementById('shareLink').value = `${location.origin}/index.html?ref=${encodeURIComponent(ref.data.code)}`;
-  });
-
+<script>
+// Local progress management (no Firebase)
+(function() {
+  const SAVE_KEY = 'koj_progress';
+  
+  function loadProgress() {
+    try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch { return {}; }
+  }
+  
+  function saveProgress(data) {
+    const current = loadProgress();
+    Object.assign(current, data);
+    localStorage.setItem(SAVE_KEY, JSON.stringify(current));
+  }
+  
+  // Load saved level
+  const progress = loadProgress();
+  const playerName = localStorage.getItem('koj_player_name') || 'Player';
+  document.getElementById('profileBar').textContent = 'Player: ' + playerName;
+  
+  if (progress.currentLevel && window.setServerCurrentLevel) {
+    window.setServerCurrentLevel(progress.currentLevel);
+  }
+  
+  // Save progress after each level
   window.saveProgressToCloud = async (payload) => {
-    if (!ready) return;
-    await saveLevelResultFn(payload);
+    saveProgress({
+      currentLevel: payload.level,
+      totalScore: (loadProgress().totalScore || 0) + (payload.score || 0),
+      lastPlayed: new Date().toISOString()
+    });
   };
-} catch (e) {
-  console.warn('Firebase not configured yet', e);
-}
+  
+  // Share link (no referral code, just page URL)
+  const shareLink = document.getElementById('shareLink');
+  if (shareLink) shareLink.value = location.origin + '/index.html';
+})()
 
 document.getElementById('shareBtn').addEventListener('click', async () => {
   const link = document.getElementById('shareLink').value;
