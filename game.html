@@ -285,13 +285,14 @@ h1 {
 @keyframes floatUp { to { transform:translateY(-100px); opacity:0; } }
 
 
-/* Pro jungle match-3 animation layer */
-#board { position:relative; perspective:900px; }
+/* Pro jungle match-3 animation layer - CANDY CRUSH LEVEL */
+#board { position:relative; perspective:900px; transform-style:preserve-3d; }
 .candy {
   position:relative;
-  will-change:transform, opacity, filter;
+  will-change:transform, opacity, filter, box-shadow;
   border:1px solid rgba(255,255,255,0.08);
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), 0 6px 14px rgba(0,0,0,0.42);
+  transition: box-shadow 0.18s ease;
 }
 .candy::before {
   content:'';
@@ -306,46 +307,343 @@ h1 {
   opacity:0; pointer-events:none;
 }
 .candy.hint-pulse { animation:hintPulse 1.2s ease-in-out infinite; }
-.candy.swapping { z-index:30; animation:tileSwap 0.34s cubic-bezier(.2,.9,.2,1.15); }
-.candy.invalid { animation:invalidShake 0.38s ease; }
-.candy.predator-strike { z-index:35; animation:predatorPounce 0.48s cubic-bezier(.16,1,.3,1); filter:drop-shadow(0 0 16px #ffb000); }
-.candy.prey-hit { z-index:34; animation:preyHit 0.48s ease forwards; }
-.candy.special-line { z-index:32; animation:lineRoar 0.55s ease; }
-.candy.special-bomb { z-index:32; animation:bombPulse 0.65s ease; }
-.candy.drop-in { animation:dropIn 0.34s cubic-bezier(.25,.9,.25,1); }
-.candy.new-spawn { animation:newSpawn 0.42s cubic-bezier(.18,1.2,.3,1); }
-.removing { animation:fadeOut 0.35s forwards; }
-@keyframes tileSwap { 0%{transform:scale(.96)} 55%{transform:scale(1.12) rotate(3deg)} 100%{transform:scale(1)} }
-@keyframes invalidShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 40%{transform:translateX(7px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
-@keyframes predatorPounce { 0%{transform:scale(1)} 35%{transform:scale(1.26) rotate(-7deg)} 70%{transform:scale(1.08) rotate(5deg)} 100%{transform:scale(1)} }
-@keyframes preyHit { 0%{transform:scale(1);opacity:1} 45%{transform:scale(1.22) rotate(12deg);filter:brightness(1.5)} 100%{transform:scale(.1) rotate(35deg);opacity:0} }
-@keyframes lineRoar { 0%{box-shadow:0 0 0 rgba(240,192,64,0)} 50%{transform:scale(1.18);box-shadow:0 0 28px #f0c040} 100%{transform:scale(1)} }
-@keyframes bombPulse { 0%{transform:scale(1)} 45%{transform:scale(1.28);filter:brightness(1.7)} 100%{transform:scale(1)} }
-@keyframes dropIn { from{transform:translateY(-42px) scale(.92);opacity:.3} to{transform:translateY(0) scale(1);opacity:1} }
-@keyframes newSpawn { from{transform:translateY(-70px) rotate(-12deg) scale(.4);opacity:0} to{transform:translateY(0) rotate(0) scale(1);opacity:1} }
-@keyframes hintPulse { 0%,100%{box-shadow:0 6px 14px rgba(0,0,0,.42)} 50%{transform:translateY(-2px) scale(1.05);box-shadow:0 0 22px #f0c040} }
+.candy.swapping { z-index:30; animation:tileSwapPro 0.36s cubic-bezier(.17,.89,.24,1.18); }
+.candy.invalid { animation:invalidShakePro 0.42s ease; }
+.candy.predator-strike { z-index:35; animation:predatorPounceDeluxe 0.54s cubic-bezier(.16,1,.3,1); filter:drop-shadow(0 0 16px #ffb000); }
+.candy.prey-hit { z-index:34; animation:preyHitDeluxe 0.54s ease forwards; }
+.candy.special-line { z-index:32; animation:lineRoarDeluxe 0.62s ease; }
+.candy.special-bomb { z-index:32; animation:bombPulseDeluxe 0.72s ease; }
+.candy.drop-in { animation:dropInPro 0.48s cubic-bezier(.25,.95,.25,.95); }
+.candy.new-spawn { animation:newSpawnPro 0.54s cubic-bezier(.18,1.5,.3,1); }
+.candy.match-pop { animation:matchPopBurst 0.36s ease; }
+.candy.cascade-drop { animation:cascadeDropPro 0.52s cubic-bezier(.25,.82,.25,.95); }
+.removing { animation:fadeOutPro 0.42s forwards; }
+.removing.burst { animation:fadeOutBurst 0.52s forwards; }
+
+/* Enhanced Swap Animation */
+@keyframes tileSwapPro {
+  0% { transform:scale(.94) rotate(-2deg); }
+  45% { transform:scale(1.14) rotate(2deg); filter:brightness(1.08); }
+  70% { transform:scale(1.06) rotate(-1deg); }
+  100% { transform:scale(1) rotate(0deg); filter:brightness(1); }
+}
+
+/* Improved Shake for Invalid Moves */
+@keyframes invalidShakePro {
+  0%,100% { transform:translateX(0) rotate(0); }
+  12% { transform:translateX(-8px) rotate(-1deg); }
+  24% { transform:translateX(8px) rotate(1deg); }
+  36% { transform:translateX(-6px) rotate(-0.5deg); }
+  48% { transform:translateX(6px) rotate(0.5deg); }
+  60% { transform:translateX(-4px) rotate(-0.3deg); }
+  72% { transform:translateX(4px) rotate(0.3deg); }
+  84% { transform:translateX(-2px); }
+}
+
+/* Deluxe Predator Pounce with Impact */
+@keyframes predatorPounceDeluxe {
+  0% { transform:scale(1) rotate(0deg); box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), 0 6px 14px rgba(0,0,0,0.42); }
+  20% { transform:scale(.88) rotate(-3deg); }
+  38% { transform:scale(1.32) rotate(-8deg); box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), 0 12px 28px rgba(255,176,0,0.6); }
+  62% { transform:scale(1.12) rotate(6deg); filter:brightness(1.3); }
+  100% { transform:scale(1) rotate(0deg); filter:brightness(1); box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), 0 6px 14px rgba(0,0,0,0.42); }
+}
+
+/* Deluxe Prey Hit with Spin */
+@keyframes preyHitDeluxe {
+  0% { transform:scale(1) rotate(0deg); opacity:1; filter:brightness(1); }
+  28% { transform:scale(1.28) rotate(8deg); filter:brightness(1.6); }
+  42% { transform:scale(1.06) rotate(-4deg); opacity:.8; }
+  100% { transform:scale(.08) rotate(45deg); opacity:0; filter:brightness(0); }
+}
+
+/* Deluxe Line Roar */
+@keyframes lineRoarDeluxe {
+  0% { box-shadow:0 0 0 rgba(240,192,64,0), inset 0 1px 0 rgba(255,255,255,0.14); transform:scale(1); }
+  25% { box-shadow:0 0 12px rgba(240,192,64,0.4), inset 0 1px 0 rgba(255,255,255,0.14); }
+  50% { transform:scale(1.22); box-shadow:0 0 32px #f0c040, inset 0 0 0 rgba(240,192,64,0.8); filter:brightness(1.4); }
+  75% { transform:scale(1.08); box-shadow:0 0 18px #f0c040, inset 0 1px 0 rgba(255,255,255,0.14); }
+  100% { transform:scale(1); box-shadow:0 0 0 rgba(240,192,64,0), inset 0 1px 0 rgba(255,255,255,0.14); }
+}
+
+/* Deluxe Bomb Pulse */
+@keyframes bombPulseDeluxe {
+  0% { transform:scale(1) rotate(0deg); filter:brightness(1); box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), 0 6px 14px rgba(0,0,0,0.42); }
+  18% { transform:scale(1.08) rotate(-3deg); }
+  36% { transform:scale(1.36) rotate(6deg); filter:brightness(1.8); box-shadow:0 0 28px rgba(255,176,0,0.8), inset 0 0 12px rgba(255,255,255,0.4); }
+  55% { transform:scale(1.16) rotate(-4deg); filter:brightness(1.3); }
+  100% { transform:scale(1) rotate(0deg); filter:brightness(1); box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), 0 6px 14px rgba(0,0,0,0.42); }
+}
+
+/* Production Drop Animation */
+@keyframes dropInPro {
+  0% {
+    transform:translateY(-68px) scale(.88);
+    opacity:.2;
+    filter:blur(2px);
+  }
+  40% {
+    transform:translateY(-8px) scale(1.02);
+    opacity:1;
+  }
+  65% {
+    transform:translateY(2px) scale(1.04);
+  }
+  100% {
+    transform:translateY(0) scale(1);
+    opacity:1;
+    filter:blur(0);
+  }
+}
+
+/* Cascade Drop with Bounce */
+@keyframes cascadeDropPro {
+  0% {
+    transform:translateY(-64px) scale(.86);
+    opacity:.15;
+    filter:blur(3px);
+  }
+  35% {
+    transform:translateY(-4px) scale(1.03);
+    opacity:1;
+  }
+  60% {
+    transform:translateY(3px) scale(1.05);
+  }
+  85% {
+    transform:translateY(-1px) scale(1.02);
+  }
+  100% {
+    transform:translateY(0) scale(1);
+    filter:blur(0);
+  }
+}
+
+/* Enhanced Spawn Animation */
+@keyframes newSpawnPro {
+  0% {
+    transform:translateY(-88px) rotate(-18deg) scale(.32);
+    opacity:0;
+    filter:blur(4px);
+  }
+  35% {
+    transform:translateY(-8px) rotate(-4deg) scale(1.08);
+    opacity:.95;
+  }
+  70% {
+    transform:translateY(2px) rotate(2deg) scale(1.03);
+  }
+  100% {
+    transform:translateY(0) rotate(0deg) scale(1);
+    opacity:1;
+    filter:blur(0);
+  }
+}
+
+/* Pop Burst Effect */
+@keyframes matchPopBurst {
+  0% { transform:scale(1); box-shadow:0 0 0 rgba(240,192,64,0); }
+  50% { transform:scale(1.26); box-shadow:0 0 24px rgba(240,192,64,0.8); filter:brightness(1.5); }
+  100% { transform:scale(1); box-shadow:0 0 0 rgba(240,192,64,0); }
+}
+
+/* Fade with Sparkle Burst */
+@keyframes fadeOutPro {
+  0% {
+    transform:scale(1) rotate(0deg);
+    opacity:1;
+    filter:brightness(1);
+  }
+  60% {
+    transform:scale(1.12) rotate(-8deg);
+    filter:brightness(1.4);
+  }
+  100% {
+    transform:scale(.02) rotate(25deg);
+    opacity:0;
+    filter:brightness(0.5);
+  }
+}
+
+/* Burst Fade - Big Explosion Feel */
+@keyframes fadeOutBurst {
+  0% {
+    transform:scale(1) rotate(0deg);
+    opacity:1;
+  }
+  45% {
+    transform:scale(1.28) rotate(12deg);
+    filter:brightness(1.7);
+  }
+  100% {
+    transform:scale(.05) rotate(45deg);
+    opacity:0;
+    filter:brightness(0);
+  }
+}
+
+/* Hint Pulse Enhanced */
+@keyframes hintPulse {
+  0%, 100% { box-shadow:0 6px 14px rgba(0,0,0,.42); transform:scale(1); }
+  50% { transform:translateY(-3px) scale(1.08); box-shadow:0 0 28px #f0c040, 0 8px 18px rgba(0,0,0,.5); filter:brightness(1.15); }
+}
 
 .fx-layer { position:fixed; inset:0; pointer-events:none; z-index:180; overflow:hidden; }
+
+/* Attack Trail - Production Quality */
 .attack-trail {
-  position:fixed; height:4px; transform-origin:left center; border-radius:8px;
-  background:linear-gradient(90deg, rgba(240,192,64,0), #f0c040, rgba(255,95,28,.95));
-  box-shadow:0 0 16px #ffb000; animation:trailFlash .42s ease forwards;
+  position:fixed; height:5px; transform-origin:left center; border-radius:10px;
+  background:linear-gradient(90deg, rgba(240,192,64,0), #f0c040 20%, #ffb000 50%, rgba(255,95,28,0));
+  box-shadow:0 0 20px #ffb000, 0 0 8px rgba(240,192,64,0.6); animation:trailFlashPro .48s ease forwards;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));
 }
+
+/* Blast Ring - Enhanced */
 .blast-ring {
-  position:fixed; width:28px; height:28px; border:2px solid #f0c040; border-radius:50%;
-  transform:translate(-50%,-50%) scale(.2); box-shadow:0 0 24px #f0c040;
-  animation:ringBlast .62s ease-out forwards;
+  position:fixed; width:32px; height:32px; border:3px solid #f0c040; border-radius:50%;
+  transform:translate(-50%,-50%) scale(.15); box-shadow:0 0 32px #ffb000, inset 0 0 12px rgba(240,192,64,0.5);
+  animation:ringBlastPro .68s cubic-bezier(.2,.6,.2,.8) forwards;
+  opacity:.9;
 }
+.blast-ring::before {
+  content:''; position:absolute; inset:0; border-radius:50%;
+  border:2px dashed #ffb000; opacity:.6;
+  animation:ringPulse .68s ease-out forwards;
+}
+
+/* Enhanced Combo Banner */
 .combo-banner {
-  position:fixed; left:50%; top:44%; transform:translate(-50%,-50%) scale(.8);
-  padding:10px 18px; border-radius:28px; z-index:210; pointer-events:none;
-  background:rgba(5,22,8,.88); border:1px solid #f0c040; color:#f0c040;
-  font-family:'Cinzel Decorative',serif; font-size:18px; text-shadow:0 0 12px #f0c040;
-  animation:comboBanner .9s ease forwards;
+  position:fixed; left:50%; top:44%; transform:translate(-50%,-50%) scale(.7);
+  padding:14px 26px; border-radius:32px; z-index:210; pointer-events:none;
+  background:linear-gradient(135deg, rgba(5,22,8,.95), rgba(10,40,15,.95));
+  border:2px solid #f0c040; color:#f0c040;
+  font-family:'Cinzel Decorative',serif; font-size:20px; font-weight:bold;
+  text-shadow:0 0 16px #f0c040, 0 2px 4px #000;
+  animation:comboBannerPro 1s cubic-bezier(.34,1.56,.64,1) forwards;
+  box-shadow:0 0 28px rgba(240,192,64,0.4), 0 8px 16px rgba(0,0,0,0.6);
 }
-@keyframes trailFlash { 0%{opacity:0;transform:scaleX(.1)} 35%{opacity:1} 100%{opacity:0;transform:scaleX(1)} }
-@keyframes ringBlast { to{transform:translate(-50%,-50%) scale(5);opacity:0} }
-@keyframes comboBanner { 0%{opacity:0;transform:translate(-50%,-55%) scale(.65)} 25%{opacity:1;transform:translate(-50%,-50%) scale(1.08)} 100%{opacity:0;transform:translate(-50%,-70%) scale(1)} }
+
+/* Particles - Multiple Types */
+.particles {
+  position:fixed; pointer-events:none; font-size:18px;
+  animation:floatUpPro 1.2s cubic-bezier(.3,0,.4,1) forwards;
+  z-index:200; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+  will-change:transform, opacity;
+}
+.particles.hunt { animation:huntParticlesPro 1.4s ease-out forwards; }
+.particles.magic { animation:magicParticlesPro 1.3s ease-out forwards; }
+
+/* Production Trail Effects */
+@keyframes trailFlashPro {
+  0% {
+    opacity:0;
+    transform:scaleX(.08);
+    filter:blur(2px);
+  }
+  25% { opacity:1; filter:blur(0); }
+  35% { opacity:1; }
+  100% {
+    opacity:0;
+    transform:scaleX(1);
+    filter:blur(4px);
+  }
+}
+
+/* Blast Ring Animation */
+@keyframes ringBlastPro {
+  0% {
+    transform:translate(-50%,-50%) scale(.15);
+    opacity:1;
+    filter:brightness(1.6);
+  }
+  40% {
+    transform:translate(-50%,-50%) scale(2.8);
+    opacity:.7;
+  }
+  100% {
+    transform:translate(-50%,-50%) scale(5.5);
+    opacity:0;
+    filter:brightness(.8);
+  }
+}
+
+/* Inner Ring Pulse */
+@keyframes ringPulse {
+  0% {
+    transform:scale(1);
+    opacity:.8;
+  }
+  100% {
+    transform:scale(5.5);
+    opacity:0;
+  }
+}
+
+/* Combo Banner Pro */
+@keyframes comboBannerPro {
+  0% {
+    opacity:0;
+    transform:translate(-50%,-60%) scale(.5) rotate(-5deg);
+  }
+  20% {
+    opacity:1;
+    transform:translate(-50%,-48%) scale(1.12) rotate(2deg);
+  }
+  75% {
+    opacity:1;
+    transform:translate(-50%,-50%) scale(1.04) rotate(0deg);
+  }
+  100% {
+    opacity:0;
+    transform:translate(-50%,-72%) scale(.95) rotate(3deg);
+  }
+}
+
+/* Float Up - Smooth and Natural */
+@keyframes floatUpPro {
+  0% {
+    transform:translateY(0) translateX(0) scale(1);
+    opacity:1;
+    filter:blur(0);
+  }
+  50% {
+    opacity:1;
+  }
+  100% {
+    transform:translateY(-120px) translateX(var(--offset-x, 0)) scale(.8);
+    opacity:0;
+    filter:blur(2px);
+  }
+}
+
+/* Hunt Particles - Explosive */
+@keyframes huntParticlesPro {
+  0% {
+    transform:translateY(0) scale(1);
+    opacity:1;
+  }
+  30% {
+    opacity:1;
+    filter:brightness(1.4);
+  }
+  100% {
+    transform:translateY(-140px) scale(.6);
+    opacity:0;
+    filter:brightness(.6);
+  }
+}
+
+/* Magic Particles - Spiral */
+@keyframes magicParticlesPro {
+  0% {
+    transform:translateY(0) rotate(0deg) scale(1);
+    opacity:1;
+  }
+  100% {
+    transform:translateY(-130px) rotate(360deg) scale(.5);
+    opacity:0;
+  }
+}
 
 #gameContainer.screen-shake { animation:screenShake .38s ease; }
 .level-intro {
@@ -951,7 +1249,8 @@ function renderBoard(iconSizeOverride, markSpawned=false) {
     for (let c = 0; c < COLS; c++) {
       const animalIdx = board[r][c];
       const d = document.createElement('div');
-      d.className = `candy candy-${Math.min(animalIdx, 5)}${markSpawned ? ' spawned' : ''}`;
+      const baseClass = `candy candy-${Math.min(animalIdx, 5)}`;
+      d.className = baseClass;
       d.textContent = ALL_ANIMALS[animalIdx] || '🐯';
       d.title = ANIMAL_NAMES[animalIdx] || 'Animal';
       d.style.fontSize = iSize + 'px';
@@ -960,11 +1259,35 @@ function renderBoard(iconSizeOverride, markSpawned=false) {
       d.addEventListener('touchend',   onTouchEnd,   {passive:false});
       d.addEventListener('mousedown',  onMouseDown);
       d.addEventListener('mouseup',    onMouseUp);
+      
+      // Apply spawned animation with stagger for initial board
+      if (markSpawned && animationsEnabled) {
+        const stagger = r * 45 + c * 35;
+        d.style.animationDelay = (stagger / 1000) + 's';
+        d.classList.add('spawned');
+      }
       el.appendChild(d);
     }
   }
   lastDroppedCells.clear();
   lastSpawnedCells.clear();
+}
+
+// Apply staggered animations to newly filled cells
+function applySpawnAnimations() {
+  if (!animationsEnabled) return;
+  lastSpawnedCells.forEach((key) => {
+    const [r, c] = key.split(',').map(Number);
+    const el = getEl(r, c);
+    if (el) {
+      const stagger = c * 40 + r * 25 + Math.random() * 30;
+      setTimeout(() => {
+        el.classList.remove('new-spawn');
+        void el.offsetWidth;
+        el.classList.add('new-spawn');
+      }, stagger);
+    }
+  });
 }
 
 function onTouchStart(e) {
@@ -1211,15 +1534,43 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
     });
   }
 
-  predatorCells.forEach(([r, c]) => getEl(r, c)?.classList.add('predator-strike'));
-  attackLinks.slice(0, 18).forEach(([from, to]) => drawAttackLine(from, to));
-  cellsToRemove.forEach(key => {
+  // Apply predator animations with stagger
+  predatorCells.forEach(([r, c], idx) => {
+    const el = getEl(r, c);
+    if (el) {
+      setTimeout(() => {
+        el.classList.add('predator-strike');
+      }, idx * 45 + (Math.random() * 30));
+    }
+  });
+  
+  // Draw attack trails
+  attackLinks.slice(0, 18).forEach(([from, to], idx) => {
+    setTimeout(() => {
+      drawAttackLine(from, to);
+    }, idx * 60 + 100);
+  });
+  
+  // Remove cells with enhanced animations
+  cellsToRemove.forEach((key, idx) => {
     const [r, c] = key.split(',').map(Number);
     const el = getEl(r, c);
     if (el) {
-      if (huntedCells.has(key)) el.classList.add('prey-hit');
-      else el.classList.add(matchIsSpecial(matches, r, c) ? 'special-sweep' : 'removing');
-      spawnParticles(el, huntedCells.has(key));
+      // Add animation class with small delay for cascade effect
+      const delay = c * 35 + (huntedCells.has(key) ? 80 : 0);
+      setTimeout(() => {
+        if (huntedCells.has(key)) {
+          el.classList.add('prey-hit');
+          spawnParticles(el, true);
+        } else if (matchIsSpecial(matches, r, c)) {
+          el.classList.add('special-sweep', 'burst');
+          spawnParticles(el, false);
+          drawBlastRing(r, c);
+        } else {
+          el.classList.add('removing');
+          spawnParticles(el, false);
+        }
+      }, delay);
     }
   });
 
@@ -1253,38 +1604,46 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
         board[r][c] = -1;
       });
       drop();
+      // Apply drop animations with stagger
+      applyDropAnimations();
+      
       setTimeout(() => {
         try {
           fill(cfg.animalTypes);
-          renderBoard(undefined, true);
-          const nextMatches = findMatches();
-          if (!nextMatches.length) {
-            isProcessing = false;
-            clearTimeout(processingTimeoutId);
-            checkStatus();
-            return;
-          }
-          const nextDepth = playerTriggered ? 1 : cascadeDepth + 1;
-          if (nextDepth > MAX_AUTO_CASCADES) {
-            isProcessing = false;
-            clearTimeout(processingTimeoutId);
-            showMsg('🌿 Cascade stabilized — your turn!');
-            ensurePlayableBoard();
-            checkStatus();
-            return;
-          }
+          renderBoard(undefined, false);
+          // Apply spawn animations with stagger
+          applySpawnAnimations();
+          
           setTimeout(() => {
-            try {
-              processMatches(false, nextDepth);
-            } catch (e) {
-              console.error('Cascade error:', e);
+            const nextMatches = findMatches();
+            if (!nextMatches.length) {
               isProcessing = false;
               clearTimeout(processingTimeoutId);
-              showMsg('🌿 Game recovered. Your turn!');
+              checkStatus();
+              return;
+            }
+            const nextDepth = playerTriggered ? 1 : cascadeDepth + 1;
+            if (nextDepth > MAX_AUTO_CASCADES) {
+              isProcessing = false;
+              clearTimeout(processingTimeoutId);
+              showMsg('🌿 Cascade stabilized — your turn!');
               ensurePlayableBoard();
               checkStatus();
+              return;
             }
-          }, CASCADE_PAUSE_MS);
+            setTimeout(() => {
+              try {
+                processMatches(false, nextDepth);
+              } catch (e) {
+                console.error('Cascade error:', e);
+                isProcessing = false;
+                clearTimeout(processingTimeoutId);
+                showMsg('🌿 Game recovered. Your turn!');
+                ensurePlayableBoard();
+                checkStatus();
+              }
+            }, CASCADE_PAUSE_MS);
+          }, animationsEnabled ? 520 : 50);
         } catch (e) {
           console.error('Fill/render error:', e);
           isProcessing = false;
@@ -1292,7 +1651,7 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
           showMsg('🌿 Game error. Try your next move!');
           checkStatus();
         }
-      }, 300);
+      }, animationsEnabled ? 480 : 100);
     } catch (e) {
       console.error('Drop error:', e);
       isProcessing = false;
@@ -1300,7 +1659,7 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
       showMsg('🌿 Game error. Try your next move!');
       checkStatus();
     }
-  }, animationsEnabled ? 460 : 120);
+  }, animationsEnabled ? 520 : 120);
 }
 
 function matchIsSpecial(matches, r, c) {
@@ -1308,6 +1667,7 @@ function matchIsSpecial(matches, r, c) {
 }
 
 function drawAttackLine(from, to) {
+  if (!animationsEnabled) return;
   const a = getEl(from[0], from[1]);
   const b = getEl(to[0], to[1]);
   if (!a || !b) return;
@@ -1317,13 +1677,13 @@ function drawAttackLine(from, to) {
   const x2 = br.left + br.width / 2, y2 = br.top + br.height / 2;
   const dx = x2 - x1, dy = y2 - y1;
   const line = document.createElement('div');
-  line.className = 'attack-line';
+  line.className = 'attack-trail';
   line.style.left = `${x1}px`;
   line.style.top = `${y1}px`;
   line.style.width = `${Math.hypot(dx, dy)}px`;
-  line.style.rotate = `${Math.atan2(dy, dx)}rad`;
+  line.style.transform = `rotate(${Math.atan2(dy, dx)}rad)`;
   document.body.appendChild(line);
-  setTimeout(() => line.remove(), 460);
+  setTimeout(() => line.remove(), 480);
 }
 
 function drop() {
@@ -1332,18 +1692,42 @@ function drop() {
     let e = ROWS - 1;
     for (let r = ROWS - 1; r >= 0; r--) {
       if (board[r][c] !== -1) {
-        if (r !== e) { board[e][c] = board[r][c]; board[r][c] = -1; lastDroppedCells.add(`${e},${c}`); }
+        if (r !== e) {
+          board[e][c] = board[r][c];
+          board[r][c] = -1;
+          lastDroppedCells.add(`${e},${c}`);
+        }
         e--;
       }
     }
   }
+}
+
+// Apply staggered drop animations for smooth cascade
+function applyDropAnimations() {
+  if (!animationsEnabled) return;
+  lastDroppedCells.forEach((key, index) => {
+    const [r, c] = key.split(',').map(Number);
+    const el = getEl(r, c);
+    if (el) {
+      const stagger = c * 35 + Math.random() * 25;
+      setTimeout(() => {
+        el.classList.remove('cascade-drop', 'drop-in');
+        void el.offsetWidth;
+        el.classList.add('cascade-drop');
+      }, stagger);
+    }
+  });
 }
 function fill(animalTypes) {
   lastSpawnedCells.clear();
   const types = animalTypes || getConfig(level).animalTypes;
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
-      if (board[r][c] === -1) board[r][c] = pickSpawnAnimal(types, r, c);
+      if (board[r][c] === -1) {
+        board[r][c] = pickSpawnAnimal(types, r, c);
+        lastSpawnedCells.add(`${r},${c}`);
+      }
     }
   }
 }
@@ -1470,32 +1854,97 @@ function drawAttackTrail(r1, c1, r2, c2) {
   fxLayer().appendChild(trail); setTimeout(() => trail.remove(), 460);
 }
 function drawBlastRing(r, c) {
-  const el = getEl(r,c); if (!el) return;
+  if (!animationsEnabled) return;
+  const el = getEl(r, c);
+  if (!el) return;
   const rect = el.getBoundingClientRect();
   const ring = document.createElement('div');
   ring.className = 'blast-ring';
-  ring.style.left = rect.left + rect.width/2 + 'px';
-  ring.style.top = rect.top + rect.height/2 + 'px';
-  fxLayer().appendChild(ring); setTimeout(() => ring.remove(), 650);
+  ring.style.left = rect.left + rect.width / 2 + 'px';
+  ring.style.top = rect.top + rect.height / 2 + 'px';
+  fxLayer().appendChild(ring);
+  setTimeout(() => ring.remove(), 700);
+  
+  // Add secondary pulse ring
+  setTimeout(() => {
+    const ring2 = document.createElement('div');
+    ring2.className = 'blast-ring';
+    ring2.style.left = rect.left + rect.width / 2 + 'px';
+    ring2.style.top = rect.top + rect.height / 2 + 'px';
+    ring2.style.borderColor = '#ffb000';
+    ring2.style.opacity = '0.6';
+    fxLayer().appendChild(ring2);
+    setTimeout(() => ring2.remove(), 700);
+  }, 80);
 }
 function showComboBanner(text) {
-  const b = document.createElement('div'); b.className = 'combo-banner'; b.textContent = text;
-  document.body.appendChild(b); setTimeout(() => b.remove(), 920);
+  if (!animationsEnabled) {
+    const b = document.createElement('div');
+    b.className = 'combo-banner';
+    b.textContent = text;
+    document.body.appendChild(b);
+    setTimeout(() => b.remove(), 500);
+    return;
+  }
+  
+  const b = document.createElement('div');
+  b.className = 'combo-banner';
+  b.textContent = text;
+  
+  // Add sparkles around banner
+  for (let i = 0; i < 8; i++) {
+    const spark = document.createElement('div');
+    spark.className = 'particles magic';
+    spark.textContent = '✨';
+    spark.style.position = 'fixed';
+    spark.style.left = '50%';
+    spark.style.top = '44%';
+    spark.style.fontSize = '16px';
+    const angle = (i / 8) * Math.PI * 2;
+    const distance = 60;
+    spark.style.setProperty('--offset-x', Math.cos(angle) * distance + 'px');
+    spark.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+    spark.style.zIndex = '205';
+    document.body.appendChild(spark);
+    setTimeout(() => spark.remove(), 1000);
+  }
+  
+  document.body.appendChild(b);
+  shakeBoard();
+  setTimeout(() => b.remove(), 1000);
 }
 
 function spawnParticles(el, hunted=false) {
+  if (!animationsEnabled) return;
   const rect = el.getBoundingClientRect();
-  const icons = hunted ? ['🐾','💥','🌿','✨'] : ['🌿','🍃','✨','🌱'];
-  for (let i = 0; i < (hunted ? 5 : 3); i++) {
+  const count = hunted ? 6 : 4;
+  const icons = hunted ? ['🐾','💥','🌿','✨','⭐','🔥'] : ['🌿','🍃','✨','🌱','💫','✨'];
+  
+  for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
-    p.className = 'particles';
+    const isHunt = hunted && Math.random() > 0.3;
+    p.className = `particles ${isHunt ? 'hunt' : hunted ? 'magic' : ''}`;
     p.textContent = icons[Math.floor(Math.random() * icons.length)];
     p.style.left = rect.left + rect.width / 2 + 'px';
-    p.style.top  = rect.top + rect.height / 2 + 'px';
-    p.style.transform = `translateX(${(Math.random() - 0.5) * 90}px)`;
+    p.style.top = rect.top + rect.height / 2 + 'px';
+    
+    // Randomize spread direction
+    const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.8;
+    const distance = 70 + Math.random() * 50;
+    const offsetX = Math.cos(angle) * distance;
+    const offsetY = Math.sin(angle) * distance * 0.6;
+    
+    p.style.setProperty('--offset-x', offsetX + 'px');
+    p.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    p.style.animationDelay = (Math.random() * 120) + 'ms';
+    p.style.zIndex = Math.floor(200 + Math.random() * 10);
+    
     document.body.appendChild(p);
-    setTimeout(() => p.remove(), 1000);
+    setTimeout(() => p.remove(), hunted ? 1400 : 1200);
   }
+  
+  // Add screen shake for important matches
+  if (hunted && count > 4) shakeBoard();
 }
 
 function hasAnyValidMove() { return Boolean(findFirstValidMove()); }
@@ -1546,6 +1995,7 @@ function shakeBoard() {
 }
 
 function showScoreFloat(r, c, text) {
+  if (!animationsEnabled) return;
   const el = getEl(r, c);
   if (!el) return;
   const rect = el.getBoundingClientRect();
@@ -1554,6 +2004,12 @@ function showScoreFloat(r, c, text) {
   scoreEl.textContent = text;
   scoreEl.style.left = rect.left + rect.width / 2 - 18 + 'px';
   scoreEl.style.top = rect.top + rect.height / 2 - 8 + 'px';
+  
+  // Add color variation based on score value
+  if (text.includes('100')) scoreEl.style.color = '#ffb000';
+  else if (text.includes('50')) scoreEl.style.color = '#6dbf67';
+  
+  scoreEl.style.filter = 'drop-shadow(0 3px 6px rgba(0,0,0,0.5))';
   document.body.appendChild(scoreEl);
   setTimeout(() => scoreEl.remove(), 920);
 }
