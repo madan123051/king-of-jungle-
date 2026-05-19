@@ -1234,21 +1234,10 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
     setTimeout(() => {
       fill(cfg.animalTypes);
       renderBoard(undefined, true);
-      const nextMatches = findMatches();
-      if (!nextMatches.length) {
-        isProcessing = false;
-        checkStatus();
-        return;
-      }
-      const nextDepth = playerTriggered ? 1 : cascadeDepth + 1;
-      if (nextDepth > MAX_AUTO_CASCADES) {
-        isProcessing = false;
-        showMsg('🌿 Cascade stabilized — your turn!');
-        ensurePlayableBoard();
-        checkStatus();
-        return;
-      }
-      setTimeout(() => processMatches(false, nextDepth), CASCADE_PAUSE_MS);
+      // NO cascade — single resolve per swap (manual match logic)
+      isProcessing = false;
+      ensurePlayableBoard();
+      checkStatus();
     }, 300);
   }, animationsEnabled ? 460 : 120);
 }
