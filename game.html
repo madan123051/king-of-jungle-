@@ -317,8 +317,8 @@ h1 {
 .candy.new-spawn { animation:newSpawnPro 0.54s cubic-bezier(.18,1.5,.3,1); }
 .candy.match-pop { animation:matchPopBurst 0.36s ease; }
 .candy.cascade-drop { animation:cascadeDropPro 0.52s cubic-bezier(.25,.82,.25,.95); }
-.removing { animation:fadeOutPro 0.42s forwards; }
-.removing.burst { animation:fadeOutBurst 0.52s forwards; }
+.removing { animation:fadeOutPro 0.42s forwards !important; opacity:0 !important; pointer-events:none !important; }
+.removing.burst { animation:fadeOutBurst 0.52s forwards !important; opacity:0 !important; pointer-events:none !important; }
 
 /* Enhanced Swap Animation */
 @keyframes tileSwapPro {
@@ -379,15 +379,16 @@ h1 {
 @keyframes dropInPro {
   0% {
     transform:translateY(-68px) scale(.88);
-    opacity:.2;
-    filter:blur(2px);
+    opacity:.15;
+    filter:blur(3px);
   }
-  40% {
-    transform:translateY(-8px) scale(1.02);
+  30% {
+    transform:translateY(-12px) scale(1.08);
     opacity:1;
+    filter:blur(1px);
   }
   65% {
-    transform:translateY(2px) scale(1.04);
+    transform:translateY(3px) scale(1.02);
   }
   100% {
     transform:translateY(0) scale(1);
@@ -1280,10 +1281,11 @@ function applySpawnAnimations() {
     const [r, c] = key.split(',').map(Number);
     const el = getEl(r, c);
     if (el) {
-      const stagger = c * 40 + r * 25 + Math.random() * 30;
+      const stagger = c * 45 + r * 30 + Math.random() * 35;
       setTimeout(() => {
-        el.classList.remove('new-spawn');
-        void el.offsetWidth;
+        // Force reflow to ensure animation plays
+        el.classList.remove('new-spawn', 'drop-in', 'cascade-drop');
+        void el.offsetHeight;
         el.classList.add('new-spawn');
       }, stagger);
     }
@@ -1563,7 +1565,7 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
           el.classList.add('prey-hit');
           spawnParticles(el, true);
         } else if (matchIsSpecial(matches, r, c)) {
-          el.classList.add('special-sweep', 'burst');
+          el.classList.add('removing', 'burst');
           spawnParticles(el, false);
           drawBlastRing(r, c);
         } else {
@@ -1597,6 +1599,9 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
   else if (matches.length > 1) showMsg(`🔥 COMBO x${matches.length}! +${pts}`, true);
   else showMsg(msgs[firstType] || `✨ Match! +${pts}`);
 
+  // Wait for all removal animations to complete before clearing board
+  // Max delay = (COLS * 35) + animation duration (420-540ms)
+  const maxAnimTime = animationsEnabled ? (COLS * 40) + 540 : 50;
   setTimeout(() => {
     try {
       cellsToRemove.forEach(key => {
@@ -1607,6 +1612,8 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
       // Apply drop animations with stagger
       applyDropAnimations();
       
+      // Wait for drop animations to complete
+      const dropAnimTime = animationsEnabled ? 520 : 50;
       setTimeout(() => {
         try {
           fill(cfg.animalTypes);
@@ -1614,6 +1621,8 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
           // Apply spawn animations with stagger
           applySpawnAnimations();
           
+          // Wait for spawn animations to complete
+          const spawnAnimTime = animationsEnabled ? 540 : 50;
           setTimeout(() => {
             const nextMatches = findMatches();
             if (!nextMatches.length) {
@@ -1643,7 +1652,7 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
                 checkStatus();
               }
             }, CASCADE_PAUSE_MS);
-          }, animationsEnabled ? 520 : 50);
+          }, spawnAnimTime);
         } catch (e) {
           console.error('Fill/render error:', e);
           isProcessing = false;
@@ -1651,7 +1660,7 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
           showMsg('🌿 Game error. Try your next move!');
           checkStatus();
         }
-      }, animationsEnabled ? 480 : 100);
+      }, dropAnimTime);
     } catch (e) {
       console.error('Drop error:', e);
       isProcessing = false;
@@ -1659,7 +1668,7 @@ function processMatches(playerTriggered=false, cascadeDepth=0) {
       showMsg('🌿 Game error. Try your next move!');
       checkStatus();
     }
-  }, animationsEnabled ? 520 : 120);
+  }, maxAnimTime);
 }
 
 function matchIsSpecial(matches, r, c) {
@@ -1710,10 +1719,11 @@ function applyDropAnimations() {
     const [r, c] = key.split(',').map(Number);
     const el = getEl(r, c);
     if (el) {
-      const stagger = c * 35 + Math.random() * 25;
+      const stagger = c * 40 + Math.random() * 30;
       setTimeout(() => {
-        el.classList.remove('cascade-drop', 'drop-in');
-        void el.offsetWidth;
+        // Force reflow to ensure animation plays
+        el.classList.remove('cascade-drop', 'drop-in', 'new-spawn', 'removing');
+        void el.offsetHeight;
         el.classList.add('cascade-drop');
       }, stagger);
     }
