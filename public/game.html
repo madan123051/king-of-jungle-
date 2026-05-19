@@ -1205,9 +1205,7 @@ function mergeIntersections(matches) {
 function cellKey({r,c}){ return `${r},${c}`; }
 
 /* ════════════════════════════════════════════════════
-   COMPUTE DROP INFO
-   Returns Map: "${newR},${c}" -> dropCount
-   Computed BEFORE drop() is called
+   COMPUTE DROP INFO  (called after board[r][c]=-1 for matches)
 ════════════════════════════════════════════════════ */
 function computeDropInfo() {
   const dropInfo = new Map();
@@ -1262,232 +1260,152 @@ function removeSkeletonCells() {
 }
 
 /* ════════════════════════════════════════════════════
-   PROCESS MATCHES — Candy Crush smooth animation flow
-   USER'S EXACT LOGIC: Single resolve, NO cascade
+   PROCESS MATCHES
+   Candy Crush cascade: after each resolve, re-check for new matches
+   Pop → clear DOM → rebuild with drop/spawn animations → repeat
 ════════════════════════════════════════════════════ */
 async function processMatches(playerTriggered=false) {
-  const cfg = getConfig(level);
-  const matches = findMatches();
-  if (!matches.length) { isProcessing=false; ensurePlayableBoard(); checkStatus(); return; }
+  let totalPts = 0;
+  let cascadeCount = 0;
 
-  /* ── COLLECT MATCHED CELLS ── */
-  const cellsToRemove = new Set();
-  matches.forEach(m=>m.cells.forEach(({r,c})=>cellsToRemove.add(`${r},${c}`)));
+  while (true) {
+    const matches = findMatches();
+    if (!matches.length) break;
 
-  /* ── SCORE ── */
-  const pts = cellsToRemove.size * 10;
-  score += pts;
-  updateScore();
+    const cfg = getConfig(level);
 
-  const centerCell = matches[0].cells[Math.floor(matches[0].cells.length/2)];
-  const pan = jungleAudio.panFromCell(centerCell.c);
+    /* ── Collect matched cells ── */
+    const cellsToRemove = new Set();
+    matches.forEach(m => m.cells.forEach(({r,c}) => cellsToRemove.add(`${r},${c}`)));
 
-  /* ── STAGE 1: Staggered match-pop animation ── */
-  const matchArr = [...cellsToRemove]
-    .map(k=>{ const [r,c]=k.split(',').map(Number); return{r,c}; })
-    .sort((a,b)=>
-      Math.hypot(a.r-centerCell.r,a.c-centerCell.c) -
-      Math.hypot(b.r-centerCell.r,b.c-centerCell.c)
+    /* ── Score ── */
+    const cascadeBonus = cascadeCount > 0 ? 1 + cascadeCount * 0.25 : 1;
+    const pts = Math.round(cellsToRemove.size * 10 * cascadeBonus);
+    totalPts += pts;
+    score += pts;
+    updateScore();
+
+    const centerCell = matches[0].cells[Math.floor(matches[0].cells.length / 2)];
+    const pan = jungleAudio.panFromCell(centerCell.c);
+
+    /* ── STEP 1: Flash matched tiles with pop animation ── */
+    const matchArr = [...cellsToRemove].map(k => {
+      const [r,c] = k.split(',').map(Number); return {r,c};
+    }).sort((a,b) =>
+      Math.hypot(a.r-centerCell.r, a.c-centerCell.c) -
+      Math.hypot(b.r-centerCell.r, b.c-centerCell.c)
     );
 
-  let maxDelay = 0;
-  matchArr.forEach(({r,c},i)=>{
-    const d = i * 55; // 55ms stagger — one by one feel
-    if (d > maxDelay) maxDelay = d;
-    setTimeout(()=>{
-      const el = getEl(r,c);
-      if (!el) return;
-      el.classList.add('match-pop');
-      spawnMatchParticles(el);
-    }, d);
-  });
+    matchArr.forEach(({r,c}, i) => {
+      setTimeout(() => {
+        const el = getEl(r,c);
+        if (el) { el.classList.add('match-pop'); spawnMatchParticles(el); }
+      }, i * 50);
+    });
 
-  // Score float at center of match
-  showScoreFloat(centerCell.r, centerCell.c, '+'+pts);
-  drawBlastRing(centerCell.r, centerCell.c);
+    showScoreFloat(centerCell.r, centerCell.c, '+' + pts);
+    drawBlastRing(centerCell.r, centerCell.c);
 
-  // Audio
-  if (pts >= 50) { jungleAudio.play('bigpop',pan); jungleAudio.comboIntensity(); }
-  else           { jungleAudio.play('pop',pan); }
+    if (cascadeCount > 0)    { showMsg('🔥 CASCADE! +' + pts + '!', true); jungleAudio.play('bigpop', pan); }
+    else if (pts >= 80)      { showMsg('🔥 MEGA! +' + pts + ' points!', true); jungleAudio.play('bigpop', pan); jungleAudio.comboIntensity(); }
+    else if (pts >= 40)      { showMsg('💥 Combo! +' + pts + ' points!', true); jungleAudio.play('pop', pan); }
+    else                     { showMsg('✨ +' + pts + ' points!'); jungleAudio.play('pop', pan); }
 
-  // Message
-  if (pts>=80)          showMsg('🔥 MEGA! +'+pts+' points!', true);
-  else if (pts>=40)     showMsg('💥 Combo! +'+pts+' points!', true);
-  else                  showMsg('✨ +'+pts+' points!');
+    if (pts >= 40 || cascadeCount > 0) showComboBanner(cascadeCount>0 ? '🔗 CASCADE x'+(cascadeCount+1)+'!' : pts>=80 ? '🔥 MEGA MATCH!' : '💥 COMBO!');
 
-  if (pts>=40) showComboBanner(pts>=80?'🔥 MEGA MATCH!':'💥 COMBO!');
+    /* ── STEP 2: Wait for ALL pop animations to finish ── */
+    const popDuration = (matchArr.length - 1) * 50 + 420;
+    await delay(popDuration);
 
-  /* ── Wait for all pops to finish ── */
-  await delay(maxDelay + 380);
+    /* ── STEP 3: Update board data ── */
+    cellsToRemove.forEach(k => {
+      const [r,c] = k.split(',').map(Number);
+      board[r][c] = -1;
+    });
 
-  /* ── STAGE 2: Remove matched tiles from board data + show skeletons ── */
-  cellsToRemove.forEach(k=>{
-    const [r,c]=k.split(',').map(Number);
-    board[r][c] = -1;
-  });
-  addSkeletonCells(cellsToRemove);
+    /* ── STEP 4: Compute which tiles will drop (BEFORE drop()) ── */
+    const dropInfo = computeDropInfo();
 
-  /* ── STAGE 3: Compute drop info BEFORE drop() ── */
-  const dropInfo = computeDropInfo();
+    /* ── STEP 5: Apply gravity + fill ── */
+    drop();
+    const newCells = computeNewCells();
+    fill(cfg.animalTypes);
 
-  /* ── Brief pause so player sees skeletons ── */
-  await delay(80);
+    /* ── STEP 6: Clear entire board DOM and rebuild cleanly ── */
+    const boardEl = document.getElementById('board');
+    const cellH   = getBoardCellHeight();
+    const gapPx   = parseInt(getComputedStyle(boardEl).gap) || 4;
 
-  /* ── STAGE 4: Apply gravity to board data ── */
-  drop();
+    boardEl.innerHTML = '';
+    boardEl.style.gridTemplateColumns = `repeat(${COLS},1fr)`;
 
-  /* ── STAGE 5: Compute which cells will be filled ── */
-  const newCellPositions = computeNewCells(); // positions still -1
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const animalIdx = board[r][c];
+        const d = makeTileEl(animalIdx, r, c, cfg.iconSize);
+        const key = `${r},${c}`;
 
-  /* ── STAGE 6: Fill new tiles ── */
-  fill(cfg.animalTypes);
+        if (newCells.has(key)) {
+          /* New tile: spawn from above board */
+          const spawnOffset = -((r + 1) * (cellH + gapPx) + 30);
+          d.style.transform  = `translateY(${spawnOffset}px)`;
+          d.style.transition = 'none';
+          d.dataset.spawnFor  = `${r},${c}`;
+          d.dataset.spawnOffset = spawnOffset;
+          d.classList.add('tile-spawning');
+        } else if (dropInfo.has(key)) {
+          /* Dropped tile: starts above, animates down */
+          const dropCount = dropInfo.get(key);
+          const offset    = -(dropCount * (cellH + gapPx));
+          d.style.transform  = `translateY(${offset}px)`;
+          d.style.transition = 'none';
+          d.dataset.dropCount = dropCount;
+          d.classList.add('tile-dropping');
+        }
 
-  /* ── STAGE 7: Get cell height for offset calculation ── */
-  const cellH = getBoardCellHeight();
+        boardEl.appendChild(d);
+      }
+    }
 
-  /* ── STAGE 8: Add dropping tiles to DOM (at new positions, offset upward) ── */
-  const boardEl = document.getElementById('board');
-  const gapPxVal = parseInt(getComputedStyle(boardEl).gap) || 4;
+    /* ── STEP 7: Force reflow then animate ── */
+    boardEl.offsetHeight;
 
-  dropInfo.forEach((dropCount, key)=>{
-    const [r,c] = key.split(',').map(Number);
-    const animalIdx = board[r][c];
-    if (animalIdx < 0) return;
-    // ── CRITICAL: Remove old tile element at OLD position before adding at new ──
-    const oldR = r - dropCount;
-    const oldEl = document.querySelector(`#board .candy[data-r="${oldR}"][data-c="${c}"]:not(.skeleton-tile)`);
-    if (oldEl) oldEl.remove();
-    const iSize = cfg.iconSize;
-    const d = makeTileEl(animalIdx, r, c, iSize);
-    d.classList.add('tile-dropping');
-    d.dataset.dropCount = dropCount;
-    // Initial position: offset upward so tile APPEARS at its old position
-    const offsetPx = -(dropCount * (cellH + gapPxVal));
-    d.style.transform = `translateY(${offsetPx}px)`;
-    d.style.transition = 'none';
-    boardEl.appendChild(d);
-  });
+    let maxAnimEnd = 0;
+    boardEl.querySelectorAll('.tile-dropping, .tile-spawning').forEach(el => {
+      const isSpawn  = el.classList.contains('tile-spawning');
+      const r        = parseInt(el.dataset.r);
+      const c        = parseInt(el.dataset.c);
+      const dropCount = parseInt(el.dataset.dropCount) || r + 1;
+      const dur      = isSpawn ? 260 + r * 45 : 180 + dropCount * 60;
+      /* Stagger: bottom tiles land first, columns stagger slightly */
+      const stagger  = isSpawn
+        ? c * 28 + r * 30 + 100
+        : c * 15 + (ROWS - 1 - r) * 10;
+      const totalEnd = stagger + dur;
+      if (totalEnd > maxAnimEnd) maxAnimEnd = totalEnd;
 
-  /* ── STAGE 9: Add new (spawned) tiles to DOM (above the board) ── */
-  const gapPx = gapPxVal;
-  newCellPositions.forEach(key=>{
-    const [r,c] = key.split(',').map(Number);
-    const animalIdx = board[r][c];
-    if (animalIdx < 0) return;
-    const iSize = cfg.iconSize;
-    const d = makeTileEl(animalIdx, r, c, iSize);
-    d.classList.add('tile-spawning');
-    // Offset: tile needs to come from above the board entirely
-    // It's at row r, needs to travel from -(r+1)*cellH to 0
-    const spawnOffset = -((r + 1) * (cellH + gapPx) + 20);
-    d.style.transform = `translateY(${spawnOffset}px)`;
-    d.style.transition = 'none';
-    boardEl.appendChild(d);
-  });
+      setTimeout(() => {
+        el.style.transition = `transform ${dur}ms cubic-bezier(0.25,0.55,0.3,1.25)`;
+        el.style.transform  = '';
+        el.classList.remove('tile-dropping', 'tile-spawning');
+        setTimeout(() => {
+          el.classList.add('tile-landing');
+          setTimeout(() => el.classList.remove('tile-landing'), 130);
+          if (isSpawn) jungleAudio.play('drop', jungleAudio.panFromCell(c));
+        }, dur - 20);
+      }, stagger);
+    });
 
-  /* ── STAGE 10: Force reflow, then animate drops + spawns ── */
-  boardEl.offsetHeight; // trigger reflow
+    /* ── STEP 8: Wait for drop/spawn animations ── */
+    await delay(maxAnimEnd + 80);
 
-  await Promise.all([
-    animateDropTiles(dropInfo, cellH, gapPx),
-    animateSpawnTiles(newCellPositions, cellH, gapPx)
-  ]);
+    cascadeCount++;
+  } // end while(cascade)
 
-  /* ── STAGE 11: Clean up skeletons ── */
-  removeSkeletonCells();
-
-  /* ── NO CASCADE: single resolve per swap (user's exact logic) ── */
+  /* ── All cascades done ── */
   isProcessing = false;
   ensurePlayableBoard();
   checkStatus();
-}
-
-/* ════════════════════════════════════════════════════
-   ANIMATE DROP TILES — smooth staggered fall
-════════════════════════════════════════════════════ */
-function animateDropTiles(dropInfo, cellH, gapPx) {
-  const dropping = document.querySelectorAll('.tile-dropping');
-  if (!dropping.length) return Promise.resolve();
-
-  return new Promise(resolve=>{
-    let pending = dropping.length;
-    const onDone = ()=>{ if (--pending<=0) resolve(); };
-
-    dropping.forEach(el=>{
-      const dropCount = parseInt(el.dataset.dropCount)||1;
-      const c         = parseInt(el.dataset.c)||0;
-      const r         = parseInt(el.dataset.r)||0;
-      // Duration: longer fall = slightly more time
-      const dur  = 200 + dropCount * 55;
-      // Stagger: bottom tiles drop first (lower row index = wait longer)
-      const colDelay  = c * 18;
-      const rowDelay  = (ROWS - 1 - r) * 12; // closer to bottom = less delay
-      const totalDelay = colDelay + rowDelay;
-
-      setTimeout(()=>{
-        el.style.transition = `transform ${dur}ms cubic-bezier(0.25,0.46,0.45,1.3)`;
-        el.style.transform  = '';
-        el.classList.remove('tile-dropping');
-
-        // Add landing bounce after drop
-        const safeDur = dur;
-        const bounceTimer = setTimeout(()=>{
-          el.classList.add('tile-landing');
-          setTimeout(()=>el.classList.remove('tile-landing'),150);
-          jungleAudio.play('drop', jungleAudio.panFromCell(c));
-          onDone();
-        }, safeDur + 20);
-
-        el.addEventListener('transitionend',()=>{
-          clearTimeout(bounceTimer);
-          el.classList.add('tile-landing');
-          setTimeout(()=>el.classList.remove('tile-landing'),150);
-          jungleAudio.play('drop', jungleAudio.panFromCell(c));
-          onDone();
-        },{once:true});
-      }, totalDelay);
-    });
-  });
-}
-
-/* ════════════════════════════════════════════════════
-   ANIMATE SPAWN TILES — tiles fall from above board
-════════════════════════════════════════════════════ */
-function animateSpawnTiles(newCellPositions, cellH, gapPx) {
-  const spawning = document.querySelectorAll('.tile-spawning');
-  if (!spawning.length) return Promise.resolve();
-
-  return new Promise(resolve=>{
-    let pending = spawning.length;
-    const onDone = ()=>{ if (--pending<=0) resolve(); };
-
-    spawning.forEach(el=>{
-      const c   = parseInt(el.dataset.c)||0;
-      const r   = parseInt(el.dataset.r)||0;
-      // Tiles at higher rows appear first (they start closer to top)
-      const dur        = 250 + r * 40;
-      const spawnDelay = c * 25 + r * 30 + 120; // stagger columns + rows
-
-      setTimeout(()=>{
-        el.style.transition = `transform ${dur}ms cubic-bezier(0.22,1.2,0.36,1)`;
-        el.style.transform  = '';
-        el.classList.remove('tile-spawning');
-
-        const bounceTimer = setTimeout(()=>{
-          el.classList.add('tile-landing');
-          setTimeout(()=>el.classList.remove('tile-landing'),120);
-          onDone();
-        }, dur + 20);
-
-        el.addEventListener('transitionend',()=>{
-          clearTimeout(bounceTimer);
-          el.classList.add('tile-landing');
-          setTimeout(()=>el.classList.remove('tile-landing'),120);
-          onDone();
-        },{once:true});
-      }, spawnDelay);
-    });
-  });
 }
 
 /* ════════════════════════════════════════════════════
