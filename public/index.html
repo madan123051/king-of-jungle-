@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="theme-color" content="#0d3b1e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CandyBoom">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/assets/icon-apple.png">
+<link rel="icon" href="/assets/icon-96.png" type="image/png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>King of Jungle - Home</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -900,5 +908,14 @@ homeAudio.updateUi();
 if (homeAudio.enabled) homeAudio.unlock();
 </script>
 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js', {scope:'/'})
+      .then(r => console.log('[SW] index registered'))
+      .catch(e => console.warn('[SW] failed:', e));
+  });
+}
+</script>
 </body>
 </html>

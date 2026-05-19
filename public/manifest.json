@@ -1,0 +1,32 @@
+{
+  "name": "King of Jungle – Candy Boom",
+  "short_name": "CandyBoom",
+  "description": "Match jungle animals in this wild candy crush adventure!",
+  "start_url": "/levelmap.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#081f0e",
+  "theme_color": "#0d3b1e",
+  "lang": "en",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "/assets/icon-48.png",    "sizes": "48x48",     "type": "image/png" },
+    { "src": "/assets/icon-72.png",    "sizes": "72x72",     "type": "image/png" },
+    { "src": "/assets/icon-96.png",    "sizes": "96x96",     "type": "image/png" },
+    { "src": "/assets/icon-144.png",   "sizes": "144x144",   "type": "image/png" },
+    { "src": "/assets/icon-192.png",   "sizes": "192x192",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "/assets/icon-512.png",   "sizes": "512x512",   "type": "image/png", "purpose": "any maskable" }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Play Now",
+      "short_name": "Play",
+      "description": "Jump straight to the level map",
+      "url": "/levelmap.html",
+      "icons": [{ "src": "/assets/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+  "prefer_related_applications": false
+}
