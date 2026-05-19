@@ -471,7 +471,10 @@ footer p { color:#1a4a1a; font-size:12px; line-height:1.8; }
     <div class="nav-links">
       <a href="#features">Features</a>
       <a href="#howto">How to Play</a>
-      <a href="game.html">▶ Play</a>
+      <a href="#" id="navProfileBtn" onclick="goToMap();return false;" style="display:flex;align-items:center;gap:6px;text-decoration:none;color:inherit;">
+        <span id="navAvatarSmall" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#2d8a2d,#1a4a1a);border:2px solid #f0c040;display:flex;align-items:center;justify-content:center;font-size:15px;overflow:hidden;">🦁</span>
+        <span id="navPlayerName" style="font-size:13px;color:#f0c040;">Play</span>
+      </a>
     </div>
   </nav>
 
@@ -849,7 +852,25 @@ window.copyInvite = async () => {
   alert('Invite link copied!');
 };
 
-window.playNow = () => { location.href = 'game.html'; };
+window.goToMap = () => {
+  const saved = parseInt(localStorage.getItem('koj_current_level')||'0');
+  if(saved > 1) { location.href = 'levelmap.html'; }
+  else { location.href = 'game.html'; }
+};
+window.playNow = () => { window.goToMap(); };
+
+// Update nav profile on load
+(function(){
+  const name = localStorage.getItem('koj_player_name');
+  const photo = localStorage.getItem('koj_photo_url');
+  const lv = parseInt(localStorage.getItem('koj_current_level')||'1');
+  if(name){
+    const nn = document.getElementById('navPlayerName');
+    const na = document.getElementById('navAvatarSmall');
+    if(nn) nn.textContent = name.split(' ')[0] + ' Lv'+lv;
+    if(na && photo) na.innerHTML = `<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="">`;
+  }
+})();
 
 function showLoggedIn(name) {
   authStatus.innerHTML = '<div style="display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;">' +
