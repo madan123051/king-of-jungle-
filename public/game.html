@@ -3,1260 +3,814 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>King of Jungle – Play</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<title>King of Jungle – Animal Boom</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --bg:       #030f05;
-  --panel:    rgba(7,33,13,0.92);
-  --border:   #1a4a1a;
-  --green:    #6dbf67;
-  --gold:     #f0c040;
-  --darkgreen:#2d8a2d;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-}
+  body {
+    background: #030f05;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    font-family: 'Nunito', sans-serif;
+    overflow-x: hidden;
+  }
 
-html, body {
-  width:100%; min-height:100dvh;
-  background:var(--bg);
-  font-family:'Lato', sans-serif;
-  color:white;
-  overflow-x:hidden;
-  user-select:none;
-}
+  /* ── Jungle background leaves ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(0,80,20,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(0,60,10,0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
 
-#bgCanvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
-.leaf {
-  position:fixed; font-size:20px; z-index:1; pointer-events:none; opacity:0;
-  animation: leafFall linear infinite;
-}
-@keyframes leafFall {
-  0%   { transform:translateY(-60px) rotate(0deg); opacity:0; }
-  10%  { opacity:0.5; }
-  90%  { opacity:0.3; }
-  100% { transform:translateY(110vh) rotate(360deg); opacity:0; }
-}
+  /* ── Top Bar ── */
+  .top-bar {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 8px;
+    position: relative;
+    z-index: 10;
+  }
 
-/* ── TOP NAV ── */
-.topnav {
-  position:fixed; top:0; left:0; right:0; z-index:200;
-  padding:calc(10px + var(--safe-top)) 16px 10px;
-  background:linear-gradient(180deg,rgba(0,0,0,0.8) 0%,transparent 100%);
-  backdrop-filter:blur(4px);
-  border-bottom:1px solid rgba(45,138,45,0.2);
-  display:flex; align-items:center; justify-content:space-between;
-}
-.nav-back {
-  color:var(--green); font-size:14px; text-decoration:none;
-  border:1px solid var(--border); border-radius:20px;
-  padding:6px 14px; transition:all 0.3s;
-  display:flex; align-items:center; gap:6px;
-  background:none; cursor:pointer;
-}
-.nav-back:hover { background:rgba(45,138,45,0.15); border-color:var(--green); }
-.nav-title {
-  font-family:'Cinzel Decorative', serif;
-  color:var(--gold); font-size:13px;
-  text-shadow:0 0 10px #f0c04088;
-}
+  .back-btn {
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: #a8d5a2;
+    font-size: 1.4rem;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+  }
 
-/* ── GAME WRAPPER ── */
-#gameWrap {
-  position:relative; z-index:10;
-  min-height:100dvh;
-  display:flex; flex-direction:column;
-  align-items:center;
-  padding:calc(60px + var(--safe-top)) 12px calc(20px + var(--safe-bottom));
-}
+  .top-title {
+    font-family: 'Cinzel Decorative', cursive;
+    color: #c8f0a0;
+    font-size: 1.1rem;
+    text-shadow: 0 0 12px rgba(100,255,100,0.4);
+    letter-spacing: 1px;
+  }
 
-/* ── STATS BAR (Pill shape) ── */
-.stats-bar {
-  width:100%; max-width:480px;
-  display:flex; gap:6px;
-  margin-bottom:8px;
-}
-.stat-pill {
-  flex:1;
-  background:var(--panel);
-  border:1.5px solid var(--border);
-  border-radius:50px;
-  padding:7px 10px;
-  text-align:center;
-  box-shadow:0 2px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-}
-.stat-label {
-  font-size:9px; color:#3a7a3a;
-  text-transform:uppercase; letter-spacing:1px;
-}
-.stat-val {
-  font-size:16px; font-weight:700;
-  color:var(--gold);
-  font-family:'Cinzel Decorative', serif;
-}
+  /* ── Stats Row (pill shaped) ── */
+  .stats-row {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    gap: 8px;
+    padding: 4px 16px 8px;
+    justify-content: space-between;
+    position: relative;
+    z-index: 10;
+  }
 
-/* ── TIGER-GOAT LIVES ── */
-.lives-bar {
-  width:100%; max-width:480px;
-  display:flex; align-items:center; justify-content:center;
-  gap:10px;
-  margin-bottom:8px;
-  background:var(--panel);
-  border:1.5px solid var(--border);
-  border-radius:50px;
-  padding:8px 18px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.4);
-}
-.tiger-icon {
-  font-size:28px;
-  filter:drop-shadow(0 0 6px rgba(255,140,0,0.6));
-  transition:transform 0.3s;
-}
-.tiger-icon.lunge {
-  animation: tigerLunge 0.5s ease;
-}
-@keyframes tigerLunge {
-  0%   { transform:scale(1) translateX(0); }
-  30%  { transform:scale(1.4) translateX(10px); }
-  60%  { transform:scale(1.2) translateX(5px); }
-  100% { transform:scale(1) translateX(0); }
-}
-.goats-row {
-  display:flex; gap:4px; align-items:center;
-}
-.goat {
-  font-size:22px;
-  transition:all 0.4s;
-  filter:drop-shadow(0 0 4px rgba(255,255,255,0.3));
-}
-.goat.eaten {
-  animation: goatEaten 0.5s ease forwards;
-}
-@keyframes goatEaten {
-  0%   { transform:scale(1); opacity:1; }
-  40%  { transform:scale(1.3) rotate(-15deg); opacity:0.7; }
-  100% { transform:scale(0) rotate(45deg); opacity:0; }
-}
-.lives-label {
-  font-size:10px; color:#3a7a3a;
-  letter-spacing:1px; text-transform:uppercase;
-}
+  .pill {
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50px;
+    padding: 8px 18px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
 
-/* ── PROGRESS BAR ── */
-.prog-wrap { width:100%; max-width:480px; margin-bottom:8px; }
-.prog-row {
-  display:flex; justify-content:space-between;
-  font-size:11px; color:#3a7a3a; margin-bottom:4px;
-}
-.prog-row b { color:var(--gold); }
-.prog-track {
-  background:rgba(255,255,255,0.08);
-  border-radius:30px; height:10px; overflow:hidden;
-}
-.prog-fill {
-  height:100%; border-radius:30px;
-  background:linear-gradient(90deg, #1a8a2d, #6dbf67, #f0c040);
-  transition:width 0.5s cubic-bezier(.47,1.64,.41,.8);
-}
+  .pill-label {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
 
-/* ── BOOSTERS ── */
-.boosters {
-  width:100%; max-width:480px;
-  display:flex; gap:6px; justify-content:flex-end;
-  margin-bottom:8px;
-}
-.booster-btn {
-  background:var(--panel);
-  border:1.5px solid var(--border);
-  border-radius:50px;
-  padding:7px 12px;
-  cursor:pointer;
-  transition:all 0.2s;
-  display:flex; align-items:center; gap:4px;
-  color:var(--gold);
-  font-size:11px;
-}
-.booster-btn:hover { border-color:var(--darkgreen); background:rgba(45,138,45,0.15); transform:scale(1.05); }
-.booster-btn.active { border-color:var(--gold); background:rgba(240,192,64,0.15); }
-.booster-icon { font-size:16px; }
+  .pill-value {
+    color: #c8f0a0;
+    font-size: 1.1rem;
+    font-weight: 900;
+  }
 
-/* ── GRID ── */
-#gridWrap { width:100%; max-width:480px; position:relative; touch-action:none; }
-#grid {
-  display:grid;
-  gap:4px;
-  width:100%;
-  padding:8px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:16px;
-  box-shadow:0 0 30px rgba(45,138,45,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
-}
+  /* ── Lives Row ── */
+  .lives-row {
+    width: 100%;
+    max-width: 480px;
+    padding: 0 16px 10px;
+    position: relative;
+    z-index: 10;
+  }
 
-/* ── ANIMAL BOOM CELLS ── */
-.cell {
-  aspect-ratio:1;
-  display:flex; align-items:center; justify-content:center;
-  font-size:clamp(20px, 4.5vw, 34px);
-  border-radius:12px;
-  cursor:pointer;
-  transition:transform 0.1s, filter 0.2s;
-  position:relative;
-  overflow:hidden;
-  border:2px solid transparent;
-  box-shadow:0 4px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
-}
-/* Animal type colors */
-.cell[data-type="0"] { background:linear-gradient(135deg,#ff4d4d,#cc0000); border-color:#ff6666; }
-.cell[data-type="1"] { background:linear-gradient(135deg,#4d79ff,#0033cc); border-color:#6699ff; }
-.cell[data-type="2"] { background:linear-gradient(135deg,#00cc66,#007a3d); border-color:#33ff88; }
-.cell[data-type="3"] { background:linear-gradient(135deg,#ffcc00,#cc8800); border-color:#ffdd44; }
-.cell[data-type="4"] { background:linear-gradient(135deg,#cc44ff,#7700cc); border-color:#dd88ff; }
-.cell[data-type="5"] { background:linear-gradient(135deg,#ff8800,#cc5500); border-color:#ffaa33; }
-.cell[data-type="6"] { background:linear-gradient(135deg,#ff4da6,#cc0066); border-color:#ff80c0; }
-.cell[data-type="7"] { background:linear-gradient(135deg,#00cccc,#006666); border-color:#33ffff; }
+  .lives-pill {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50px;
+    padding: 8px 18px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+  }
 
-.cell::after {
-  content:'';
-  position:absolute; top:0; left:0; right:0; height:40%;
-  background:linear-gradient(180deg, rgba(255,255,255,0.25), transparent);
-  border-radius:10px 10px 0 0;
-  pointer-events:none;
-}
-.cell:hover { transform:scale(1.06); filter:brightness(1.15); }
-.cell.selected {
-  border-color:var(--gold) !important;
-  transform:scale(1.12);
-  box-shadow:0 0 16px rgba(240,192,64,0.6), 0 4px 8px rgba(0,0,0,0.4);
-  z-index:2;
-  filter:brightness(1.2);
-}
-.cell.hint { animation: hintPulse 0.6s ease infinite alternate; }
-@keyframes hintPulse {
-  from { filter:brightness(1); box-shadow:0 0 6px rgba(109,191,103,0.4); }
-  to   { filter:brightness(1.3); box-shadow:0 0 14px rgba(45,138,45,0.7); }
-}
-.cell.match-pop { animation: matchPop 0.35s ease forwards; }
-@keyframes matchPop {
-  0%   { transform:scale(1.15); }
-  40%  { transform:scale(0.6); opacity:0.6; }
-  100% { transform:scale(0); opacity:0; }
-}
-.cell.drop-in { animation: dropIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards; }
-@keyframes dropIn {
-  from { transform:translateY(-40px) scale(0.8); opacity:0; }
-  to   { transform:translateY(0) scale(1); opacity:1; }
-}
-.cell.swap-anim { animation: swapPulse 0.15s ease; }
-@keyframes swapPulse { 50% { transform:scale(0.88); } }
+  .lives-tiger {
+    font-size: 1.6rem;
+    line-height: 1;
+  }
 
-/* Float score */
-.float-score {
-  position:fixed; pointer-events:none; z-index:50;
-  font-family:'Cinzel Decorative',serif;
-  color:var(--gold); font-size:18px; font-weight:700;
-  text-shadow:0 0 8px rgba(240,192,64,0.8);
-  animation: floatUp 0.9s ease forwards;
-}
-@keyframes floatUp {
-  0%   { opacity:1; transform:translateY(0) scale(1); }
-  70%  { opacity:1; transform:translateY(-40px) scale(1.1); }
-  100% { opacity:0; transform:translateY(-70px) scale(0.8); }
-}
+  .lives-vs {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0 4px;
+  }
 
-/* Combo badge */
-#comboBadge {
-  position:fixed; top:50%; left:50%;
-  transform:translate(-50%,-50%) scale(0);
-  z-index:300;
-  background:linear-gradient(135deg,#0a4a0a,#1a8a1a);
-  border:2px solid var(--gold); border-radius:16px;
-  padding:12px 24px; text-align:center; pointer-events:none;
-  transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
-  opacity:0;
-}
-#comboBadge.show { transform:translate(-50%,-50%) scale(1); opacity:1; }
-#comboBadge .combo-num { font-family:'Cinzel Decorative',serif; color:var(--gold); font-size:32px; text-shadow:0 0 20px #f0c04088; }
-#comboBadge .combo-txt { color:var(--green); font-size:13px; letter-spacing:2px; text-transform:uppercase; }
+  .goat-item {
+    font-size: 1.4rem;
+    transition: all 0.3s;
+  }
 
-/* ── TOAST / POPUP ── */
-.toast-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:400; align-items:center; justify-content:center; }
-.toast-overlay.show { display:flex; }
-.toast-box {
-  width:min(90vw,360px);
-  background:linear-gradient(135deg, rgba(7,33,13,0.97), rgba(3,15,5,0.99));
-  border:1px solid var(--darkgreen); border-radius:24px;
-  padding:36px 28px; text-align:center;
-  box-shadow:0 0 60px rgba(45,138,45,0.3);
-  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
-}
-@keyframes popIn { from { transform:scale(0.7); opacity:0; } to { transform:scale(1); opacity:1; } }
-.toast-icon { font-size:60px; margin-bottom:12px; display:block; }
-.toast-title { font-family:'Cinzel Decorative', serif; color:var(--gold); font-size:clamp(20px,5vw,28px); text-shadow:0 0 20px #f0c04066; margin-bottom:8px; }
-.toast-msg { color:var(--green); font-size:14px; line-height:1.6; margin-bottom:20px; }
-.stars { font-size:32px; margin-bottom:16px; letter-spacing:4px; }
-.toast-btns { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
-.btn-play { padding:14px 28px; background:linear-gradient(135deg, #1a5c1a, #2d8a2d, #3daa3d); color:var(--gold); border:2px solid #3daa3d; border-radius:50px; font-size:15px; font-family:'Cinzel Decorative',serif; cursor:pointer; transition:all 0.3s; }
-.btn-play:hover { transform:translateY(-2px) scale(1.04); box-shadow:0 0 20px rgba(45,138,45,0.5); }
-.btn-outline { padding:14px 28px; background:transparent; color:var(--green); border:2px solid var(--border); border-radius:50px; font-size:15px; cursor:pointer; transition:all 0.3s; }
-.btn-outline:hover { background:rgba(45,138,45,0.15); border-color:var(--green); }
+  .goat-item.eaten {
+    opacity: 0;
+    transform: scale(0) rotate(180deg);
+  }
 
-/* ── LEVEL SELECT ── */
-#levelModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:300; align-items:flex-start; justify-content:center; overflow-y:auto; padding:80px 16px 30px; }
-#levelModal.show { display:flex; }
-.level-grid { display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; max-width:340px; width:100%; }
-.lvl-btn { aspect-ratio:1; background:var(--panel); border:1px solid var(--border); border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; color:var(--gold); font-family:'Cinzel Decorative',serif; font-size:14px; }
-.lvl-btn.locked { opacity:0.35; cursor:not-allowed; }
-.lvl-btn.cleared { border-color:var(--darkgreen); }
-.lvl-btn:not(.locked):hover { border-color:var(--gold); transform:scale(1.05); }
-.lvl-stars { font-size:8px; letter-spacing:1px; margin-top:2px; }
+  /* ── Grid wrapper ── */
+  .grid-wrapper {
+    position: relative;
+    z-index: 10;
+    padding: 8px 16px;
+    touch-action: none;
+  }
 
-/* ── AUDIO BTN ── */
-#audioBtn { position:fixed; right:14px; bottom:calc(16px + var(--safe-bottom)); z-index:220; border:1px solid var(--border); border-radius:26px; background:linear-gradient(135deg,#0f3c17,#1e6a2f); color:#8adf80; padding:8px 12px; font-weight:700; cursor:pointer; font-size:12px; box-shadow:0 6px 16px rgba(0,0,0,0.35); }
-#audioBtn.muted { color:#6f836f; border-color:#486248; background:linear-gradient(135deg,#283229,#334236); }
+  .grid {
+    display: grid;
+    gap: 5px;
+    background: rgba(0,30,10,0.6);
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(100,200,100,0.15);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+    margin: 0 auto;
+    width: fit-content;
+  }
 
-/* ── NO MOVES HINT ── */
-.no-moves-hint { position:fixed; bottom:calc(60px + var(--safe-bottom)); left:50%; transform:translateX(-50%); background:rgba(7,33,13,0.9); border:1px solid var(--darkgreen); border-radius:20px; padding:8px 20px; color:var(--gold); font-size:13px; z-index:100; pointer-events:none; opacity:0; transition:opacity 0.3s; }
-.no-moves-hint.show { opacity:1; }
+  /* ── Cells ── */
+  .cell {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.1rem;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.1s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
 
-/* Swipe direction hint */
-.swipe-hint { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); z-index:200; font-size:48px; pointer-events:none; opacity:0; transition:all 0.2s; }
-.swipe-hint.show { transform:translate(-50%,-50%) scale(1); opacity:1; }
+  /* shine on top */
+  .cell::before {
+    content: '';
+    position: absolute;
+    top: 4px; left: 6px; right: 6px;
+    height: 35%;
+    background: rgba(255,255,255,0.18);
+    border-radius: 8px 8px 50% 50%;
+    pointer-events: none;
+  }
+
+  .cell.selected {
+    outline: 3px solid #fff700;
+    outline-offset: 2px;
+    transform: scale(1.1);
+    z-index: 5;
+  }
+
+  @keyframes cellPop {
+    0%   { transform: scale(1); opacity: 1; }
+    40%  { transform: scale(1.35); opacity: 0.6; }
+    100% { transform: scale(0); opacity: 0; }
+  }
+
+  .cell.pop {
+    animation: cellPop 0.32s ease forwards;
+  }
+
+  @keyframes cellDrop {
+    0%   { transform: translateY(-30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  .cell.drop {
+    animation: cellDrop 0.3s ease forwards;
+  }
+
+  /* per-animal colors */
+  .a0 { background: linear-gradient(145deg, #e74c3c, #c0392b); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.3), 0 4px 8px rgba(231,76,60,0.3); }
+  .a1 { background: linear-gradient(145deg, #3498db, #2980b9); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.3), 0 4px 8px rgba(52,152,219,0.3); }
+  .a2 { background: linear-gradient(145deg, #27ae60, #1e8449); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.3), 0 4px 8px rgba(39,174,96,0.3); }
+  .a3 { background: linear-gradient(145deg, #f39c12, #d68910); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.3), 0 4px 8px rgba(243,156,18,0.3); }
+  .a4 { background: linear-gradient(145deg, #9b59b6, #7d3c98); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.3), 0 4px 8px rgba(155,89,182,0.3); }
+  .a5 { background: linear-gradient(145deg, #e67e22, #ca6f1e); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.3), 0 4px 8px rgba(230,126,34,0.3); }
+  .a6 { background: linear-gradient(145deg, #e91e8c, #ad1457); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.3), 0 4px 8px rgba(233,30,140,0.3); }
+  .a7 { background: linear-gradient(145deg, #00bcd4, #0097a7); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.3), 0 4px 8px rgba(0,188,212,0.3); }
+
+  /* ── Message bar ── */
+  .msg-bar {
+    position: relative;
+    z-index: 10;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 16px;
+  }
+
+  .msg-text {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffb86c;
+    text-align: center;
+    transition: opacity 0.3s;
+  }
+
+  /* ── Bottom Buttons ── */
+  .bottom-row {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    gap: 10px;
+    padding: 8px 16px 20px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .btn:active { transform: translateY(3px); }
+
+  .btn-next {
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+    color: #1a3a00;
+    box-shadow: 0 5px 0 #2d6a00;
+  }
+
+  .btn-reset {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: white;
+    box-shadow: 0 5px 0 #9e1515;
+  }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(10,30,10,0.97);
+    border: 2px solid rgba(100,200,100,0.3);
+    border-radius: 24px;
+    padding: 28px 36px;
+    text-align: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    min-width: 260px;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: all;
+  }
+
+  .toast h2 { color: #c8f0a0; font-size: 1.8rem; margin-bottom: 8px; font-family: 'Cinzel Decorative', cursive; }
+  .toast p  { color: rgba(255,255,255,0.7); margin-bottom: 18px; font-size: 1rem; }
+  .toast .stars { font-size: 2rem; margin-bottom: 14px; }
+
+  .toast-btn {
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+    color: #1a3a00;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    cursor: pointer;
+    margin: 4px;
+  }
+
+  /* ── Floating score ── */
+  .float-score {
+    position: fixed;
+    color: #fff700;
+    font-weight: 900;
+    font-size: 1.4rem;
+    pointer-events: none;
+    z-index: 999;
+    animation: floatUp 0.9s ease forwards;
+  }
+  @keyframes floatUp {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-60px) scale(1.3); }
+  }
+
+  /* ── Game Over toast ── */
+  .toast.gameover h2 { color: #ff6b6b; }
 </style>
 </head>
 <body>
 
-<canvas id="bgCanvas"></canvas>
-<div class="leaf" style="left:8%;animation-duration:12s;animation-delay:0s;">🍃</div>
-<div class="leaf" style="left:25%;animation-duration:16s;animation-delay:3s;">🌿</div>
-<div class="leaf" style="left:55%;animation-duration:11s;animation-delay:5s;">🍃</div>
-<div class="leaf" style="left:78%;animation-duration:14s;animation-delay:1.5s;">🌿</div>
-<div class="leaf" style="left:92%;animation-duration:13s;animation-delay:7s;">🍃</div>
-
-<!-- TOP NAV -->
-<div class="topnav">
-  <a href="index.html" class="nav-back">← Home</a>
-  <div class="nav-title">👑 King of Jungle</div>
-  <button class="nav-back" onclick="showLevelModal()">📋 Levels</button>
+<!-- Top Bar -->
+<div class="top-bar">
+  <a href="index.html" class="back-btn">◀</a>
+  <div class="top-title">👑 King of Jungle</div>
+  <div style="width:40px"></div>
 </div>
 
-<!-- GAME WRAPPER -->
-<div id="gameWrap">
-
-  <!-- STATS PILLS -->
-  <div class="stats-bar">
-    <div class="stat-pill">
-      <div class="stat-label">Level</div>
-      <div class="stat-val" id="statLevel">1</div>
-    </div>
-    <div class="stat-pill">
-      <div class="stat-label">Score</div>
-      <div class="stat-val" id="statScore">0</div>
-    </div>
-    <div class="stat-pill">
-      <div class="stat-label">Moves</div>
-      <div class="stat-val" id="statMoves">20</div>
-    </div>
+<!-- Stats (pill shaped) -->
+<div class="stats-row">
+  <div class="pill">
+    <span class="pill-label">Level</span>
+    <span class="pill-value" id="levelDisplay">1</span>
   </div>
-
-  <!-- TIGER-GOAT LIVES BAR -->
-  <div class="lives-bar">
-    <div class="tiger-icon" id="tigerIcon">🐯</div>
-    <span style="color:#3a7a3a;font-size:12px;">VS</span>
-    <div class="goats-row" id="goatsRow">
-      <span class="goat" data-idx="0">🐐</span>
-      <span class="goat" data-idx="1">🐐</span>
-      <span class="goat" data-idx="2">🐐</span>
-      <span class="goat" data-idx="3">🐐</span>
-      <span class="goat" data-idx="4">🐐</span>
-    </div>
-    <span class="lives-label" id="livesLabel">5 Lives</span>
+  <div class="pill">
+    <span class="pill-label">Score</span>
+    <span class="pill-value" id="scoreDisplay">0</span>
   </div>
-
-  <!-- PROGRESS -->
-  <div class="prog-wrap">
-    <div class="prog-row">
-      <span>Progress</span>
-      <span><b id="progScore">0</b> / <b id="progTarget">500</b></span>
-    </div>
-    <div class="prog-track">
-      <div class="prog-fill" id="progFill" style="width:0%"></div>
-    </div>
-  </div>
-
-  <!-- BOOSTERS -->
-  <div class="boosters">
-    <button class="booster-btn" id="bHammer" onclick="activateBooster('hammer')">
-      <span class="booster-icon">🔨</span> Hammer
-    </button>
-    <button class="booster-btn" id="bBomb" onclick="activateBooster('bomb')">
-      <span class="booster-icon">💣</span> Bomb
-    </button>
-    <button class="booster-btn" id="bLightning" onclick="activateBooster('lightning')">
-      <span class="booster-icon">⚡</span> Lightning
-    </button>
-    <button class="booster-btn" onclick="shuffleBoard()">
-      <span class="booster-icon">🔀</span> Shuffle
-    </button>
-  </div>
-
-  <!-- GRID -->
-  <div id="gridWrap">
-    <div id="grid"></div>
-  </div>
-
-</div>
-
-<!-- COMBO BADGE -->
-<div id="comboBadge">
-  <div class="combo-num" id="comboNum">x3</div>
-  <div class="combo-txt">JUNGLE COMBO!</div>
-</div>
-
-<!-- WIN POPUP -->
-<div class="toast-overlay" id="winModal">
-  <div class="toast-box">
-    <span class="toast-icon">👑</span>
-    <div class="toast-title">Level Clear!</div>
-    <div class="stars" id="winStars">⭐⭐⭐</div>
-    <div class="toast-msg" id="winMsg">Magnificent! You rule the jungle!</div>
-    <div class="toast-btns">
-      <button class="btn-play" onclick="nextLevel()">▶ Next Level</button>
-      <button class="btn-outline" onclick="retryLevel()">↺ Retry</button>
-    </div>
+  <div class="pill">
+    <span class="pill-label">Moves</span>
+    <span class="pill-value" id="movesDisplay">20</span>
   </div>
 </div>
 
-<!-- LOSE POPUP -->
-<div class="toast-overlay" id="loseModal">
-  <div class="toast-box">
-    <span class="toast-icon">🌿</span>
-    <div class="toast-title" id="loseTitleEl">Out of Moves!</div>
-    <div class="toast-msg" id="loseMsg">The jungle was too strong. Try again!</div>
-    <div class="toast-btns">
-      <button class="btn-play" onclick="retryLevel()">↺ Try Again</button>
-      <button class="btn-outline" onclick="showLevelModal()">📋 Levels</button>
-    </div>
+<!-- Lives (Tiger eats Goat) -->
+<div class="lives-row">
+  <div class="lives-pill">
+    <span class="lives-tiger" id="tigerIcon">🐯</span>
+    <span class="lives-vs">VS</span>
+    <span id="goatsRow">🐐🐐🐐🐐🐐</span>
   </div>
 </div>
 
-<!-- LEVEL SELECT -->
-<div id="levelModal">
-  <div>
-    <p style="font-family:'Cinzel Decorative',serif;color:#f0c040;font-size:18px;text-align:center;margin-bottom:20px;">🏆 Select Level</p>
-    <div class="level-grid" id="levelGrid"></div>
-    <div style="text-align:center;margin-top:16px;">
-      <button class="btn-outline" onclick="hideLevelModal()">✕ Close</button>
-    </div>
-  </div>
+<!-- Grid -->
+<div class="grid-wrapper">
+  <div class="grid" id="grid"></div>
 </div>
 
-<!-- NO MOVES HINT -->
-<div class="no-moves-hint" id="noMovesHint">No valid moves! Shuffling...</div>
+<!-- Message -->
+<div class="msg-bar">
+  <div class="msg-text" id="message"></div>
+</div>
 
-<!-- AUDIO BTN -->
-<button id="audioBtn" class="muted">🔇 Audio Off</button>
+<!-- Buttons -->
+<div class="bottom-row">
+  <button class="btn btn-reset" id="resetBtn">🔄 Restart</button>
+  <button class="btn btn-next" id="nextBtn">Next Level ▶</button>
+</div>
+
+<!-- Win Toast -->
+<div class="toast" id="winToast">
+  <h2>🎉 Level Clear!</h2>
+  <div class="stars" id="toastStars">⭐⭐⭐</div>
+  <p id="toastMsg">Amazing! +200 bonus!</p>
+  <button class="toast-btn" onclick="nextLevel()">Next Level ▶</button>
+  <button class="toast-btn" style="background:rgba(255,255,255,0.1);color:#fff" onclick="closeToast('winToast')">✕ Close</button>
+</div>
+
+<!-- Lose Toast -->
+<div class="toast gameover" id="loseToast">
+  <h2>💀 Game Over</h2>
+  <p id="loseMsg">All goats have been eaten by the tiger!</p>
+  <button class="toast-btn" onclick="restartGame()">🔄 Restart</button>
+</div>
 
 <script>
-// ═══════════════════════════════════════
-//  CANVAS BG
-// ═══════════════════════════════════════
-const canvas = document.getElementById('bgCanvas');
-const ctx2d = canvas.getContext('2d');
-let BW, BH, bgParticles = [];
-function bgResize(){ BW = canvas.width = innerWidth; BH = canvas.height = innerHeight; }
-bgResize(); addEventListener('resize', bgResize);
-for(let i=0;i<50;i++) bgParticles.push({x:Math.random()*2000,y:Math.random()*1000,r:Math.random()*100+30,dx:(Math.random()-.5)*.15,dy:(Math.random()-.5)*.08,a:Math.random()*.035+.008});
-function drawBG(){
-  ctx2d.clearRect(0,0,BW,BH);
-  const bg=ctx2d.createRadialGradient(BW/2,BH*.3,0,BW/2,BH*.3,BW*.8);
-  bg.addColorStop(0,'#0a2a0a'); bg.addColorStop(1,'#010801');
-  ctx2d.fillStyle=bg; ctx2d.fillRect(0,0,BW,BH);
-  bgParticles.forEach(p=>{
-    const g=ctx2d.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
-    g.addColorStop(0,`rgba(20,80,20,${p.a})`); g.addColorStop(1,'rgba(0,0,0,0)');
-    ctx2d.fillStyle=g; ctx2d.beginPath(); ctx2d.arc(p.x,p.y,p.r,0,Math.PI*2); ctx2d.fill();
-    p.x+=p.dx; p.y+=p.dy;
-    if(p.x<-p.r)p.x=BW+p.r; if(p.x>BW+p.r)p.x=-p.r;
-    if(p.y<-p.r)p.y=BH+p.r; if(p.y>BH+p.r)p.y=-p.r;
-  });
-  requestAnimationFrame(drawBG);
-}
-drawBG();
-
-// ═══════════════════════════════════════
-//  ANIMALS
-// ═══════════════════════════════════════
+// ─── Animal pool ─────────────────────────────────────────
 const ANIMALS = ['🐯','🦏','🐘','🦚','🐒','🦅','🐆','🦁'];
 
-function getLevelConfig(lv) {
-  let cols, rows;
-  if (lv <= 10)      { cols=5; rows=5; }
-  else if (lv <= 20) { cols=5; rows=6; }
-  else if (lv <= 35) { cols=6; rows=6; }
-  else if (lv <= 50) { cols=6; rows=7; }
-  else if (lv <= 70) { cols=7; rows=7; }
-  else               { cols=7; rows=8; }
+// ─── Game state ──────────────────────────────────────────
+let level = 1;
+let score = 0;
+let goats = 5;             // lives
+let maxMoves = 20;
+let movesLeft = 20;
+let rows, cols;
+let board = [];            // 2D [r][c] = { animal: string, idx: number }
+let selectedRow = -1, selectedCol = -1;
+let isProcessing = false;
 
-  let types;
-  if (lv <= 5)        types = 4;
-  else if (lv <= 15)  types = 5;
-  else if (lv <= 30)  types = 6;
-  else if (lv <= 50)  types = 7;
-  else                types = 8;
-
-  const moves = Math.max(15, 30 - Math.floor(lv * 0.12));
-  const target = 300 + lv * 120;
-  return { cols, rows, types, moves, target };
-}
-
-// ═══════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════
-const MAX_LEVELS = 100;
-let state = {
-  level: 1,
-  score: 0,
-  moves: 20,
-  lives: 5,        // number of goats alive
-  selected: null,
-  board: [],
-  cfg: null,
-  busy: false,
-  booster: null,
-  progress: JSON.parse(localStorage.getItem('koj_progress') || '{}')
-};
-
-function saveProgress() {
-  localStorage.setItem('koj_progress', JSON.stringify(state.progress));
-}
-
-// ═══════════════════════════════════════
-//  LIVES UI: Tiger + Goats
-// ═══════════════════════════════════════
-function renderGoats() {
-  const row = document.getElementById('goatsRow');
-  row.innerHTML = '';
-  for(let i = 0; i < 5; i++){
-    const g = document.createElement('span');
-    g.className = 'goat';
-    g.dataset.idx = i;
-    g.textContent = i < state.lives ? '🐐' : '💀';
-    g.style.opacity = i < state.lives ? '1' : '0.3';
-    row.appendChild(g);
-  }
-  document.getElementById('livesLabel').textContent = `${state.lives} Live${state.lives !== 1 ? 's' : ''}`;
-}
-
-async function tigerEatsGoat() {
-  if(state.lives <= 0) return;
-  // Tiger lunges
-  const tiger = document.getElementById('tigerIcon');
-  tiger.classList.add('lunge');
-  await delay(200);
-  // Goat eaten animation (last alive goat)
-  const aliveGoats = document.querySelectorAll('#goatsRow .goat');
-  const lastAlive = aliveGoats[state.lives - 1]; // last alive one (0-indexed)
-  if(lastAlive) {
-    lastAlive.classList.add('eaten');
-    await delay(500);
-  }
-  tiger.classList.remove('lunge');
-}
-
-// ═══════════════════════════════════════
-//  START LEVEL
-// ═══════════════════════════════════════
-function startLevel(lv) {
-  state.level = lv;
-  state.cfg = getLevelConfig(lv);
-  state.score = 0;
-  state.moves = state.cfg.moves;
-  state.selected = null;
-  state.busy = false;
-  state.booster = null;
-
-  ['bHammer','bBomb','bLightning'].forEach(id => {
-    document.getElementById(id).classList.remove('active');
-  });
-
-  do {
-    state.board = buildBoard(state.cfg.rows, state.cfg.cols, state.cfg.types);
-  } while (!hasAnyMatch(state.board) && !hasAnyMove(state.board));
-
-  renderBoard();
-  updateHUD();
-  renderGoats();
-  hideLevelModal();
-}
-
-function buildBoard(rows, cols, types) {
-  const board = [];
-  for(let r=0;r<rows;r++){
-    board[r] = [];
-    for(let c=0;c<cols;c++){
-      let t;
-      do {
-        t = Math.floor(Math.random() * types);
-      } while (
-        (c >= 2 && board[r][c-1] === t && board[r][c-2] === t) ||
-        (r >= 2 && board[r-1][c] === t && board[r-2][c] === t)
-      );
-      board[r][c] = t;
-    }
-  }
-  return board;
-}
-
-// ═══════════════════════════════════════
-//  RENDER BOARD
-// ═══════════════════════════════════════
-function renderBoard() {
-  const { rows, cols } = state.cfg;
-  const grid = document.getElementById('grid');
-  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-  grid.innerHTML = '';
-
-  for(let r=0;r<rows;r++){
-    for(let c=0;c<cols;c++){
-      const cell = document.createElement('div');
-      cell.className = 'cell';
-      cell.dataset.r = r;
-      cell.dataset.c = c;
-      const t = state.board[r][c];
-      cell.dataset.type = t >= 0 ? t : 0;
-      cell.textContent = t >= 0 ? ANIMALS[t] : '';
-      cell.addEventListener('click', () => onCellClick(r, c));
-      grid.appendChild(cell);
-    }
-  }
-
-  // Setup swipe on grid
-  setupSwipe();
-}
-
-function getCell(r, c) {
-  const { cols } = state.cfg;
-  return document.getElementById('grid').children[r * cols + c];
-}
-
-function updateCellEmoji(r, c) {
-  const cell = getCell(r, c);
-  if (!cell) return;
-  const t = state.board[r][c];
-  cell.dataset.type = t >= 0 ? t : 0;
-  cell.textContent = t >= 0 ? ANIMALS[t] : '';
-}
-
-function updateHUD() {
-  document.getElementById('statLevel').textContent = state.level;
-  document.getElementById('statScore').textContent = state.score;
-  document.getElementById('statMoves').textContent = state.moves;
-  const target = state.cfg.target;
-  const pct = Math.min(100, (state.score / target) * 100);
-  document.getElementById('progFill').style.width = pct + '%';
-  document.getElementById('progScore').textContent = state.score;
-  document.getElementById('progTarget').textContent = target;
-}
-
-// ═══════════════════════════════════════
-//  TOUCH SWIPE SUPPORT
-// ═══════════════════════════════════════
+// ─── Swipe state ─────────────────────────────────────────
 let touchStartX = 0, touchStartY = 0;
-let touchStartR = -1, touchStartC = -1;
-const SWIPE_THRESHOLD = 20;
+let touchStartRow = -1, touchStartCol = -1;
 
-function setupSwipe() {
-  const gridEl = document.getElementById('grid');
-  gridEl.addEventListener('touchstart', onTouchStart, { passive:false });
-  gridEl.addEventListener('touchend', onTouchEnd, { passive:false });
+// ─── DOM ─────────────────────────────────────────────────
+const gridEl       = document.getElementById('grid');
+const levelDisplay = document.getElementById('levelDisplay');
+const scoreDisplay = document.getElementById('scoreDisplay');
+const movesDisplay = document.getElementById('movesDisplay');
+const messageEl    = document.getElementById('message');
+const goatsRow     = document.getElementById('goatsRow');
+const tigerEl      = document.getElementById('tigerIcon');
+
+// ─── Grid size ───────────────────────────────────────────
+function setGridSize() {
+  if      (level <= 20) { rows = 5; cols = 5; }
+  else if (level <= 40) { rows = 6; cols = 6; }
+  else if (level <= 60) { rows = 7; cols = 7; }
+  else                  { rows = 8; cols = 8; }
 }
 
-function onTouchStart(e) {
-  if(state.busy) return;
-  const touch = e.touches[0];
-  touchStartX = touch.clientX;
-  touchStartY = touch.clientY;
-  // Find which cell was touched
-  const el = document.elementFromPoint(touchStartX, touchStartY);
-  if(el && el.classList.contains('cell')) {
-    touchStartR = parseInt(el.dataset.r);
-    touchStartC = parseInt(el.dataset.c);
-  } else {
-    touchStartR = -1; touchStartC = -1;
-  }
+// ─── Moves per level ─────────────────────────────────────
+function getMaxMoves() {
+  return Math.max(10, 22 - Math.floor(level / 5));
 }
 
-function onTouchEnd(e) {
-  if(state.busy || touchStartR < 0) return;
-  const touch = e.changedTouches[0];
-  const dx = touch.clientX - touchStartX;
-  const dy = touch.clientY - touchStartY;
-  const absDx = Math.abs(dx), absDy = Math.abs(dy);
-
-  // Check if it's a swipe or just a tap
-  if(absDx < SWIPE_THRESHOLD && absDy < SWIPE_THRESHOLD) {
-    // Tap — handle as click
-    onCellClick(touchStartR, touchStartC);
-    return;
-  }
-
-  // Determine swipe direction
-  let targetR = touchStartR, targetC = touchStartC;
-  if(absDx > absDy) {
-    // Horizontal swipe
-    targetC = dx > 0 ? touchStartC + 1 : touchStartC - 1;
-  } else {
-    // Vertical swipe
-    targetR = dy > 0 ? touchStartR + 1 : touchStartR - 1;
-  }
-
-  const { rows, cols } = state.cfg;
-  if(targetR < 0 || targetR >= rows || targetC < 0 || targetC >= cols) return;
-
-  // Cancel any selection
-  if(state.selected) {
-    const prev = getCell(state.selected.r, state.selected.c);
-    if(prev) prev.classList.remove('selected');
-    state.selected = null;
-  }
-
-  if(state.booster) {
-    applyBooster(touchStartR, touchStartC);
-    return;
-  }
-
-  trySwap(touchStartR, touchStartC, targetR, targetC);
-  touchStartR = -1; touchStartC = -1;
+// ─── Animal types ─────────────────────────────────────────
+function getNumTypes() {
+  if (level <= 16) return 4;
+  if (level <= 32) return 5;
+  if (level <= 48) return 6;
+  if (level <= 64) return 7;
+  return 8;
 }
 
-// ═══════════════════════════════════════
-//  CELL CLICK
-// ═══════════════════════════════════════
-function onCellClick(r, c) {
-  if (state.busy) return;
-  audio.tap();
+// ─── Random animal ────────────────────────────────────────
+function randomAnimal() {
+  const n = getNumTypes();
+  const idx = Math.floor(Math.random() * n);
+  return { animal: ANIMALS[idx], idx };
+}
 
-  if (state.booster) {
-    applyBooster(r, c);
-    return;
-  }
-
-  if (state.selected === null) {
-    state.selected = {r, c};
-    const cell = getCell(r, c);
-    if(cell) cell.classList.add('selected');
-    return;
-  }
-
-  const {r: sr, c: sc} = state.selected;
-  const prevCell = getCell(sr, sc);
-  if(prevCell) prevCell.classList.remove('selected');
-
-  if (sr === r && sc === c) {
-    state.selected = null;
-    return;
-  }
-
-  const dr = Math.abs(r - sr), dc = Math.abs(c - sc);
-  if (dr + dc === 1) {
-    state.selected = null;
-    trySwap(sr, sc, r, c);
-  } else {
-    state.selected = {r, c};
-    const cell = getCell(r, c);
-    if(cell) cell.classList.add('selected');
+// ─── Create board ─────────────────────────────────────────
+function createBoard() {
+  board = [];
+  for (let r = 0; r < rows; r++) {
+    board[r] = [];
+    for (let c = 0; c < cols; c++) {
+      board[r][c] = randomAnimal();
+    }
   }
 }
 
-// ═══════════════════════════════════════
-//  SWAP
-// ═══════════════════════════════════════
-async function trySwap(r1, c1, r2, c2) {
-  state.busy = true;
-  swap(state.board, r1, c1, r2, c2);
-
-  const matches = findMatches(state.board);
-  if (matches.length === 0) {
-    swap(state.board, r1, c1, r2, c2);
-    audio.invalid();
-    const c1el = getCell(r1, c1), c2el = getCell(r2, c2);
-    if(c1el) { c1el.classList.add('swap-anim'); setTimeout(() => c1el.classList.remove('swap-anim'), 200); }
-    if(c2el) { c2el.classList.add('swap-anim'); setTimeout(() => c2el.classList.remove('swap-anim'), 200); }
-    state.busy = false;
-    return;
-  }
-
-  const c1el = getCell(r1, c1), c2el = getCell(r2, c2);
-  if(c1el) c1el.classList.add('swap-anim');
-  if(c2el) c2el.classList.add('swap-anim');
-  updateCellEmoji(r1, c1);
-  updateCellEmoji(r2, c2);
-  await delay(150);
-
-  state.moves--;
-  updateHUD();
-
-  await processMatches();
-  state.busy = false;
-
-  if (!hasAnyMove(state.board)) {
-    showNoMovesHint();
-    await delay(800);
-    shuffleBoard(true);
-  }
-
-  checkEndCondition();
-}
-
-function swap(board, r1, c1, r2, c2) {
-  [board[r1][c1], board[r2][c2]] = [board[r2][c2], board[r1][c1]];
-}
-
-// ═══════════════════════════════════════
-//  MATCH LOGIC
-// ═══════════════════════════════════════
-function findMatches(board) {
-  const { rows, cols } = state.cfg;
-  const matched = new Set();
-
-  for(let r=0;r<rows;r++){
-    for(let c=0;c<cols-2;c++){
-      const t = board[r][c];
-      if(t>=0 && t===board[r][c+1] && t===board[r][c+2]){
-        let end = c+2;
-        while(end+1<cols && board[r][end+1]===t) end++;
-        for(let k=c;k<=end;k++) matched.add(`${r},${k}`);
-        c = end;
+// ─── Find matches (3+ in row/col) ─────────────────────────
+function findMatches() {
+  const matches = new Set();
+  // horizontal
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols - 2; c++) {
+      const val = board[r][c].animal;
+      let len = 1;
+      while (c + len < cols && board[r][c + len].animal === val) len++;
+      if (len >= 3) {
+        for (let i = 0; i < len; i++) matches.add(`${r},${c+i}`);
       }
+      c += len - 1;
     }
   }
-  for(let c=0;c<cols;c++){
-    for(let r=0;r<rows-2;r++){
-      const t = board[r][c];
-      if(t>=0 && t===board[r+1][c] && t===board[r+2][c]){
-        let end = r+2;
-        while(end+1<rows && board[end+1][c]===t) end++;
-        for(let k=r;k<=end;k++) matched.add(`${k},${c}`);
-        r = end;
+  // vertical
+  for (let c = 0; c < cols; c++) {
+    for (let r = 0; r < rows - 2; r++) {
+      const val = board[r][c].animal;
+      let len = 1;
+      while (r + len < rows && board[r + len][c].animal === val) len++;
+      if (len >= 3) {
+        for (let i = 0; i < len; i++) matches.add(`${r+i},${c}`);
       }
+      r += len - 1;
     }
   }
-  return [...matched].map(s => { const [r,c]=s.split(',').map(Number); return {r,c}; });
+  return matches;
 }
 
-async function processMatches(cascade = 0) {
-  const matches = findMatches(state.board);
-  if (matches.length === 0) return;
-
-  if (cascade >= 1) showCombo(cascade + 1);
-
-  const pts = matches.length * 10 * (cascade + 1);
-  state.score += pts;
-
-  const positions = [];
-  matches.forEach(({r,c}) => {
-    state.board[r][c] = -1;
-    const cell = getCell(r, c);
-    if (cell) {
-      cell.classList.add('match-pop');
-      const rect = cell.getBoundingClientRect();
-      positions.push({x: rect.left + rect.width/2, y: rect.top});
-    }
+// ─── Resolve matches (ONE TIME, no cascade) ───────────────
+function resolveMatches(matchSet) {
+  // Clear matched cells
+  matchSet.forEach(coord => {
+    const [r, c] = coord.split(',').map(Number);
+    board[r][c] = null;
   });
 
-  if (positions.length > 0) {
-    const mid = positions[Math.floor(positions.length/2)];
-    showFloatScore(`+${pts}`, mid.x, mid.y);
-  }
-
-  audio.match(cascade);
-  await delay(350);
-
-  matches.forEach(({r,c}) => {
-    const cell = getCell(r,c);
-    if(cell) cell.classList.remove('match-pop');
-  });
-
-  await applyGravity();
-  await fillBoard();
-  updateHUD();
-  await delay(200);
-  await processMatches(cascade + 1);
-}
-
-async function applyGravity() {
-  const { rows, cols } = state.cfg;
-  for(let c=0;c<cols;c++){
+  // Gravity: drop down
+  for (let c = 0; c < cols; c++) {
     let empty = rows - 1;
-    for(let r=rows-1;r>=0;r--){
-      if(state.board[r][c] >= 0){
-        if(r !== empty){
-          state.board[empty][c] = state.board[r][c];
-          state.board[r][c] = -1;
-          updateCellEmoji(empty, c);
-          updateCellEmoji(r, c);
+    for (let r = rows - 1; r >= 0; r--) {
+      if (board[r][c] !== null) {
+        if (r !== empty) {
+          board[empty][c] = board[r][c];
+          board[r][c] = null;
         }
         empty--;
       }
     }
-  }
-  await delay(100);
-}
-
-async function fillBoard() {
-  const { rows, cols, types } = state.cfg;
-  for(let r=0;r<rows;r++){
-    for(let c=0;c<cols;c++){
-      if(state.board[r][c] < 0){
-        const t = Math.floor(Math.random() * types);
-        state.board[r][c] = t;
-        const cell = getCell(r, c);
-        if(cell){
-          cell.dataset.type = t;
-          cell.textContent = ANIMALS[t];
-          cell.classList.add('drop-in');
-          setTimeout(() => cell.classList.remove('drop-in'), 350);
-        }
-      }
+    // Refill top
+    for (let r = empty; r >= 0; r--) {
+      board[r][c] = randomAnimal();
     }
   }
-  await delay(300);
+
+  score += matchSet.size * 10;
+  updateHUD();
 }
 
-// ═══════════════════════════════════════
-//  HAS MOVES
-// ═══════════════════════════════════════
-function hasAnyMatch(board) { return findMatchesOn(board).length > 0; }
-
-function findMatchesOn(board) {
-  const rows = board.length, cols = board[0].length;
-  const matched = new Set();
-  for(let r=0;r<rows;r++)
-    for(let c=0;c<cols-2;c++)
-      if(board[r][c]>=0 && board[r][c]===board[r][c+1] && board[r][c]===board[r][c+2])
-        matched.add(`${r},${c}`);
-  for(let c=0;c<cols;c++)
-    for(let r=0;r<rows-2;r++)
-      if(board[r][c]>=0 && board[r][c]===board[r+1][c] && board[r][c]===board[r+2][c])
-        matched.add(`${r},${c}`);
-  return [...matched];
+// ─── Swap ─────────────────────────────────────────────────
+function swapCells(r1, c1, r2, c2) {
+  const tmp = board[r1][c1];
+  board[r1][c1] = board[r2][c2];
+  board[r2][c2] = tmp;
 }
 
-function hasAnyMove(board) {
-  const rows = board.length, cols = board[0].length;
-  const dirs = [[0,1],[1,0]];
-  for(let r=0;r<rows;r++){
-    for(let c=0;c<cols;c++){
-      for(const [dr,dc] of dirs){
-        const nr=r+dr, nc=c+dc;
-        if(nr>=rows||nc>=cols) continue;
-        [board[r][c], board[nr][nc]] = [board[nr][nc], board[r][c]];
-        const m = findMatchesOn(board).length > 0;
-        [board[r][c], board[nr][nc]] = [board[nr][nc], board[r][c]];
-        if(m) return true;
-      }
-    }
+// ─── Attempt swap ─────────────────────────────────────────
+function attemptSwap(r1, c1, r2, c2) {
+  if (isProcessing) return;
+  isProcessing = true;
+  setMessage('');
+
+  swapCells(r1, c1, r2, c2);
+  const matches = findMatches();
+
+  if (matches.size > 0) {
+    // Valid — resolve ONCE (no auto-cascade)
+    resolveMatches(matches);
+    movesLeft--;
+    showFloatScore(matches.size * 10);
+    setMessage(`+${matches.size * 10} points! 🔥`);
+    clearSelection();
+    renderBoard();
+    updateHUD();
+    checkEndConditions();
+  } else {
+    // No match — swap back
+    swapCells(r1, c1, r2, c2);
+    setMessage('❌ No match! Try again.');
+    clearSelection();
+    renderBoard();
   }
-  return false;
+
+  isProcessing = false;
 }
 
-// ═══════════════════════════════════════
-//  BOOSTERS
-// ═══════════════════════════════════════
-function activateBooster(type) {
-  if (state.busy) return;
-  const btns = { hammer:'bHammer', bomb:'bBomb', lightning:'bLightning' };
-  if (state.booster === type) {
-    state.booster = null;
-    Object.values(btns).forEach(id => document.getElementById(id).classList.remove('active'));
+// ─── Check end: moves exhausted? score target? ────────────
+function checkEndConditions() {
+  const target = level * 80;
+  if (score >= target) {
+    setTimeout(() => showWin(), 300);
     return;
   }
-  state.booster = type;
-  Object.entries(btns).forEach(([k,id]) => {
-    document.getElementById(id).classList.toggle('active', k === type);
-  });
-}
-
-async function applyBooster(r, c) {
-  state.busy = true;
-  const type = state.booster;
-  state.booster = null;
-  ['bHammer','bBomb','bLightning'].forEach(id => document.getElementById(id).classList.remove('active'));
-
-  const { rows, cols } = state.cfg;
-  const toRemove = new Set();
-
-  if (type === 'hammer') {
-    toRemove.add(`${r},${c}`);
-  } else if (type === 'bomb') {
-    for(let dr=-1;dr<=1;dr++) for(let dc=-1;dc<=1;dc++){
-      const nr=r+dr, nc=c+dc;
-      if(nr>=0&&nr<rows&&nc>=0&&nc<cols) toRemove.add(`${nr},${nc}`);
-    }
-  } else if (type === 'lightning') {
-    for(let rr=0;rr<rows;rr++) toRemove.add(`${rr},${c}`);
-    for(let cc=0;cc<cols;cc++) toRemove.add(`${r},${cc}`);
-  }
-
-  const pts = toRemove.size * 15;
-  state.score += pts;
-  showFloatScore(`+${pts}`, innerWidth/2, innerHeight/2);
-
-  toRemove.forEach(key => {
-    const [kr,kc] = key.split(',').map(Number);
-    state.board[kr][kc] = -1;
-    const cell = getCell(kr,kc);
-    if(cell) cell.classList.add('match-pop');
-  });
-
-  audio.match(0);
-  await delay(350);
-  toRemove.forEach(key => {
-    const [kr,kc] = key.split(',').map(Number);
-    const cell = getCell(kr,kc);
-    if(cell) cell.classList.remove('match-pop');
-  });
-
-  state.moves--;
-  await applyGravity();
-  await fillBoard();
-  await processMatches();
-  updateHUD();
-  state.busy = false;
-  checkEndCondition();
-}
-
-async function shuffleBoard(auto = false) {
-  if (!auto && state.busy) return;
-  state.busy = true;
-  const { rows, cols, types } = state.cfg;
-  const flat = [];
-  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) flat.push(state.board[r][c]);
-  for(let i=flat.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [flat[i],flat[j]]=[flat[j],flat[i]];
-  }
-  let idx=0;
-  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) state.board[r][c]=flat[idx++];
-  if(!hasAnyMove(state.board)){
-    do { state.board = buildBoard(rows, cols, types); } while(!hasAnyMove(state.board));
-  }
-  renderBoard();
-  state.busy = false;
-}
-
-// ═══════════════════════════════════════
-//  END CONDITION
-// ═══════════════════════════════════════
-async function checkEndCondition() {
-  if (state.score >= state.cfg.target) {
-    const stars = state.moves >= state.cfg.moves * 0.6 ? 3 : state.moves >= state.cfg.moves * 0.3 ? 2 : 1;
-    const prev = state.progress[state.level] || 0;
-    if (stars > prev) {
-      state.progress[state.level] = stars;
-      saveProgress();
-    }
-    showWin(stars);
-  } else if (state.moves <= 0) {
-    // Tiger eats a goat!
-    await tigerEatsGoat();
-    state.lives = Math.max(0, state.lives - 1);
-    renderGoats();
-    showLose();
+  if (movesLeft <= 0) {
+    setTimeout(() => loseLife(), 300);
   }
 }
 
-function showWin(stars) {
-  document.getElementById('winStars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3-stars);
-  const msgs = ['You cleared the jungle!', 'Outstanding, jungle king!', 'PERFECT! The wild bows to you!'];
-  document.getElementById('winMsg').textContent = msgs[stars-1];
-  document.getElementById('winModal').classList.add('show');
-  audio.win();
+// ─── Win ──────────────────────────────────────────────────
+function showWin() {
+  const target = level * 80;
+  const extra = score - target;
+  const stars = extra > 200 ? '⭐⭐⭐' : extra > 80 ? '⭐⭐' : '⭐';
+  document.getElementById('toastStars').textContent = stars;
+  document.getElementById('toastMsg').textContent = `Score: ${score} | Level ${level} cleared!`;
+  document.getElementById('winToast').classList.add('show');
 }
 
-function showLose() {
-  if (state.lives <= 0) {
-    document.getElementById('loseTitleEl').textContent = '💀 All Goats Eaten!';
-    document.getElementById('loseMsg').textContent = 'The tiger devoured all 5 goats! Start over!';
-    state.lives = 5; // reset after game over
+// ─── Lose a goat ──────────────────────────────────────────
+function loseLife() {
+  goats--;
+  // Tiger lunge animation
+  tigerEl.style.transform = 'scale(1.4) translateX(8px)';
+  tigerEl.style.transition = 'transform 0.25s';
+  setTimeout(() => {
+    tigerEl.style.transform = 'scale(1)';
+  }, 350);
+
+  // Eat a goat (mark eaten)
+  const goatEls = document.querySelectorAll('.goat-item:not(.eaten)');
+  if (goatEls.length > 0) {
+    goatEls[goatEls.length - 1].classList.add('eaten');
+  }
+
+  updateGoats();
+  setMessage(`🐯 Tiger ate a goat! ${goats} goat${goats !== 1 ? 's' : ''} left.`);
+
+  if (goats <= 0) {
+    setTimeout(() => {
+      document.getElementById('loseMsg').textContent = `Score: ${score} | All goats eaten by the tiger! 😱`;
+      document.getElementById('loseToast').classList.add('show');
+    }, 500);
   } else {
-    document.getElementById('loseTitleEl').textContent = '🐐 Goat Eaten!';
-    document.getElementById('loseMsg').textContent = `Tiger ate a goat! ${state.lives} goat${state.lives !== 1 ? 's' : ''} remain. Try again!`;
+    // Restart same level
+    setTimeout(() => startLevel(level), 800);
   }
-  document.getElementById('loseModal').classList.add('show');
-  audio.lose();
 }
 
-function nextLevel() {
-  document.getElementById('winModal').classList.remove('show');
-  if (state.level >= MAX_LEVELS) { startLevel(1); return; }
-  startLevel(state.level + 1);
-}
-
-function retryLevel() {
-  document.getElementById('winModal').classList.remove('show');
-  document.getElementById('loseModal').classList.remove('show');
-  startLevel(state.level);
-}
-
-// ═══════════════════════════════════════
-//  LEVEL MODAL
-// ═══════════════════════════════════════
-function showLevelModal() {
-  const grid = document.getElementById('levelGrid');
-  grid.innerHTML = '';
-  for(let i=1;i<=MAX_LEVELS;i++){
-    const btn = document.createElement('button');
-    btn.className = 'lvl-btn';
-    const stars = state.progress[i] || 0;
-    const locked = i > 1 && !state.progress[i-1];
-    if(locked) btn.classList.add('locked');
-    if(stars > 0) btn.classList.add('cleared');
-    btn.innerHTML = `<span>${i}</span><span class="lvl-stars">${'⭐'.repeat(stars)}${'·'.repeat(3-stars)}</span>`;
-    if(!locked) btn.onclick = () => startLevel(i);
-    grid.appendChild(btn);
+// ─── Render goats ─────────────────────────────────────────
+function updateGoats() {
+  const total = 5;
+  let html = '';
+  for (let i = 0; i < total; i++) {
+    const alive = i < goats;
+    html += `<span class="goat-item${alive ? '' : ' eaten'}">🐐</span>`;
   }
-  document.getElementById('levelModal').classList.add('show');
+  goatsRow.innerHTML = html;
 }
 
-function hideLevelModal() {
-  document.getElementById('levelModal').classList.remove('show');
+// ─── Clear selection ──────────────────────────────────────
+function clearSelection() {
+  selectedRow = -1;
+  selectedCol = -1;
 }
 
-// Globals
-window.showLevelModal = showLevelModal;
-window.hideLevelModal = hideLevelModal;
-window.nextLevel = nextLevel;
-window.retryLevel = retryLevel;
-window.activateBooster = activateBooster;
-window.shuffleBoard = () => shuffleBoard(false);
+// ─── Cell click handler ───────────────────────────────────
+function cellClicked(row, col) {
+  if (isProcessing) return;
 
-// ═══════════════════════════════════════
-//  FLOAT SCORE + COMBO
-// ═══════════════════════════════════════
-function showFloatScore(text, x, y) {
+  if (selectedRow === -1) {
+    selectedRow = row; selectedCol = col;
+    renderBoard();
+    return;
+  }
+  if (selectedRow === row && selectedCol === col) {
+    clearSelection();
+    renderBoard();
+    return;
+  }
+  const rd = Math.abs(selectedRow - row);
+  const cd = Math.abs(selectedCol - col);
+  if ((rd === 1 && cd === 0) || (rd === 0 && cd === 1)) {
+    const sr = selectedRow, sc = selectedCol;
+    clearSelection();
+    renderBoard();
+    attemptSwap(sr, sc, row, col);
+  } else {
+    clearSelection();
+    selectedRow = row; selectedCol = col;
+    renderBoard();
+  }
+}
+
+// ─── Render board ─────────────────────────────────────────
+function renderBoard() {
+  gridEl.innerHTML = '';
+  const cellSize = Math.min(58, Math.floor((window.innerWidth - 52) / cols));
+  gridEl.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const cell = document.createElement('div');
+      cell.className = `cell a${board[r][c].idx}`;
+      cell.style.width = cell.style.height = cellSize + 'px';
+      cell.style.fontSize = Math.floor(cellSize * 0.55) + 'px';
+      cell.textContent = board[r][c].animal;
+      cell.dataset.row = r;
+      cell.dataset.col = c;
+      if (selectedRow === r && selectedCol === c) cell.classList.add('selected');
+      cell.addEventListener('click', () => cellClicked(r, c));
+      gridEl.appendChild(cell);
+    }
+  }
+
+  // Touch/swipe events on grid
+  gridEl.addEventListener('touchstart', onTouchStart, { passive: true });
+  gridEl.addEventListener('touchend', onTouchEnd, { passive: true });
+}
+
+// ─── Swipe support ────────────────────────────────────────
+function onTouchStart(e) {
+  if (e.touches.length !== 1) return;
+  const t = e.touches[0];
+  touchStartX = t.clientX;
+  touchStartY = t.clientY;
+  const el = document.elementFromPoint(touchStartX, touchStartY);
+  if (el && el.dataset.row !== undefined) {
+    touchStartRow = parseInt(el.dataset.row);
+    touchStartCol = parseInt(el.dataset.col);
+  } else {
+    touchStartRow = -1;
+    touchStartCol = -1;
+  }
+}
+
+function onTouchEnd(e) {
+  if (touchStartRow === -1) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - touchStartX;
+  const dy = t.clientY - touchStartY;
+  const THRESHOLD = 20;
+
+  if (Math.abs(dx) < THRESHOLD && Math.abs(dy) < THRESHOLD) {
+    // Tap — handle as click
+    cellClicked(touchStartRow, touchStartCol);
+    return;
+  }
+
+  let tr = touchStartRow, tc = touchStartCol;
+  if (Math.abs(dx) > Math.abs(dy)) {
+    tc += dx > 0 ? 1 : -1;  // left/right
+  } else {
+    tr += dy > 0 ? 1 : -1;  // up/down
+  }
+
+  if (tr < 0 || tr >= rows || tc < 0 || tc >= cols) return;
+
+  clearSelection();
+  renderBoard();
+  attemptSwap(touchStartRow, touchStartCol, tr, tc);
+}
+
+// ─── HUD update ───────────────────────────────────────────
+function updateHUD() {
+  levelDisplay.textContent = level;
+  scoreDisplay.textContent = score;
+  movesDisplay.textContent = movesLeft;
+}
+
+// ─── Floating score ───────────────────────────────────────
+function showFloatScore(pts) {
   const el = document.createElement('div');
   el.className = 'float-score';
-  el.textContent = text;
-  el.style.left = x + 'px';
-  el.style.top = y + 'px';
+  el.textContent = `+${pts}`;
+  const gridRect = gridEl.getBoundingClientRect();
+  el.style.left = (gridRect.left + gridRect.width / 2 - 20) + 'px';
+  el.style.top  = (gridRect.top + 40) + 'px';
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 900);
+  setTimeout(() => el.remove(), 1000);
 }
 
-function showCombo(n) {
-  const badge = document.getElementById('comboBadge');
-  document.getElementById('comboNum').textContent = `x${n}`;
-  badge.classList.add('show');
-  setTimeout(() => badge.classList.remove('show'), 900);
+// ─── Message helper ──────────────────────────────────────
+function setMessage(txt) {
+  messageEl.textContent = txt;
 }
 
-function showNoMovesHint() {
-  const el = document.getElementById('noMovesHint');
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2000);
+// ─── Start level ─────────────────────────────────────────
+function startLevel(lvl) {
+  level = lvl;
+  score = 0;
+  setGridSize();
+  maxMoves = getMaxMoves();
+  movesLeft = maxMoves;
+  createBoard();
+  // Reshuffle until no initial matches
+  let attempts = 0;
+  while (findMatches().size > 0 && attempts < 20) { createBoard(); attempts++; }
+  clearSelection();
+  updateHUD();
+  updateGoats();
+  renderBoard();
+  setMessage(`🎯 Target: ${level * 80} pts in ${movesLeft} moves`);
+  isProcessing = false;
 }
 
-function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
-
-// ═══════════════════════════════════════
-//  AUDIO
-// ═══════════════════════════════════════
-const AUDIO_KEY = 'koj_game_audio';
-const audio = {
-  ctx: null, master: null, bus: null, enabled: localStorage.getItem(AUDIO_KEY) === '1',
-  build() {
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    if(!Ctx || this.ctx) return;
-    this.ctx = new Ctx();
-    this.master = this.ctx.createGain(); this.master.gain.value = this.enabled ? 0.5 : 0.0001; this.master.connect(this.ctx.destination);
-    this.bus = this.ctx.createGain(); this.bus.gain.value = 0.3; this.bus.connect(this.master);
-  },
-  unlock() { this.build(); if(this.ctx?.state==='suspended') this.ctx.resume(); },
-  tone(freq, type='triangle', dur=0.2, vol=0.2, delay2=0) {
-    if(!this.ctx || !this.enabled) return;
-    const t = this.ctx.currentTime + delay2;
-    const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
-    osc.type=type; osc.frequency.setValueAtTime(freq,t);
-    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.03);
-    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
-    osc.connect(g); g.connect(this.bus); osc.start(t); osc.stop(t+dur+0.05);
-  },
-  tap()     { this.tone(600,'sine',0.08,0.1); },
-  invalid() { this.tone(150,'sawtooth',0.2,0.15); },
-  match(cascade) {
-    const freqs = [440,550,660,770,880];
-    const f = freqs[Math.min(cascade,freqs.length-1)];
-    this.tone(f,'triangle',0.25,0.2);
-    if(cascade>0) this.tone(f*1.5,'triangle',0.2,0.15,0.1);
-  },
-  win()  { [523,659,784,1047].forEach((f,i)=>this.tone(f,'triangle',0.4,0.25,i*0.12)); },
-  lose() { [440,392,349].forEach((f,i)=>this.tone(f,'sawtooth',0.3,0.15,i*0.15)); },
-  toggle() {
-    this.enabled = !this.enabled;
-    localStorage.setItem(AUDIO_KEY, this.enabled?'1':'0');
-    if(this.master) this.master.gain.setTargetAtTime(this.enabled?0.5:0.0001, this.ctx.currentTime, 0.1);
-    updateAudioBtn();
-  }
-};
-
-function updateAudioBtn() {
-  const btn = document.getElementById('audioBtn');
-  btn.textContent = audio.enabled ? '🔊 Audio On' : '🔇 Audio Off';
-  btn.classList.toggle('muted', !audio.enabled);
+// ─── Next level ──────────────────────────────────────────
+function nextLevel() {
+  closeToast('winToast');
+  if (level < 100) startLevel(level + 1);
+  else setMessage('🏆 You completed all 100 levels!');
 }
 
-document.getElementById('audioBtn').addEventListener('click', () => audio.toggle());
-document.addEventListener('pointerdown', () => audio.unlock(), { once:true });
-updateAudioBtn();
+// ─── Restart ─────────────────────────────────────────────
+function restartGame() {
+  closeToast('loseToast');
+  goats = 5;
+  startLevel(1);
+}
 
-// ═══════════════════════════════════════
-//  FIREBASE
-// ═══════════════════════════════════════
-(async () => {
-  try {
-    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
-    const { getAuth } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js');
-    const { getFirestore, doc, updateDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
+// ─── Close toast ────────────────────────────────────────
+function closeToast(id) {
+  document.getElementById(id).classList.remove('show');
+}
 
-    const app = initializeApp({
-      apiKey: "AIzaSyDOCAbauIOAnUOSLWlwe9Z5PvQq8xyzQGQ",
-      authDomain: "king-of-jungle-77f06.firebaseapp.com",
-      projectId: "king-of-jungle-77f06",
-      storageBucket: "king-of-jungle-77f06.appspot.com",
-      messagingSenderId: "993583513273",
-      appId: "1:993583513273:web:d4f7e8c9a1b2c3d4e5f6"
-    }, 'game-app');
+// ─── Buttons ─────────────────────────────────────────────
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if (level < 100) startLevel(level + 1);
+  else setMessage('🏆 Level 100 reached!');
+});
+document.getElementById('resetBtn').addEventListener('click', () => startLevel(level));
 
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    const _origNext = window.nextLevel;
-    window.nextLevel = async () => {
-      const user = auth.currentUser;
-      if(user) {
-        try {
-          await updateDoc(doc(db,'users',user.uid), {
-            level: state.level + 1,
-            totalScore: state.score,
-            lastPlayed: serverTimestamp()
-          });
-        } catch(e) {}
-      }
-      _origNext();
-    };
-  } catch(e) {}
-})();
-
-// ═══════════════════════════════════════
-//  START
-// ═══════════════════════════════════════
-const urlParams = new URLSearchParams(location.search);
-const startLv = parseInt(urlParams.get('level')) || 1;
-startLevel(Math.min(Math.max(1, startLv), MAX_LEVELS));
+// ─── Init ────────────────────────────────────────────────
+startLevel(1);
 </script>
 </body>
 </html>
