@@ -1030,7 +1030,7 @@ async function loginWithGoogle() {
   try {
     await supaClient.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.href }
+      options: { redirectTo: 'https://candyboom.wildsaura.com/game.html' }
     });
   } catch(e) {
     console.error('Google login error:', e);
