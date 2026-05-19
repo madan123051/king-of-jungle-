@@ -683,12 +683,14 @@ h1 {
 
 /* ═══ LOGIN SCREEN ══════════════════════════════════════ */
 #loginScreen {
-  position:fixed;inset:0;z-index:9000;
+  position:fixed;inset:0;z-index:99999;
+  pointer-events:all;
   background:radial-gradient(ellipse at top,#0d3b1e 0%,#050f08 80%);
   display:flex;align-items:center;justify-content:center;padding:24px;
 }
 #loginScreen.hidden{display:none;}
 #loginBox {
+  pointer-events:all;
   background:linear-gradient(160deg,#0d3b1e,#081a0e);
   border:2px solid #1a5c28;border-radius:24px;
   padding:40px 32px;max-width:340px;width:100%;
@@ -935,11 +937,33 @@ function getHeaders() {
 
 /* ── Google OAuth ─────────────────────────────────────────────────────────── */
 async function loginWithGoogle() {
-  if (!supaClient) { alert('Auth not available. Try again in a moment.'); return; }
-  await supaClient.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.href }
-  });
+  // Retry up to 30 times (3 seconds) if Supabase not ready
+  let tries = 0;
+  while (!supaClient && tries < 30) {
+    await new Promise(r => setTimeout(r, 100));
+    tries++;
+  }
+  if (!supaClient) {
+    // Supabase unavailable — fall back to guest
+    const num = Math.floor(Math.random() * 9000) + 1000;
+    const gName = 'Guest_' + num;
+    localStorage.setItem('koj_guest_mode', '1');
+    localStorage.setItem('koj_player_name', gName);
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('headerName').textContent = gName;
+    document.getElementById('headerLevel').textContent = 'Lv 1';
+    document.getElementById('hdrAvatarEl').innerHTML = '🦁';
+    return;
+  }
+  try {
+    await supaClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.href }
+    });
+  } catch(e) {
+    console.error('Google login error:', e);
+    alert('Google login failed. Try again or use Guest mode.');
+  }
 }
 
 async function logoutUser() {
@@ -1200,15 +1224,22 @@ window.saveProgressToCloud = async (payload) => {
   // else: login screen stays visible
 })();
 
-document.getElementById('googleLoginBtn').addEventListener('click', loginWithGoogle);
-document.getElementById('guestBtn').addEventListener('click', () => {
+const _gBtn = document.getElementById('googleLoginBtn');
+_gBtn.addEventListener('click', loginWithGoogle);
+_gBtn.addEventListener('touchend', function(e){ e.preventDefault(); loginWithGoogle(); });
+function doGuestLogin() {
   const num = Math.floor(Math.random() * 9000) + 1000;
   const gName = 'Guest_' + num;
   localStorage.setItem('koj_guest_mode', '1');
   localStorage.setItem('koj_player_name', gName);
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('headerName').textContent = gName;
-});
+  document.getElementById('headerLevel').textContent = 'Lv 1';
+  document.getElementById('hdrAvatarEl').innerHTML = '🦁';
+}
+const _guestBtn = document.getElementById('guestBtn');
+_guestBtn.addEventListener('click', doGuestLogin);
+_guestBtn.addEventListener('touchend', function(e){ e.preventDefault(); doGuestLogin(); });
 document.getElementById('profileModal').addEventListener('click', e => {
   if (e.target.id === 'profileModal') e.target.classList.remove('open');
 });

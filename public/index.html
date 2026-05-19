@@ -849,10 +849,7 @@ window.copyInvite = async () => {
   alert('Invite link copied!');
 };
 
-window.playNow = () => {
-  if (localStorage.getItem('koj_logged_in') !== '1') return openAuthModal();
-  location.href = 'game.html';
-};
+window.playNow = () => { location.href = 'game.html'; };
 
 function showLoggedIn(name) {
   authStatus.innerHTML = '<div style="display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;">' +
@@ -872,7 +869,7 @@ document.addEventListener('keydown', () => homeAudio.unlock(), { once:true });
 if (localStorage.getItem('koj_logged_in') === '1') {
   showLoggedIn(localStorage.getItem('koj_player_name') || 'Player');
 } else {
-  authStatus.innerHTML = '<button class="btn-play" onclick="openAuthModal()">🔐 Login to Play</button>';
+  authStatus.innerHTML = '';
   inviteBox.style.display = 'none';
 }
 
