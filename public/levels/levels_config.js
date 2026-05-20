@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// CANDYBOOM LEVEL CONFIGS — Rebalanced v2
+// CANDYBOOM LEVEL CONFIGS — Rebalanced v3 (4x score, achievable targets)
 // Bigger grid = more moves (7×7/8×8 need more moves to reach target)
 // Score per move avg: 5×5≈80, 6×6≈120, 7×7≈200, 8×8≈280 pts
 // ═══════════════════════════════════════════════════════════════
@@ -11,7 +11,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 22,          // 22 moves allowed
-    target_score: 300,  // Need 300 pts to pass
+    target_score: 850,  // Need 300 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -24,7 +24,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 22,          // 22 moves allowed
-    target_score: 520,  // Need 520 pts to pass
+    target_score: 950,  // Need 520 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -37,7 +37,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 22,          // 22 moves allowed
-    target_score: 740,  // Need 740 pts to pass
+    target_score: 1050,  // Need 740 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -50,7 +50,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 22,          // 22 moves allowed
-    target_score: 960,  // Need 960 pts to pass
+    target_score: 1150,  // Need 960 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -63,7 +63,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 22,          // 22 moves allowed
-    target_score: 1180,  // Need 1180 pts to pass
+    target_score: 1300,  // Need 1180 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -76,7 +76,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 21,          // 21 moves allowed
-    target_score: 1400,  // Need 1400 pts to pass
+    target_score: 1300,  // Need 1400 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -89,7 +89,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 21,          // 21 moves allowed
-    target_score: 1620,  // Need 1620 pts to pass
+    target_score: 1450,  // Need 1620 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -102,7 +102,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 21,          // 21 moves allowed
-    target_score: 1840,  // Need 1840 pts to pass
+    target_score: 1550,  // Need 1840 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -115,7 +115,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 21,          // 21 moves allowed
-    target_score: 2060,  // Need 2060 pts to pass
+    target_score: 1650,  // Need 2060 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -128,7 +128,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 21,          // 21 moves allowed
-    target_score: 2280,  // Need 2280 pts to pass
+    target_score: 1750,  // Need 2280 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -141,7 +141,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 20,          // 20 moves allowed
-    target_score: 2500,  // Need 2500 pts to pass
+    target_score: 1750,  // Need 2500 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -154,7 +154,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 20,          // 20 moves allowed
-    target_score: 2720,  // Need 2720 pts to pass
+    target_score: 1850,  // Need 2720 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -167,7 +167,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 20,          // 20 moves allowed
-    target_score: 2940,  // Need 2940 pts to pass
+    target_score: 1950,  // Need 2940 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -180,7 +180,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 20,          // 20 moves allowed
-    target_score: 3160,  // Need 3160 pts to pass
+    target_score: 2050,  // Need 3160 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -193,7 +193,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 4,      // 4 animal types
     moves: 20,          // 20 moves allowed
-    target_score: 3380,  // Need 3380 pts to pass
+    target_score: 2150,  // Need 3380 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -206,7 +206,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 5,      // 5 animal types
     moves: 19,          // 19 moves allowed
-    target_score: 3600,  // Need 3600 pts to pass
+    target_score: 2150,  // Need 3600 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -219,7 +219,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 5,      // 5 animal types
     moves: 19,          // 19 moves allowed
-    target_score: 3820,  // Need 3820 pts to pass
+    target_score: 2250,  // Need 3820 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -232,7 +232,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 5,      // 5 animal types
     moves: 19,          // 19 moves allowed
-    target_score: 4040,  // Need 4040 pts to pass
+    target_score: 2350,  // Need 4040 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -245,7 +245,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 5,        // Grid = 5×5
     tile_types: 5,      // 5 animal types
     moves: 19,          // 19 moves allowed
-    target_score: 4260,  // Need 4260 pts to pass
+    target_score: 2450,  // Need 4260 pts to pass
     theme: "jungle",
     bg_color: "#1a3a1a",
     special_tiles: [],
@@ -258,7 +258,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 5000,  // Need 5000 pts to pass
+    target_score: 1100,  // Need 5000 pts to pass
     theme: "savanna",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -271,7 +271,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 5240,  // Need 5240 pts to pass
+    target_score: 1250,  // Need 5240 pts to pass
     theme: "savanna",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -284,7 +284,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 5480,  // Need 5480 pts to pass
+    target_score: 1400,  // Need 5480 pts to pass
     theme: "savanna",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -297,7 +297,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 5720,  // Need 5720 pts to pass
+    target_score: 1500,  // Need 5720 pts to pass
     theme: "savanna",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -310,7 +310,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 5960,  // Need 5960 pts to pass
+    target_score: 1600,  // Need 5960 pts to pass
     theme: "savanna",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -323,7 +323,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 6200,  // Need 6200 pts to pass
+    target_score: 1750,  // Need 6200 pts to pass
     theme: "savanna",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -336,7 +336,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 24,          // 24 moves allowed
-    target_score: 6440,  // Need 6440 pts to pass
+    target_score: 1800,  // Need 6440 pts to pass
     theme: "savanna",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -349,7 +349,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 24,          // 24 moves allowed
-    target_score: 6680,  // Need 6680 pts to pass
+    target_score: 1950,  // Need 6680 pts to pass
     theme: "savanna",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -362,7 +362,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 24,          // 24 moves allowed
-    target_score: 6920,  // Need 6920 pts to pass
+    target_score: 2100,  // Need 6920 pts to pass
     theme: "savanna",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -375,7 +375,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 23,          // 23 moves allowed
-    target_score: 7160,  // Need 7160 pts to pass
+    target_score: 2100,  // Need 7160 pts to pass
     theme: "savanna",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -388,7 +388,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 23,          // 23 moves allowed
-    target_score: 7400,  // Need 7400 pts to pass
+    target_score: 2250,  // Need 7400 pts to pass
     theme: "savanna",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -401,7 +401,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 5,      // 5 animal types
     moves: 23,          // 23 moves allowed
-    target_score: 7640,  // Need 7640 pts to pass
+    target_score: 2350,  // Need 7640 pts to pass
     theme: "desert",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -414,7 +414,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 6,      // 6 animal types
     moves: 22,          // 22 moves allowed
-    target_score: 7880,  // Need 7880 pts to pass
+    target_score: 2400,  // Need 7880 pts to pass
     theme: "desert",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -427,7 +427,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 6,      // 6 animal types
     moves: 22,          // 22 moves allowed
-    target_score: 8120,  // Need 8120 pts to pass
+    target_score: 2500,  // Need 8120 pts to pass
     theme: "desert",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -440,7 +440,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 6,      // 6 animal types
     moves: 22,          // 22 moves allowed
-    target_score: 8360,  // Need 8360 pts to pass
+    target_score: 2650,  // Need 8360 pts to pass
     theme: "desert",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -453,7 +453,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 6,      // 6 animal types
     moves: 21,          // 21 moves allowed
-    target_score: 8600,  // Need 8600 pts to pass
+    target_score: 2650,  // Need 8600 pts to pass
     theme: "desert",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -466,7 +466,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 6,      // 6 animal types
     moves: 21,          // 21 moves allowed
-    target_score: 8840,  // Need 8840 pts to pass
+    target_score: 2750,  // Need 8840 pts to pass
     theme: "desert",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -479,7 +479,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 6,      // 6 animal types
     moves: 21,          // 21 moves allowed
-    target_score: 9080,  // Need 9080 pts to pass
+    target_score: 2850,  // Need 9080 pts to pass
     theme: "desert",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -492,7 +492,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 6,      // 6 animal types
     moves: 20,          // 20 moves allowed
-    target_score: 9320,  // Need 9320 pts to pass
+    target_score: 2850,  // Need 9320 pts to pass
     theme: "desert",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -505,7 +505,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 6,        // Grid = 6×6
     tile_types: 6,      // 6 animal types
     moves: 20,          // 20 moves allowed
-    target_score: 9560,  // Need 9560 pts to pass
+    target_score: 2950,  // Need 9560 pts to pass
     theme: "desert",
     bg_color: "#3a2a0a",
     special_tiles: ["bomb"],
@@ -518,7 +518,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 6,      // 6 animal types
     moves: 28,          // 28 moves allowed
-    target_score: 10000,  // Need 10000 pts to pass
+    target_score: 1450,  // Need 10000 pts to pass
     theme: "ocean",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -531,7 +531,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 6,      // 6 animal types
     moves: 28,          // 28 moves allowed
-    target_score: 10230,  // Need 10230 pts to pass
+    target_score: 1650,  // Need 10230 pts to pass
     theme: "ocean",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -544,7 +544,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 6,      // 6 animal types
     moves: 28,          // 28 moves allowed
-    target_score: 10460,  // Need 10460 pts to pass
+    target_score: 1800,  // Need 10460 pts to pass
     theme: "ocean",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -557,7 +557,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 6,      // 6 animal types
     moves: 27,          // 27 moves allowed
-    target_score: 10690,  // Need 10690 pts to pass
+    target_score: 1950,  // Need 10690 pts to pass
     theme: "ocean",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -570,7 +570,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 6,      // 6 animal types
     moves: 27,          // 27 moves allowed
-    target_score: 10920,  // Need 10920 pts to pass
+    target_score: 2100,  // Need 10920 pts to pass
     theme: "ocean",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -583,7 +583,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 6,      // 6 animal types
     moves: 27,          // 27 moves allowed
-    target_score: 11150,  // Need 11150 pts to pass
+    target_score: 2300,  // Need 11150 pts to pass
     theme: "ocean",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -596,7 +596,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 6,      // 6 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 11380,  // Need 11380 pts to pass
+    target_score: 2350,  // Need 11380 pts to pass
     theme: "ocean",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -609,7 +609,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 6,      // 6 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 11610,  // Need 11610 pts to pass
+    target_score: 2550,  // Need 11610 pts to pass
     theme: "ocean",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -622,7 +622,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 11840,  // Need 11840 pts to pass
+    target_score: 2700,  // Need 11840 pts to pass
     theme: "ocean",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -635,7 +635,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 12070,  // Need 12070 pts to pass
+    target_score: 2750,  // Need 12070 pts to pass
     theme: "ocean",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -648,7 +648,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 12300,  // Need 12300 pts to pass
+    target_score: 2950,  // Need 12300 pts to pass
     theme: "ocean",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -661,7 +661,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 12530,  // Need 12530 pts to pass
+    target_score: 3100,  // Need 12530 pts to pass
     theme: "volcano",
     bg_color: "#3a0a0a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -674,7 +674,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 24,          // 24 moves allowed
-    target_score: 12760,  // Need 12760 pts to pass
+    target_score: 3150,  // Need 12760 pts to pass
     theme: "volcano",
     bg_color: "#3a0a0a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -687,7 +687,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 24,          // 24 moves allowed
-    target_score: 12990,  // Need 12990 pts to pass
+    target_score: 3300,  // Need 12990 pts to pass
     theme: "volcano",
     bg_color: "#3a0a0a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -700,7 +700,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 24,          // 24 moves allowed
-    target_score: 13220,  // Need 13220 pts to pass
+    target_score: 3450,  // Need 13220 pts to pass
     theme: "volcano",
     bg_color: "#3a0a0a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -713,7 +713,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 23,          // 23 moves allowed
-    target_score: 13450,  // Need 13450 pts to pass
+    target_score: 3450,  // Need 13450 pts to pass
     theme: "volcano",
     bg_color: "#3a0a0a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -726,7 +726,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 23,          // 23 moves allowed
-    target_score: 13680,  // Need 13680 pts to pass
+    target_score: 3600,  // Need 13680 pts to pass
     theme: "volcano",
     bg_color: "#3a0a0a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -739,7 +739,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 23,          // 23 moves allowed
-    target_score: 13910,  // Need 13910 pts to pass
+    target_score: 3750,  // Need 13910 pts to pass
     theme: "volcano",
     bg_color: "#3a0a0a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -752,7 +752,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 22,          // 22 moves allowed
-    target_score: 14140,  // Need 14140 pts to pass
+    target_score: 3750,  // Need 14140 pts to pass
     theme: "volcano",
     bg_color: "#3a0a0a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -765,7 +765,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 7,        // Grid = 7×7
     tile_types: 7,      // 7 animal types
     moves: 22,          // 22 moves allowed
-    target_score: 14370,  // Need 14370 pts to pass
+    target_score: 3900,  // Need 14370 pts to pass
     theme: "volcano",
     bg_color: "#3a0a0a",
     special_tiles: ["bomb","row_clear","col_clear"],
@@ -778,7 +778,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 7,      // 7 animal types
     moves: 30,          // 30 moves allowed
-    target_score: 15000,  // Need 15000 pts to pass
+    target_score: 1800,  // Need 15000 pts to pass
     theme: "tundra",
     bg_color: "#1a2a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -791,7 +791,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 7,      // 7 animal types
     moves: 30,          // 30 moves allowed
-    target_score: 15230,  // Need 15230 pts to pass
+    target_score: 2000,  // Need 15230 pts to pass
     theme: "tundra",
     bg_color: "#1a2a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -804,7 +804,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 7,      // 7 animal types
     moves: 30,          // 30 moves allowed
-    target_score: 15460,  // Need 15460 pts to pass
+    target_score: 2250,  // Need 15460 pts to pass
     theme: "tundra",
     bg_color: "#1a2a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -817,7 +817,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 7,      // 7 animal types
     moves: 29,          // 29 moves allowed
-    target_score: 15690,  // Need 15690 pts to pass
+    target_score: 2400,  // Need 15690 pts to pass
     theme: "tundra",
     bg_color: "#1a2a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -830,7 +830,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 29,          // 29 moves allowed
-    target_score: 15920,  // Need 15920 pts to pass
+    target_score: 2600,  // Need 15920 pts to pass
     theme: "tundra",
     bg_color: "#1a2a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -843,7 +843,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 29,          // 29 moves allowed
-    target_score: 16150,  // Need 16150 pts to pass
+    target_score: 2800,  // Need 16150 pts to pass
     theme: "tundra",
     bg_color: "#1a2a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -856,7 +856,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 28,          // 28 moves allowed
-    target_score: 16380,  // Need 16380 pts to pass
+    target_score: 2900,  // Need 16380 pts to pass
     theme: "tundra",
     bg_color: "#1a2a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -869,7 +869,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 28,          // 28 moves allowed
-    target_score: 16610,  // Need 16610 pts to pass
+    target_score: 3150,  // Need 16610 pts to pass
     theme: "tundra",
     bg_color: "#1a2a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -882,7 +882,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 28,          // 28 moves allowed
-    target_score: 16840,  // Need 16840 pts to pass
+    target_score: 3350,  // Need 16840 pts to pass
     theme: "tundra",
     bg_color: "#1a2a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -895,7 +895,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 27,          // 27 moves allowed
-    target_score: 17070,  // Need 17070 pts to pass
+    target_score: 3450,  // Need 17070 pts to pass
     theme: "tundra",
     bg_color: "#1a2a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -908,7 +908,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 27,          // 27 moves allowed
-    target_score: 17300,  // Need 17300 pts to pass
+    target_score: 3650,  // Need 17300 pts to pass
     theme: "tundra",
     bg_color: "#1a2a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -921,7 +921,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 27,          // 27 moves allowed
-    target_score: 17530,  // Need 17530 pts to pass
+    target_score: 3850,  // Need 17530 pts to pass
     theme: "sky",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -934,7 +934,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 17760,  // Need 17760 pts to pass
+    target_score: 3900,  // Need 17760 pts to pass
     theme: "sky",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -947,7 +947,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 17990,  // Need 17990 pts to pass
+    target_score: 4100,  // Need 17990 pts to pass
     theme: "sky",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -960,7 +960,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 18220,  // Need 18220 pts to pass
+    target_score: 4300,  // Need 18220 pts to pass
     theme: "sky",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -973,7 +973,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 18450,  // Need 18450 pts to pass
+    target_score: 4300,  // Need 18450 pts to pass
     theme: "sky",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -986,7 +986,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 18680,  // Need 18680 pts to pass
+    target_score: 4500,  // Need 18680 pts to pass
     theme: "sky",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -999,7 +999,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 18910,  // Need 18910 pts to pass
+    target_score: 4650,  // Need 18910 pts to pass
     theme: "sky",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1012,7 +1012,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 24,          // 24 moves allowed
-    target_score: 19140,  // Need 19140 pts to pass
+    target_score: 4650,  // Need 19140 pts to pass
     theme: "sky",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1025,7 +1025,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 24,          // 24 moves allowed
-    target_score: 19370,  // Need 19370 pts to pass
+    target_score: 4850,  // Need 19370 pts to pass
     theme: "sky",
     bg_color: "#0a1a3a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1038,7 +1038,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 28,          // 28 moves allowed
-    target_score: 20000,  // Need 20000 pts to pass
+    target_score: 1650,  // Need 20000 pts to pass
     theme: "cave",
     bg_color: "#1a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1051,7 +1051,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 28,          // 28 moves allowed
-    target_score: 20250,  // Need 20250 pts to pass
+    target_score: 1850,  // Need 20250 pts to pass
     theme: "cave",
     bg_color: "#1a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1064,7 +1064,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 28,          // 28 moves allowed
-    target_score: 20500,  // Need 20500 pts to pass
+    target_score: 2050,  // Need 20500 pts to pass
     theme: "cave",
     bg_color: "#1a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1077,7 +1077,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 28,          // 28 moves allowed
-    target_score: 20750,  // Need 20750 pts to pass
+    target_score: 2250,  // Need 20750 pts to pass
     theme: "cave",
     bg_color: "#1a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1090,7 +1090,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 28,          // 28 moves allowed
-    target_score: 21000,  // Need 21000 pts to pass
+    target_score: 2450,  // Need 21000 pts to pass
     theme: "cave",
     bg_color: "#1a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1103,7 +1103,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 27,          // 27 moves allowed
-    target_score: 21250,  // Need 21250 pts to pass
+    target_score: 2550,  // Need 21250 pts to pass
     theme: "cave",
     bg_color: "#1a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1116,7 +1116,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 27,          // 27 moves allowed
-    target_score: 21500,  // Need 21500 pts to pass
+    target_score: 2750,  // Need 21500 pts to pass
     theme: "cave",
     bg_color: "#1a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1129,7 +1129,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 27,          // 27 moves allowed
-    target_score: 21750,  // Need 21750 pts to pass
+    target_score: 2950,  // Need 21750 pts to pass
     theme: "cave",
     bg_color: "#1a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1142,7 +1142,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 27,          // 27 moves allowed
-    target_score: 22000,  // Need 22000 pts to pass
+    target_score: 3150,  // Need 22000 pts to pass
     theme: "cave",
     bg_color: "#1a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1155,7 +1155,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 27,          // 27 moves allowed
-    target_score: 22250,  // Need 22250 pts to pass
+    target_score: 3350,  // Need 22250 pts to pass
     theme: "cave",
     bg_color: "#1a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1168,7 +1168,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 22500,  // Need 22500 pts to pass
+    target_score: 3400,  // Need 22500 pts to pass
     theme: "cave",
     bg_color: "#1a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1181,7 +1181,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 22750,  // Need 22750 pts to pass
+    target_score: 3600,  // Need 22750 pts to pass
     theme: "cosmic",
     bg_color: "#0a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1194,7 +1194,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 23000,  // Need 23000 pts to pass
+    target_score: 3750,  // Need 23000 pts to pass
     theme: "cosmic",
     bg_color: "#0a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1207,7 +1207,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 23250,  // Need 23250 pts to pass
+    target_score: 3950,  // Need 23250 pts to pass
     theme: "cosmic",
     bg_color: "#0a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1220,7 +1220,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 26,          // 26 moves allowed
-    target_score: 23500,  // Need 23500 pts to pass
+    target_score: 4150,  // Need 23500 pts to pass
     theme: "cosmic",
     bg_color: "#0a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1233,7 +1233,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 23750,  // Need 23750 pts to pass
+    target_score: 4150,  // Need 23750 pts to pass
     theme: "cosmic",
     bg_color: "#0a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1246,7 +1246,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 24000,  // Need 24000 pts to pass
+    target_score: 4350,  // Need 24000 pts to pass
     theme: "cosmic",
     bg_color: "#0a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1259,7 +1259,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 24250,  // Need 24250 pts to pass
+    target_score: 4500,  // Need 24250 pts to pass
     theme: "cosmic",
     bg_color: "#0a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1272,7 +1272,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 24500,  // Need 24500 pts to pass
+    target_score: 4700,  // Need 24500 pts to pass
     theme: "cosmic",
     bg_color: "#0a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1285,7 +1285,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 25,          // 25 moves allowed
-    target_score: 24750,  // Need 24750 pts to pass
+    target_score: 4850,  // Need 24750 pts to pass
     theme: "cosmic",
     bg_color: "#0a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],
@@ -1298,7 +1298,7 @@ window.LEVEL_CONFIGS = {
     grid_size: 8,        // Grid = 8×8
     tile_types: 8,      // 8 animal types
     moves: 24,          // 24 moves allowed
-    target_score: 25000,  // Need 25000 pts to pass
+    target_score: 4850,  // Need 25000 pts to pass
     theme: "cosmic",
     bg_color: "#0a0a2a",
     special_tiles: ["bomb","row_clear","col_clear","rainbow"],

@@ -1818,7 +1818,7 @@ function getConfig(lvl) {
   const zoneNames = {'I':'Starter Plains','II':'Dense Forest','III':'River Delta','IV':'Mountain Peak','V':'Royal Garden'};
 
   const moves = ext && ext.moves ? ext.moves : Math.max(10, 22 - Math.floor(lvl/5));
-  const target = ext && ext.target_score ? ext.target_score : lvl * 250;
+  const target = ext && ext.target_score ? ext.target_score : Math.round(300 + (lvl-1) * 80);
 
   return {
     level:lvl, rows:r, cols:c, iconSize,
@@ -2311,7 +2311,7 @@ async function activatePowerTile(pr,pc,tr,tc) {
     if(el){el.classList.add('match-pop');spawnMatchParticles(el);}
   },i*22));
 
-  const pts=blastArr.length*12;
+  const pts=blastArr.length*40;
   score+=pts; updateScore();
   showScoreFloat(pr,pc,'+'+pts);
   drawBlastRing(pr,pc);
@@ -2357,7 +2357,7 @@ async function processMatches(playerTriggered=false) {
 
     /* ── Score ── */
     const cascadeBonus = cascadeCount > 0 ? 1 + cascadeCount * 0.25 : 1;
-    const pts = Math.round(cellsToRemove.size * 10 * cascadeBonus);
+    const pts = Math.round(cellsToRemove.size * 40 * cascadeBonus);
     totalPts += pts;
     score += pts;
     updateScore();
