@@ -236,7 +236,6 @@ h1 {
   touch-action:none;
   width:100%;
   position:relative;
-  will-change:contents;
 }
 
 /* ═══════════════════════════════════════════
@@ -254,16 +253,13 @@ h1 {
   position:relative; isolation:isolate;
   /* 3D raised bottom shadow - like candy crush */
   box-shadow:
-    0 5px 0 rgba(0,0,0,0.35),
-    0 7px 10px rgba(0,0,0,0.4),
-    inset 0 1px 0 rgba(255,255,255,0.25),
-    inset 0 -3px 0 rgba(0,0,0,0.2);
+    0 4px 0 rgba(0,0,0,0.35),
+    0 6px 10px rgba(0,0,0,0.35);
   border:2px solid rgba(255,255,255,0.15);
-  will-change:transform,opacity;
   transition: transform 0.08s ease, box-shadow 0.08s ease;
   backface-visibility:hidden;
   -webkit-backface-visibility:hidden;
-  contain:layout style;
+  contain:layout style paint;
 }
 /* Press down effect */
 .candy:active {
@@ -298,7 +294,7 @@ h1 {
   font-size:1.1em; line-height:1;
   position:relative; z-index:2;
   flex-shrink:0;
-  filter:drop-shadow(0 2px 3px rgba(0,0,0,0.5));
+  text-shadow: 0 2px 3px rgba(0,0,0,0.5);
 }
 
 
@@ -1547,7 +1543,7 @@ class JungleAudioEngine {
       });
     };
     playDrone();
-    const lp=setInterval(()=>{ if(!this.enabled||!this.ctx)return; playDrone(); },8000);
+    const lp=setInterval(()=>{ if(!this.enabled||!this.ctx)return; playDrone(); },12000);
     this.loops.push(lp);
   }
   // Tribal flute — G minor pentatonic with vibrato LFO
@@ -2420,6 +2416,7 @@ async function processMatches(playerTriggered=false) {
 
     boardEl.innerHTML = '';
     boardEl.style.gridTemplateColumns = `repeat(${COLS},1fr)`;
+    const _frag = document.createDocumentFragment();
 
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
@@ -2448,9 +2445,10 @@ async function processMatches(playerTriggered=false) {
           d.classList.add('tile-survive');
         }
 
-        boardEl.appendChild(d);
+        _frag.appendChild(d);
       }
     }
+    boardEl.appendChild(_frag);
 
     /* ── STEP 7: Force reflow then animate ── */
     boardEl.offsetHeight;
@@ -2471,6 +2469,7 @@ async function processMatches(playerTriggered=false) {
       const totalEnd = stagger + dur;
       if (totalEnd > maxAnimEnd) maxAnimEnd = totalEnd;
 
+      el.style.willChange = 'transform';
       setTimeout(() => {
         el.style.transition = `transform ${dur}ms cubic-bezier(0.25,0.55,0.3,1.25)`;
         el.style.transform  = '';
@@ -2479,6 +2478,7 @@ async function processMatches(playerTriggered=false) {
           el.classList.add('tile-landing');
           setTimeout(() => el.classList.remove('tile-landing'), 130);
           if (isSpawn) jungleAudio.play('drop', jungleAudio.panFromCell(c));
+          el.style.willChange = 'auto';
         }, dur - 20);
       }, stagger);
     });
